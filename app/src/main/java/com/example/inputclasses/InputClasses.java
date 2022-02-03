@@ -15,11 +15,12 @@ import java.util.*;
 
 public class InputClasses extends AppCompatActivity {
     private List<Course> localCourses;
-    //AppDatabase db;
+    AppDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //db = AppDatabase.singleton(this);
-        localCourses = new ArrayList<>();//db.classesDao().getAll();
+        db = AppDatabase.singleton(this);
+        localCourses = db.classesDao().getAll();
+        //localCourses = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_classes);
         //quarter spinner
@@ -54,10 +55,11 @@ public class InputClasses extends AppCompatActivity {
                 Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
             }
             else {
-                localCourses.add(potentialCourse);
-                //ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
-                //db.classesDao().insert(classEntity);
+
                 //localCourses.add(potentialCourse);
+                ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
+                db.classesDao().insert(classEntity);
+                localCourses.add(potentialCourse);
                 System.out.println(localCourses);
             }
         }
