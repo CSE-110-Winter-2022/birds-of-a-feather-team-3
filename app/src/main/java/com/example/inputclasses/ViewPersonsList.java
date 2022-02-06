@@ -15,31 +15,25 @@ public class ViewPersonsList extends AppCompatActivity {
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
 
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         List<String> persons;
-        //fakedata
+        // fake data of my classes
         Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
 
-
+        // fake data of people around
         Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
         Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
         Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
 
-        List<Person> fakedata = new ArrayList<>();
-        fakedata.add(Lucas);
-        fakedata.add(Grace);
-        fakedata.add(Mark);
-        fakedata.add(Vicky);
+        List<Person> fakeData = new ArrayList<>();
+        fakeData.add(Lucas);
+        fakeData.add(Grace);
+        fakeData.add(Mark);
+        fakeData.add(Vicky);
 
-        persons  = SearchClassmates.search(fakedata,Rodney);
+        persons  = SearchClassmates.search(fakeData,Rodney);
 
 
         super.onCreate(savedInstanceState);

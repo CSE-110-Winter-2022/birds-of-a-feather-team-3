@@ -5,18 +5,18 @@ import java.util.List;
 
 public class SearchClassmates {
     public static List<String> search(List<Person> Persons, Person me) {
-        String [] mycourse = me.getClasses();
-        List<String> namelist = new ArrayList<>();
-        for (int i = 0 ; i < mycourse.length; i++){
-            String currcouse = mycourse[i];
+        String [] myCourse = me.getClasses();
+        List<String> nameList = new ArrayList<>();
+        for (int i = 0 ; i < myCourse.length; i++){
+            String currCourse = myCourse[i];
 
             for (int j = 0; j < Persons.size(); j ++){
                 Person curr = Persons.get(j);
                 for (int k = 0; k < curr.getClasses().length;k++){
-                    String[] currclasses = curr.getClasses();
-                    if (currcouse.equals(currclasses[k]))  {
-                        if (!namelist.contains(curr.getName())){
-                            namelist.add(curr.getName());
+                    String[] currClasses = curr.getClasses();
+                    if (currCourse.equals(currClasses[k]))  {
+                        if (!nameList.contains(curr.getName())){
+                            nameList.add(curr.getName());
                         }
                     }
                 }
@@ -24,7 +24,7 @@ public class SearchClassmates {
 
         }
 
-        return namelist;
+        return nameList;
     }
 
 
