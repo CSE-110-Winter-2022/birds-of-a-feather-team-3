@@ -54,4 +54,24 @@ public class ViewPersonsListTest {
 
         assertEquals(persons, expectedOutput);
     }
+
+//    //Integration Tests
+//    @Rule
+//    public ActivityScenarioRule<InputClasses> scenarioRule = new ActivityScenarioRule<>(ViewPersonsList.class);
+//    @Test
+//    public void testViewPersonsList() {
+//        ActivityScenario<InputClasses> scenario = scenarioRule.getScenario();
+//        scenario.moveToState(Lifecycle.State.CREATED);
+//
+//        scenario.onActivity(activity -> {
+//
+//            EditText subjectView = activity.findViewById(R.id.subject_edittext);
+//            EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
+//            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+//            subjectView.setText("");
+//            courseNumberView.setText("");
+//
+//            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
+//        });
+//    }
 }
