@@ -1,14 +1,20 @@
 package com.example.inputclasses;
-public class Person {
-    private String name;
-    private String[] classes;
 
-    public Person(String name, String[] classes){
+import java.io.Serializable;
+import java.util.List;
+
+public class Person implements Serializable {
+    private String name;
+    //private String profileURL;
+    private List<Course> classes;
+
+    public Person(String name, List<Course> classes){
         this.name = name;
         this.classes = classes;
+        //this.profileURL = profileURL;
     }
 
-    public String[] getClasses(){
+    public List<Course> getClasses(){
         return this.classes;
     }
 
@@ -16,4 +22,8 @@ public class Person {
         return this.name;
     }
 
+    //public String getProfileURL(){return this.profileURL;}
+
 }
+
+

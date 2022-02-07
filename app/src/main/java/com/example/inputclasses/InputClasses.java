@@ -2,6 +2,7 @@ package com.example.inputclasses;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,20 +16,26 @@ import java.util.*;
 
 public class InputClasses extends AppCompatActivity {
     private List<Course> localCourses;
+    //private Course[] classes;
     AppDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = AppDatabase.singleton(this);
         localCourses = db.classesDao().getAll();
         //localCourses = new ArrayList<>();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_classes);
         //quarter spinner
+
+
         Spinner quarterSpinner = (Spinner) findViewById(R.id.quarter_dropdown);
         ArrayAdapter<CharSequence> quarterAdapter = ArrayAdapter.createFromResource(this, R.array.QuarterSelection,
                 android.R.layout.simple_spinner_item);
         quarterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         quarterSpinner.setAdapter(quarterAdapter);
+
+
         //year spinner
         Spinner yearSpinner = (Spinner) findViewById(R.id.year_dropdown);
         ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(this, R.array.YearSelection,
@@ -36,11 +43,26 @@ public class InputClasses extends AppCompatActivity {
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
     }
+    public void doneInputOnClick(View view){
+        if(localCourses.isEmpty()){
+            //do not proceed and send warning if no classes entered
+            Utilities.sendAlert(this,"Please enter at least one class", "Warning");
+        }
+        else{
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            //intent.putExtra("COURSES_ARRAY", classes);
+            startActivity(intent);
+        }
+    }
+
+
     public void enterClassOnClick(View view) {
         Spinner quarterInput = (Spinner) findViewById(R.id.quarter_dropdown);
         Spinner yearInput = (Spinner) findViewById(R.id.year_dropdown);
+
         EditText subjectInput = (EditText) findViewById(R.id.subject_edittext);
         EditText classNumberInput = (EditText) findViewById(R.id.class_number_edittext);
+
         String quarter = quarterInput.getSelectedItem().toString() + "";
         String year = yearInput.getSelectedItem().toString() + "";
         String subject = subjectInput.getText().toString() + "";

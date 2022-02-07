@@ -17,11 +17,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
           // InputClasses Activity
-//        Intent intent = new Intent(this, InputClasses.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, InputClasses.class);
+        startActivity(intent);
 
         // ViewPersonsList Activity
-        Intent intent = new Intent(this, ViewPersonsList.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, ViewPersonsList.class);
+        //startActivity(intent);
     }
 }

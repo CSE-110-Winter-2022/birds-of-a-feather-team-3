@@ -1,6 +1,8 @@
 package com.example.inputclasses;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
     public String quarter;
     public String year;
     public String subject;
