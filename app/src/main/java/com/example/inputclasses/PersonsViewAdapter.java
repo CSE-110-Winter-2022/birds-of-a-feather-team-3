@@ -21,10 +21,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     }
 
     public void addPerson(String person){
-       // if (!this.persons.contains(person)) {
+        if (!this.persons.contains(person)) {
             this.persons.add(person);
             this.notifyItemInserted(this.persons.size()-1);
-      //  }
+        }
     }
 
 
@@ -50,7 +50,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     public static class ViewHolder
             extends RecyclerView.ViewHolder
-            //implements View.OnClickListener
+            implements View.OnClickListener
             {
         private final TextView personNameView;
         private String person;
@@ -66,12 +66,12 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.personNameView.setText(person);
         }
 
-//        @Override
-//        public void onClick(View view) {
-//            Context context = view.getContext();
-//            Intent intent = new Intent(context, PersonDetailActivity.class);
-//            intent.putExtra("person_id", this.person.getId());
-//            context.startActivity(intent);
-//        }
+        @Override
+        public void onClick(View view) {
+            Context context = view.getContext();
+            Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra("person_id", this.person.getId());
+            context.startActivity(intent);
+        }
     }
 }
