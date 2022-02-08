@@ -7,10 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.inputclasses.database.AppDatabase;
-
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -23,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO!!! name not saved yet. Not sure how to handle at this point!
         TextView textView = findViewById(R.id.name);
         String name = textView.getText().toString();
+//        Intent intent = new Intent(this, InputClasses.class);
+//        intent.putExtra("database_type", "actual");
 
 
         // go to InputClasses Activity
