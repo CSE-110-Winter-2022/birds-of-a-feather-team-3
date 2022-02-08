@@ -17,7 +17,7 @@ public class ViewPersonsList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        List<String> persons;
+        List<String> names;
 //        // fake data of my classes
 //        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
 //
@@ -33,10 +33,12 @@ public class ViewPersonsList extends AppCompatActivity {
 //        fakeData.add(Mark);
 //        fakeData.add(Vicky);
 
-//        persons  = SearchClassmates.search(fakeData,Rodney);
-        persons = new ArrayList<>();
-        persons.add("Dummy1");
-        persons.add("Dummy2");
+//        names  = SearchClassmates.search(fakeData,Rodney);
+
+
+        names = new ArrayList<>();
+        names.add("Dummy1");
+        names.add("Dummy2");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
@@ -47,7 +49,7 @@ public class ViewPersonsList extends AppCompatActivity {
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
 
-        personsViewAdapter = new PersonsViewAdapter(persons);
+        personsViewAdapter = new PersonsViewAdapter(names);
         personsRecyclerView.setAdapter(personsViewAdapter);
     }
 

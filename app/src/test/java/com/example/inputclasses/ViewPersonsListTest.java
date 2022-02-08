@@ -2,6 +2,7 @@ package com.example.inputclasses;
 
 //import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import org.junit.Rule;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 //import org.junit.runner.RunWith;
@@ -29,8 +30,9 @@ public class ViewPersonsListTest {
 
     //Unit Tests
     @Test
-    public void testSearchClassmates() {
-        List<String> persons;
+    public void testSearchClassmatesNormal() {
+        List<Person> persons;
+
         // fake data of my classes
         Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
 
@@ -48,14 +50,55 @@ public class ViewPersonsListTest {
 
         persons  = SearchClassmates.search(fakeData,Rodney);
 
-        List<String> expectedOutput = new ArrayList<String>();
-        expectedOutput.add("Lucas");
+        List<String> output = new ArrayList<>();
+        for (int i = 0; i < persons.size(); i++) {
+            output.add(persons.get(i).getName());
+        }
+        List<String> expectedOutput = new ArrayList<>();
         expectedOutput.add("Mark");
         expectedOutput.add("Grace");
+        expectedOutput.add("Lucas");
+
+        assertEquals(expectedOutput, output);
+    }
+
+    // unit test
+    @Test
+    public void testSearchClassmatesDupNames() {
+        List<Person> persons;
+        // fake data of my classes
+        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18", "CSE30", "CSE21", "CSE101"});
+
+        // fake data of people around
+        Person Lucas = new Person("Lucas", new String[]{"CSE21","MATH18", "CSE30", "ECE101", "ECE109"});
+        Person Grace = new Person("Grace", new String[]{"CSE21","MATH18", "CSE30", "CSE21"});
+        Person DupVicki = new Person("Vicki", new String[]{"CSE21","MATH18", "CSE30", "CSE21", "CSE101"});
+        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18", "ECON100", "MATH20A"});
+        Person Vicky = new Person("Vicki", new String[]{"WCWP10B","ECON109","WCWP10A", "CSE101"});
+
+        List<Person> fakeData = new ArrayList<>();
+        fakeData.add(Lucas);
+        fakeData.add(Grace);
+        fakeData.add(DupVicki);
+        fakeData.add(Mark);
+        fakeData.add(Vicky);
 
 
+        persons  = SearchClassmates.search(fakeData,Rodney);
+        List<String> output = new ArrayList<>();
+        for (int i = 0; i < persons.size(); i++) {
+            output.add(persons.get(i).getName());
+        }
 
-        assertEquals(persons, expectedOutput);
+        List<String> expectedOutput = new ArrayList<>();
+        expectedOutput.add("Vicki");
+        expectedOutput.add("Grace");
+        expectedOutput.add("Lucas");
+        expectedOutput.add("Mark");
+        expectedOutput.add("Vicki");
+
+
+        assertEquals(expectedOutput, output);
     }
 
 //    //Integration Tests
