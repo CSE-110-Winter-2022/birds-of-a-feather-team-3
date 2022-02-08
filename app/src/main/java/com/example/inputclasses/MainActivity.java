@@ -13,6 +13,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Intent intent = new Intent(this, InputClasses.class);
+        //intent.putExtra("database_type", "actual");
+
+          // InputClasses Activity
+        //Intent intent = new Intent(this, InputClasses.class);
+        //startActivity(intent);
+
+        // ViewPersonsList Activity
+        //Intent intent = new Intent(this, ViewPersonsList.class);
+        //startActivity(intent);
     }
 
     public void onClickSave(View view) {
@@ -21,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
         String name = textView.getText().toString();
 //        Intent intent = new Intent(this, InputClasses.class);
 //        intent.putExtra("database_type", "actual");
-
-
         // go to InputClasses Activity
         Intent intent = new Intent(this, InputClasses.class);
+        intent.putExtra("database_type", "actual");
+        //Intent intent = new Intent(this, InputClasses.class);
         startActivity(intent);
     }
 }

@@ -1,26 +1,46 @@
 package com.example.inputclasses;
-public class Person {
+import java.io.Serializable;
+import java.util.List;
+
+public class Person implements Serializable {
     private String name;
-    private String[] classes;
+    private String profileURL;
+    private List<Course> classes;
     private int matches;
 
-    public Person(String name, String[] classes){
+    public Person(String name, List<Course> classes){
         this.name = name;
         this.classes = classes;
+        this.profileURL = "";
     }
 
+    public List<Course> getClasses(){
+        return this.classes;
+    }
     public void setMatches(int i) {
         matches = i;
     }
 
+    /*
     public String[] getClasses(){
         return this.classes;
     }
-
+*/
     public String getName(){
         return this.name;
     }
 
-    public int getMatches() {return this.matches;}
+    public int getMatches() {
+        return this.matches;
+    }
 
+    public String toString() {
+        return name + ", " + profileURL + ", " + this.classes.toString() + ", " + this.classes.size();
+    }
+
+    public boolean equals(Person otherPerson) {
+        return this.toString().equals(otherPerson.toString());
+    }
 }
+
+

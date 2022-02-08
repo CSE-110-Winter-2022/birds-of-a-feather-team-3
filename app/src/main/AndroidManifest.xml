@@ -10,6 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InputClasses">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.nearby.messages.API_KEY"
+            android:value="AIzaSyDNsZzdUQLmhdBhUsLlFqrYfVexZO58CjQ" />
+
+        <activity
             android:name=".ViewPersonsList"
             android:exported="false" />
         <activity

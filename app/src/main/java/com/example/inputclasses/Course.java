@@ -1,6 +1,8 @@
 package com.example.inputclasses;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
     public String quarter;
     public String year;
     public String subject;
@@ -29,4 +31,9 @@ public class Course {
                 this.subject.equals(otherCourse.getSubject()) &&
                 this.classNumber.equals(otherCourse.getClassNumber());
     }
+    public String toString(){
+        String toReturn = this.quarter + " " + this.year + " " + this.subject + " " + this.classNumber;
+        return toReturn;
+    }
+
 }

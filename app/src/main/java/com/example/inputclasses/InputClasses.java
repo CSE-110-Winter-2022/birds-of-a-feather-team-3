@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,6 +18,7 @@ import java.util.*;
 
 public class InputClasses extends AppCompatActivity {
     private List<Course> localCourses;
+    //private Course[] classes;
     AppDatabase db;
     boolean usingMock;
     @Override
@@ -40,26 +43,55 @@ public class InputClasses extends AppCompatActivity {
             db = AppDatabase.singleton(this);
             localCourses = db.classesDao().getAll();
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_classes);
         //quarter spinner
+
+
         Spinner quarterSpinner = (Spinner) findViewById(R.id.quarter_dropdown);
         ArrayAdapter<CharSequence> quarterAdapter = ArrayAdapter.createFromResource(this, R.array.QuarterSelection,
                 android.R.layout.simple_spinner_item);
         quarterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         quarterSpinner.setAdapter(quarterAdapter);
+
+
         //year spinner
         Spinner yearSpinner = (Spinner) findViewById(R.id.year_dropdown);
         ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(this, R.array.YearSelection,
                 android.R.layout.simple_spinner_item);
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
+
+        EditText subjectView = findViewById(R.id.subject_edittext);
+        InputFilter[] editFilters = subjectView.getFilters();
+        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
+        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
+        newFilters[editFilters.length] = new InputFilter.AllCaps();
+        subjectView.setFilters(newFilters);
     }
+    public void doneInputOnClick(View view){
+        if(localCourses.isEmpty()){
+            //do not proceed and send warning if no classes entered
+            Utilities.sendAlert(this,"Please enter at least one class", "Warning");
+        }
+        else{
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            //intent.putExtra("COURSES_ARRAY", classes);
+            startActivity(intent);
+        }
+
+
+    }
+
+
     public void enterClassOnClick(View view) {
         Spinner quarterInput = (Spinner) findViewById(R.id.quarter_dropdown);
         Spinner yearInput = (Spinner) findViewById(R.id.year_dropdown);
+
         EditText subjectInput = (EditText) findViewById(R.id.subject_edittext);
         EditText classNumberInput = (EditText) findViewById(R.id.class_number_edittext);
+
         String quarter = quarterInput.getSelectedItem().toString() + "";
         String year = yearInput.getSelectedItem().toString() + "";
         String subject = subjectInput.getText().toString() + "";

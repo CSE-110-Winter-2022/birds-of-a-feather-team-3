@@ -19,10 +19,13 @@ import static org.junit.Assert.*;
 //import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static java.util.Collections.sort;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import java.util.ArrayList;
 //import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -34,31 +37,49 @@ public class ViewPersonsListTest {
         List<Person> persons;
 
         // fake data of my classes
+        /*
         Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
-
-        // fake data of people around
         Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
         Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
         Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
+*/
+
+        Course course1 = new Course("SP", "2020", "CSE", "110");
+        Course course2 = new Course("FA", "2020", "CSE", "100");
+        Course course3 = new Course("WI", "2020", "CSE", "101");
+        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
+        List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
+        List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
+        List<Course> MarkClasses = new ArrayList<>(Arrays.asList(course3, course2));
+        List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
+
+        /***commonalities
+         * Course1: Rodney, Grace, Vicki
+         * Course2: Rodney, Grace, Mark
+         * Course3: Mark
+         * Course4: Vicki, Lucas
+         */
+
+        Person Rodney = new Person("Rodney", RodneyClasses);
+        Person Lucas = new Person("Lucas", LucasClasses);
+        Person Grace = new Person("Grace", GraceClasses);
+        Person Mark = new Person("Mark", MarkClasses);
+        Person Vicki = new Person("Vicki", VickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);
         fakeData.add(Grace);
         fakeData.add(Mark);
-        fakeData.add(Vicky);
-
-        persons  = SearchClassmates.search(fakeData,Rodney);
+        fakeData.add(Vicki);
+        persons  = SearchClassmates.search(fakeData, Rodney);
 
         List<String> output = new ArrayList<>();
         for (int i = 0; i < persons.size(); i++) {
             output.add(persons.get(i).getName());
         }
-        List<String> expectedOutput = new ArrayList<>();
-        expectedOutput.add("Mark");
-        expectedOutput.add("Grace");
-        expectedOutput.add("Lucas");
-
+        List<String> expectedOutput = new ArrayList<>(Arrays.asList("Grace", "Vicki", "Mark"));
         assertEquals(expectedOutput, output);
     }
 
@@ -67,21 +88,39 @@ public class ViewPersonsListTest {
     public void testSearchClassmatesDupNames() {
         List<Person> persons;
         // fake data of my classes
-        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18", "CSE30", "CSE21", "CSE101"});
 
-        // fake data of people around
-        Person Lucas = new Person("Lucas", new String[]{"CSE21","MATH18", "CSE30", "ECE101", "ECE109"});
-        Person Grace = new Person("Grace", new String[]{"CSE21","MATH18", "CSE30", "CSE21"});
-        Person DupVicki = new Person("Vicki", new String[]{"CSE21","MATH18", "CSE30", "CSE21", "CSE101"});
-        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18", "ECON100", "MATH20A"});
-        Person Vicky = new Person("Vicki", new String[]{"WCWP10B","ECON109","WCWP10A", "CSE101"});
+
+        Course course1 = new Course("SP", "2020", "CSE", "110");
+        Course course2 = new Course("FA", "2020", "CSE", "100");
+        Course course3 = new Course("WI", "2020", "CSE", "101");
+        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
+        List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
+        List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
+        List<Course> MarkClasses = new ArrayList<>(Arrays.asList(course3, course2));
+        List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
+        List<Course> DupVickiClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
+
+        /***commonalities
+         * Course1: Rodney, Grace, Vicki, DupVicki
+         * Course2: Rodney, Grace, Mark, DupVicki
+         * Course3: Mark, DupVicki
+         * Course4: Vicki, Lucas
+         */
+
+        Person Rodney = new Person("Rodney", RodneyClasses);
+        Person Lucas = new Person("Lucas", LucasClasses);
+        Person Grace = new Person("Grace", GraceClasses);
+        Person Mark = new Person("Mark", MarkClasses);
+        Person Vicki = new Person("Vicki", VickiClasses);
+        Person DupVicki = new Person("Vicki", DupVickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);
         fakeData.add(Grace);
         fakeData.add(DupVicki);
         fakeData.add(Mark);
-        fakeData.add(Vicky);
+        fakeData.add(Vicki);
 
 
         persons  = SearchClassmates.search(fakeData,Rodney);
@@ -90,13 +129,9 @@ public class ViewPersonsListTest {
             output.add(persons.get(i).getName());
         }
 
-        List<String> expectedOutput = new ArrayList<>();
-        expectedOutput.add("Vicki");
-        expectedOutput.add("Grace");
-        expectedOutput.add("Lucas");
-        expectedOutput.add("Mark");
-        expectedOutput.add("Vicki");
-
+        List<String> expectedOutput = new ArrayList<>(Arrays.asList("Vicki", "Vicki", "Grace", "Mark"));
+        sort(expectedOutput); //alphabetical order so it can be compared correctly
+        sort(output);
 
         assertEquals(expectedOutput, output);
     }
