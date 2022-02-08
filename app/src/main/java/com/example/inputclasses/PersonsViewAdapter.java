@@ -10,19 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
     private final List<String> persons;
+    private final Map<String, ProfileInfo> profileInformationList;
 
     public PersonsViewAdapter(List<String> persons) {
         super();
         this.persons = persons;
+        this.profileInformationList = new HashMap<>();
     }
 
-    public void addPerson(String person){
+    public void addPerson(String person, ProfileInfo newProfileInfo){
         if (!this.persons.contains(person)) {
             this.persons.add(person);
+            profileInformationList.put(person, newProfileInfo);
             this.notifyItemInserted(this.persons.size()-1);
         }
     }
@@ -41,6 +46,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull PersonsViewAdapter.ViewHolder holder, int position) {
         holder.setPerson(persons.get(position));
+        holder.setProfileInfo(profileInformationList.get(persons.get(position)));
     }
 
     @Override
@@ -54,11 +60,13 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             {
         private final TextView personNameView;
         private String person;
+        private ProfileInfo profileInfo;
 
         ViewHolder(View itemView) {
             super(itemView);
             this.personNameView = itemView.findViewById(R.id.person_row_name);
-            //itemView.setOnClickListener(this);
+            //maybe comment out below, it was before.
+            itemView.setOnClickListener(this);
         }
 
         public void setPerson(String person) {
@@ -66,11 +74,21 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.personNameView.setText(person);
         }
 
+        public void setProfileInfo (ProfileInfo profInf) {
+            this.profileInfo = profInf;
+        }
+
         @Override
         public void onClick(View view) {
             Context context = view.getContext();
             Intent intent = new Intent(context, ProfileActivity.class);
-            intent.putExtra("person_id", this.person.getId());
+            String concatenatedStr = "";
+            for (Course course : this.profileInfo.getCommonCourses()) {
+                concatenatedStr += course.toString() + '\n';
+            }
+            intent.putExtra("name", this.profileInfo.getName());
+            intent.putExtra("courses", concatenatedStr);
+            intent.putExtra("URL", this.profileInfo.getURL());
             context.startActivity(intent);
         }
     }

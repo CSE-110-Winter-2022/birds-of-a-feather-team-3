@@ -1,5 +1,6 @@
 package com.example.inputclasses;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ public class ViewPersonsList extends AppCompatActivity {
     protected PersonsViewAdapter personsViewAdapter;
 
 
-    //boolean startButtonOn = false;
+    boolean startButtonOn = false;
 
     //class name for log
     private static final String TAG = ViewPersonsList.class.getSimpleName();
@@ -79,23 +80,30 @@ public class ViewPersonsList extends AppCompatActivity {
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //fakedata
-        /*
-        Person Rodney = new Person("Rodney", new String[]{"CSE21", "MATH18"});
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
+        List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
+        List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
+        List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
+        List<Course> MarkClasses = new ArrayList<>(Arrays.asList(course3, course2));
+        List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
 
+        /***commonalities
+         * Course1: Rodney, Grace, Vicki
+         * Course2: Rodney, Grace, Mark
+         * Course3: Mark
+         * Course4: Vicki, Lucas
+         */
 
-        Person Lucas = new Person("Lucas", new String[]{"ECE45", "ECE35", "CSE21"});
-        Person Grace = new Person("Grace", new String[]{"ECE45", "ECE35", "MATH18"});
-        Person Mark = new Person("Mark", new String[]{"CSE21", "MATH18", "WCWP10A"});
-        Person Vicki = new Person("Vicki", new String[]{"WCWP10B", "ECON109", "WCWP10A"});
+        Person Rodney = new Person("Rodney", RodneyClasses);
+        Person Lucas = new Person("Lucas", LucasClasses);
+        Person Grace = new Person("Grace", GraceClasses);
+        Person Mark = new Person("Mark", MarkClasses);
+        Person Vicki = new Person("Vicki", VickiClasses);
 
-        List<Person> fakedata = new ArrayList<>();
-        fakedata.add(Lucas);
-        fakedata.add(Grace);
-        fakedata.add(Mark);
-        fakedata.add(Vicki);
-        */
-
-
+        List<Person> fakedata = new ArrayList<>(Arrays.asList(Rodney, Lucas, Grace, Mark, Vicki));
         //construct Person object for self-data
         //convert object to byte array using serialization
         Person self = new Person("Homer", myCourses);
@@ -124,7 +132,8 @@ public class ViewPersonsList extends AppCompatActivity {
         classesMessage = new Message(helloMessage.getBytes(StandardCharsets.UTF_8));
         MessageListener realMessageListener = new MessageListener() {
             @Override
-            public void onFound(final Message message) {
+            public void onFound(@NonNull Message message) {
+                System.out.println("Received message!");
                 //Called when new message found
                 //create person from message
                 /*
@@ -135,60 +144,77 @@ public class ViewPersonsList extends AppCompatActivity {
                     e.printStackTrace();
                     //throw error
                 }
-
                  */
-
-                ;
-
                 //Log.d("Start button status: ", Boolean.toString(startButtonOn));
-                if (((Button)findViewById(R.id.shareButton)).getText().equals("Stop")) {
-                    String msgBody = new String(message.getContent());
-                    System.out.println("Received message from " + msgBody);
-                    classmates.add(msgBody);
-                    int i = 0;
-                  //  for(String name: classmates){
+                if (startButtonOn) {
+                    byte[] serializedPerson = message.getContent();
+                    Person deserializedPerson = null;
+                    final ProfileInfo personsProfileInfo;
+                    try {
+                        deserializedPerson = (Person) convertFromByteArray(serializedPerson);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //String msgBody = new String(message.getContent());
+                    final String gotName;
+                    if (deserializedPerson != null) {
+                        personsProfileInfo = SearchClassmates
+                                .detectAndReturnSharedClasses(self, deserializedPerson);
+                        /*personsProfileInfo = new ProfileInfo(deserializedPerson.getName(),
+                                "", deserializedPerson.getClasses());*/
+                        gotName = deserializedPerson.getName();
+                        System.out.println("Received message from " + gotName);
+                    } else {
+                        gotName = "";
+                        personsProfileInfo = null;
+                    }
+                    //classmates.add(msgBody);
+                    //int i = 0;
+                    //for(String name: classmates){
                        // Log.d("Classmate : ", name);
                         //System.out.println("Classmate name: " + name);
                        // System.out.println(classmates.size());
-                   // }
-                    personsViewAdapter.addPerson(msgBody);
-
+                    //}
+                    if (personsProfileInfo != null) {
+                        runOnUiThread(() -> {
+                            personsViewAdapter.addPerson(gotName, personsProfileInfo);
+                        });
+                    }
                 }
-
-
             }
 
             @Override
-            public void onLost(final Message message) {
+            public void onLost(@NonNull Message message) {
                 //Called when message no longer detectable nearby
                 //should NOT delete message in this case
-                String msgBody = new String(message.getContent());
-                System.out.println("Stopped receiving messages from" + msgBody);
+                if (startButtonOn) {
+                    String msgBody = new String(message.getContent());
+                    System.out.println("Stopped receiving messages from" + msgBody);
+                }
             }
         };
 
         //fake receiving message
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 7, "Yee");
-
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
             if (shareButton.getText().equals("Start")) {
-                //startButtonOn = true;
+                startButtonOn = true;
                 //start sharing and receiving data
                 //Utilities.sendAlert((Activity) getApplicationContext(), "Starting share", "Test");
                 System.out.println("Starting share");
                 shareButton.setText("Stop");
-                subscribe();
-                publish();
+               // subscribe();
+               // publish();
             } else if (shareButton.getText().equals("Stop")) {
-                //startButtonOn = false;
+                startButtonOn = false;
                 //stop sharing and receiving data
                 //Utilities.sendAlert(this, "Stopping share", "Test");
                 System.out.println("Stopping share");
                 shareButton.setText("Start");
-                unsubscribe();
-                unpublish();
+               // unsubscribe();
+               // unpublish();
             }
         });
 
@@ -213,16 +239,7 @@ public class ViewPersonsList extends AppCompatActivity {
         }
 
          */
-
-
-
-
-
-
     }
-
-
-
 
         //subscribe to messages from nearby devices
         //update recyclerview
@@ -236,7 +253,7 @@ public class ViewPersonsList extends AppCompatActivity {
                             super.onExpired();
                             Log.i(TAG, "No longer subscribing");
                             //swap shareButton to stop
-                            runOnUiThread(()->findViewById(R.id.shareButton).performClick());
+                            //runOnUiThread(()->findViewById(R.id.shareButton).performClick());
                         }
                     }).build();
 
@@ -255,8 +272,7 @@ public class ViewPersonsList extends AppCompatActivity {
                             super.onExpired();
                             Log.i(TAG, "No longer publishing");
                             //swap shareButton to stop
-                            runOnUiThread(()->findViewById(R.id.shareButton).performClick());
-
+                            //runOnUiThread(()->findViewById(R.id.shareButton).performClick());
                         }
                     }).build();
 
@@ -276,17 +292,6 @@ public class ViewPersonsList extends AppCompatActivity {
             Nearby.getMessagesClient(this).unpublish(classesMessage);
         }
 
-    public byte[] convertToByteArray(Person self) throws Exception {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-
-        oos.writeObject(self);
-        oos.flush();
-        byte [] data = bos.toByteArray();
-        //bos.close();
-        //oos.close();
-        return data;
-    }
 
     public Person convertFromByteArray(byte[] data) throws Exception{
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
@@ -297,26 +302,4 @@ public class ViewPersonsList extends AppCompatActivity {
         //ois.close();
         return person;
     }
-
-/*
-    public void toggleShareButtonOnClick(View view) {
-        Button shareButton = (Button) findViewById(R.id.shareButton);
-        if (shareButton.getText().equals("Start")) {
-            //start sharing and receiving data
-            //Utilities.sendAlert(this, "Starting share", "Test");
-            System.out.println("Starting share");
-            shareButton.setText("Stop");
-            subscribe();
-            publish();
-        } else if (shareButton.getText().equals("Stop")) {
-            //stop sharing and receiving data
-            //Utilities.sendAlert(this, "Stopping share", "Test");
-            System.out.println("Stopping share");
-            shareButton.setText("Start");
-            unsubscribe();
-            unpublish();
-        }
-    }
-
- */
 }
