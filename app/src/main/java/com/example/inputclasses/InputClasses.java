@@ -18,12 +18,29 @@ public class InputClasses extends AppCompatActivity {
     private List<Course> localCourses;
     //private Course[] classes;
     AppDatabase db;
+    boolean usingMock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        db = AppDatabase.singleton(this);
-        localCourses = db.classesDao().getAll();
-        //localCourses = new ArrayList<>();
+        Intent extras = getIntent();
+        usingMock = true; //For testing purposes
+        if (extras != null) { //Use the real database if called by MainActivity
+            String databaseType = extras.getStringExtra("database_type");
+            if (databaseType != null) {
+                usingMock = !databaseType.equals("actual");
+            }
+            else {
+                usingMock = true;
+            }
+        }
+        Log.d("Mock Type", String.valueOf(usingMock));
 
+        if (usingMock) {
+            localCourses = new ArrayList<>();
+        }
+        else {
+            db = AppDatabase.singleton(this);
+            localCourses = db.classesDao().getAll();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_classes);
         //quarter spinner
@@ -75,16 +92,16 @@ public class InputClasses extends AppCompatActivity {
         }
         else {
             Course potentialCourse = new Course(quarter, year, subject, classNumber);
-            if (checkIsDuplicate(potentialCourse)) {
+            if (checkIsDuplicate(localCourses, potentialCourse)) {
                 Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
             }
             else {
-
-                //localCourses.add(potentialCourse);
-                ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
-                db.classesDao().insert(classEntity);
+                if (!usingMock) {
+                    ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
+                    db.classesDao().insert(classEntity);
+                }
                 localCourses.add(potentialCourse);
-                System.out.println(localCourses);
+                //System.out.println(localCourses);
             }
         }
     }
@@ -96,9 +113,9 @@ public class InputClasses extends AppCompatActivity {
         */
         return quarter.equals("") || year.equals("") || subject.equals("") || classNumber.equals("");
     }
-    public boolean checkIsDuplicate(Course potentialCourse) {
-        for (int i = 0; i < localCourses.size(); i++) {
-            if (potentialCourse.equals(localCourses.get(i))) {
+    public boolean checkIsDuplicate(List<Course> compareList, Course potentialCourse) {
+        for (int i = 0; i < compareList.size(); i++) {
+            if (potentialCourse.equals(compareList.get(i))) {
                 return true;
             }
         }
