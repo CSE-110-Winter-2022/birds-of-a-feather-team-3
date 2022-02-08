@@ -15,17 +15,24 @@ import java.util.List;
 import java.util.Map;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
-    private final List<String> persons;
-    private final Map<String, ProfileInfo> profileInformationList;
+    private final List<Person> persons;
+    private final Map<Person, ProfileInfo> profileInformationList;
 
-    public PersonsViewAdapter(List<String> persons) {
+    public PersonsViewAdapter(List<Person> persons) {
         super();
         this.persons = persons;
         this.profileInformationList = new HashMap<>();
     }
 
-    public void addPerson(String person, ProfileInfo newProfileInfo){
-        if (!this.persons.contains(person)) {
+    public void addPerson(Person person, ProfileInfo newProfileInfo){
+        boolean alreadyContained = false;
+        for (Person existingPerson : persons) {
+            if (person.toString().equals(existingPerson.toString())) {
+                alreadyContained = true;
+                break;
+            }
+        }
+        if (!alreadyContained) {
             this.persons.add(person);
             profileInformationList.put(person, newProfileInfo);
             this.notifyItemInserted(this.persons.size()-1);
@@ -59,7 +66,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             implements View.OnClickListener
             {
         private final TextView personNameView;
-        private String person;
+        private String personName;
         private ProfileInfo profileInfo;
 
         ViewHolder(View itemView) {
@@ -69,9 +76,9 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             itemView.setOnClickListener(this);
         }
 
-        public void setPerson(String person) {
-            this.person = person;
-            this.personNameView.setText(person);
+        public void setPerson(Person person) {
+            this.personName = person.getName();
+            this.personNameView.setText(personName);
         }
 
         public void setProfileInfo (ProfileInfo profInf) {
