@@ -23,7 +23,6 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class TestInputClasses {
-
     //Unit Tests
     @Test
     public void testCheckIsDuplicate() {

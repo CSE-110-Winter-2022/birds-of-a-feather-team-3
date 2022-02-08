@@ -26,13 +26,10 @@ public class ViewPersonsList extends AppCompatActivity {
         List<String> persons;
         //fakedata
         Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
-
-
         Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
         Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
         Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
-
         List<Person> fakedata = new ArrayList<>();
         fakedata.add(Lucas);
         fakedata.add(Grace);

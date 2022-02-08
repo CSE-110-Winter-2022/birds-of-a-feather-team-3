@@ -22,6 +22,12 @@ public interface ClassesDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     Course getCourse(int id);
 
+    @Query("SELECT * FROM OtherProfileInfo")
+    ProfileSubset getProfileSubset(int id);
+
     @Insert
     void insert(ClassEntity course);
+
+    @Insert
+    void insert
 }
