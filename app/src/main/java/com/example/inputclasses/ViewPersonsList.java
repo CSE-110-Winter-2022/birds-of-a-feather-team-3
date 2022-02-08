@@ -15,32 +15,30 @@ public class ViewPersonsList extends AppCompatActivity {
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
 
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        List<String> persons;
-        //fakedata
-        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
+        List<String> names;
+//        // fake data of my classes
+//        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
+//
+//        // fake data of people around
+//        Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
+//        Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
+//        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
+//        Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
+//
+//        List<Person> fakeData = new ArrayList<>();
+//        fakeData.add(Lucas);
+//        fakeData.add(Grace);
+//        fakeData.add(Mark);
+//        fakeData.add(Vicky);
+
+//        names  = SearchClassmates.search(fakeData,Rodney);
 
 
-        Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
-        Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
-        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
-        Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
-
-        List<Person> fakedata = new ArrayList<>();
-        fakedata.add(Lucas);
-        fakedata.add(Grace);
-        fakedata.add(Mark);
-        fakedata.add(Vicky);
-
-        persons  = SearchClassmates.search(fakedata,Rodney);
-
+        names = new ArrayList<>();
+        names.add("Dummy1");
+        names.add("Dummy2");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
@@ -51,7 +49,7 @@ public class ViewPersonsList extends AppCompatActivity {
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
 
-        personsViewAdapter = new PersonsViewAdapter(persons);
+        personsViewAdapter = new PersonsViewAdapter(names);
         personsRecyclerView.setAdapter(personsViewAdapter);
     }
 
