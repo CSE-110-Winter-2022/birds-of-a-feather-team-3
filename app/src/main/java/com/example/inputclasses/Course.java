@@ -31,4 +31,9 @@ public class Course implements Serializable {
                 this.subject.equals(otherCourse.getSubject()) &&
                 this.classNumber.equals(otherCourse.getClassNumber());
     }
+    public String toString(){
+        String toReturn = this.quarter + " " + this.year + " " + this.subject + " " + this.classNumber;
+        return toReturn;
+    }
+
 }

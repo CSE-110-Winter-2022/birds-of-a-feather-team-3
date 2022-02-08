@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Build;
@@ -36,6 +37,9 @@ public class ViewPersonsList extends AppCompatActivity {
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
 
+
+    //boolean startButtonOn = false;
+
     //class name for log
     private static final String TAG = ViewPersonsList.class.getSimpleName();
 
@@ -53,10 +57,26 @@ public class ViewPersonsList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //list of people received message from
         List<Person> nearbyPeople = new ArrayList<Person>();
+
+        //list of names received message from (for testing
+        List<String> classmates = new ArrayList<String>();
 
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_persons_list);
+        setTitle("People with Shared Classes");
+
+        personsRecyclerView = findViewById(R.id.persons_view);
+
+        personsLayoutManager = new LinearLayoutManager(this);
+        personsRecyclerView.setLayoutManager(personsLayoutManager);
+
+        personsViewAdapter = new PersonsViewAdapter(classmates);
+        personsRecyclerView.setAdapter(personsViewAdapter);
 
         //fakedata
         /*
@@ -78,8 +98,18 @@ public class ViewPersonsList extends AppCompatActivity {
 
         //construct Person object for self-data
         //convert object to byte array using serialization
-        Person self = new Person("Name", myCourses);
+        Person self = new Person("Homer", myCourses);
 
+        System.out.println("User input data:");
+        System.out.println(self.getName());
+        int i = 1;
+        for(Course course: self.getClasses()){
+            System.out.print("Course " + i + ":");
+            i++;
+            System.out.println(course.toString());
+        }
+
+/*
 
         // set message to be outgoing data
         try {
@@ -89,11 +119,15 @@ public class ViewPersonsList extends AppCompatActivity {
             Utilities.sendAlert(this, "Error serializing course data", "Error");
         }
 
-        classesMessageListener = new MessageListener() {
+ */
+        String helloMessage = "Hello!";
+        classesMessage = new Message(helloMessage.getBytes(StandardCharsets.UTF_8));
+        MessageListener realMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
                 //Called when new message found
                 //create person from message
+                /*
                 try {
                     Person msgBody = convertFromByteArray(message.getContent());
                     nearbyPeople.add(msgBody);
@@ -101,34 +135,89 @@ public class ViewPersonsList extends AppCompatActivity {
                     e.printStackTrace();
                     //throw error
                 }
+
+                 */
+
+                ;
+
+                //Log.d("Start button status: ", Boolean.toString(startButtonOn));
+                if (((Button)findViewById(R.id.shareButton)).getText().equals("Stop")) {
+                    String msgBody = new String(message.getContent());
+                    System.out.println("Received message from " + msgBody);
+                    classmates.add(msgBody);
+                    int i = 0;
+                  //  for(String name: classmates){
+                       // Log.d("Classmate : ", name);
+                        //System.out.println("Classmate name: " + name);
+                       // System.out.println(classmates.size());
+                   // }
+                    personsViewAdapter.addPerson(msgBody);
+
+                }
+
+
             }
 
             @Override
             public void onLost(final Message message) {
                 //Called when message no longer detectable nearby
                 //should NOT delete message in this case
-                //String msgBody = new String(message.getContent());
+                String msgBody = new String(message.getContent());
+                System.out.println("Stopped receiving messages from" + msgBody);
             }
         };
 
+        //fake receiving message
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 7, "Yee");
+
+        Button shareButton = (Button)findViewById(R.id.shareButton);
+
+        shareButton.setOnClickListener(v -> {
+            if (shareButton.getText().equals("Start")) {
+                //startButtonOn = true;
+                //start sharing and receiving data
+                //Utilities.sendAlert((Activity) getApplicationContext(), "Starting share", "Test");
+                System.out.println("Starting share");
+                shareButton.setText("Stop");
+                subscribe();
+                publish();
+            } else if (shareButton.getText().equals("Stop")) {
+                //startButtonOn = false;
+                //stop sharing and receiving data
+                //Utilities.sendAlert(this, "Stopping share", "Test");
+                System.out.println("Stopping share");
+                shareButton.setText("Start");
+                unsubscribe();
+                unpublish();
+            }
+        });
+
+
+        /*
+        List<Course> dummyClasses= new ArrayList<>();
+        dummyClasses.add(new Course("Fall", "2022","cats", "8008"));
+
+        Person dummyPerson = new Person("Test", dummyClasses);
+
+         */
 
 
         //persons  = SearchClassmates.search(fakedata,Rodney);
-        List<String> classmates = SearchClassmates.search(nearbyPeople, self);
+        //List<String> classmates = SearchClassmates.search(nearbyPeople, self);
+
+
+        /*
+        List<String> classmates = new ArrayList<>();
+        for(Person classmate: nearbyPeople){
+            classmates.add(classmate.getName());
+        }
+
+         */
 
 
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_persons_list);
-        setTitle("People with Shared Classes");
 
-        personsRecyclerView = findViewById(R.id.persons_view);
 
-        personsLayoutManager = new LinearLayoutManager(this);
-        personsRecyclerView.setLayoutManager(personsLayoutManager);
-
-        personsViewAdapter = new PersonsViewAdapter(classmates);
-        personsRecyclerView.setAdapter(personsViewAdapter);
 
     }
 
@@ -151,6 +240,8 @@ public class ViewPersonsList extends AppCompatActivity {
                         }
                     }).build();
 
+            //what do you do message client? tell me your secrets
+            //secrets: which messagelistener to get the messages from
             Nearby.getMessagesClient(this).subscribe(classesMessageListener, options);
         }
 
@@ -169,6 +260,7 @@ public class ViewPersonsList extends AppCompatActivity {
                         }
                     }).build();
 
+            //had options before as arg but not anymore since i deleted them
             Nearby.getMessagesClient(this).publish(classesMessage, options);
             // onFailureListener and throw error
         }
@@ -206,7 +298,7 @@ public class ViewPersonsList extends AppCompatActivity {
         return person;
     }
 
-
+/*
     public void toggleShareButtonOnClick(View view) {
         Button shareButton = (Button) findViewById(R.id.shareButton);
         if (shareButton.getText().equals("Start")) {
@@ -225,4 +317,6 @@ public class ViewPersonsList extends AppCompatActivity {
             unpublish();
         }
     }
+
+ */
 }

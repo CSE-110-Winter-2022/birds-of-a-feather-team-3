@@ -20,6 +20,14 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         this.persons = persons;
     }
 
+    public void addPerson(String person){
+       // if (!this.persons.contains(person)) {
+            this.persons.add(person);
+            this.notifyItemInserted(this.persons.size()-1);
+      //  }
+    }
+
+
     @NonNull
     @Override
     public PersonsViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
