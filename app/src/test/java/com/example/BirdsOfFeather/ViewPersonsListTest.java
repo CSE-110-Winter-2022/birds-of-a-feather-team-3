@@ -1,4 +1,4 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 //import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import org.junit.Rule;

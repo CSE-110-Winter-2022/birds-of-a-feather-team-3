@@ -1,4 +1,4 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import android.content.Context;
 import android.content.Intent;
@@ -55,7 +55,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull PersonsViewAdapter.ViewHolder holder, int position) {
         holder.setPerson(persons.get(position));
-        System.out.println("binded");
+        System.out.println("bound");
         holder.setProfileInfo(profileInformationList.get(persons.get(position)));
     }
 

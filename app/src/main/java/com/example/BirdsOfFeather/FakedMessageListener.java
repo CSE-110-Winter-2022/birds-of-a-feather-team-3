@@ -1,11 +1,10 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

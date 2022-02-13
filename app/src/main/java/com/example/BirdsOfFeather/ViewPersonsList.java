@@ -1,22 +1,17 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
-import com.example.inputclasses.database.AppDatabase;
+import com.example.BirdsOfFeather.database.AppDatabase;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -24,12 +19,9 @@ import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-import com.google.android.material.tabs.TabLayout;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,10 +89,10 @@ public class ViewPersonsList extends AppCompatActivity {
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //fakedata
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));

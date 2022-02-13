@@ -1,13 +1,10 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.inputclasses.database;
+package com.example.BirdsOfFeather.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;

@@ -1,4 +1,4 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import java.io.Serializable;
 

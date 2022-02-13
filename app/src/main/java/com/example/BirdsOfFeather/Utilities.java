@@ -1,4 +1,4 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,10 +17,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link
+        /*
         if (!sharedPreferences.getString("first_name", "").equals("")) {
             Intent intent = new Intent(this, ViewPersonsList.class);
             startActivity(intent);
         }
+
+         */
 
           // InputClasses Activity
         //Intent intent = new Intent(this, ImageLinkEntry.class);

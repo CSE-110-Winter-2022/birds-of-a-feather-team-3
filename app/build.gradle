@@ -6,7 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.inputclasses"
+        applicationId "com.example.BirdsOfFeather"
         minSdk 28
         targetSdk 31
         versionCode 1
