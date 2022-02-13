@@ -228,16 +228,16 @@ public class ViewPersonsList extends AppCompatActivity {
                 //Utilities.sendAlert((Activity) getApplicationContext(), "Starting share", "Test");
                 System.out.println("Starting share");
                 shareButton.setText("Stop");
-               // subscribe();
-               // publish();
+                subscribe();
+                publish();
             } else if (shareButton.getText().equals("Stop")) {
                 startButtonOn = false;
                 //stop sharing and receiving data
                 //Utilities.sendAlert(this, "Stopping share", "Test");
                 System.out.println("Stopping share");
                 shareButton.setText("Start");
-               // unsubscribe();
-               // unpublish();
+                unsubscribe();
+                unpublish();
             }
         });
 

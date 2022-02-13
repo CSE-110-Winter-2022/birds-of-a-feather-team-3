@@ -111,6 +111,8 @@ public class InputClasses extends AppCompatActivity {
                     db.classesDao().insert(classEntity);
                 }
                 localCourses.add(potentialCourse);
+                String courseConfirmed = potentialCourse.toString() + " Added";
+                Toast.makeText(this, courseConfirmed, Toast.LENGTH_SHORT).show();
                 //System.out.println(localCourses);
             }
         }
