@@ -5,8 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ComponentName;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
@@ -46,37 +52,39 @@ public class ViewPersonsList extends AppCompatActivity {
     //list of user's inputted courses
     private List<Course> myCourses;
 
+
+    //Service stuff
+    private NearbyService nearbyService;
+    private boolean isBound;
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            NearbyService.NearbyBinder nearbyBinder = (NearbyService.NearbyBinder)iBinder;
+            nearbyService = nearbyBinder.getService();
+            isBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            isBound = false;
+
+        }
+    };
+    //end Service stuff
+
     AppDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        List<String> names;
-//        // fake data of my classes
-//        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
-//
-//        // fake data of people around
-//        Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
-//        Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
-//        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
-//        Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
-//
-//        List<Person> fakeData = new ArrayList<>();
-//        fakeData.add(Lucas);
-//        fakeData.add(Grace);
-//        fakeData.add(Mark);
-//        fakeData.add(Vicky);
-//        names  = SearchClassmates.search(fakeData,Rodney);
 
-        //list of people received message from
-        List<Person> nearbyPeople = new ArrayList<Person>();
-        //list of names received message from (for testing
+        //list of names received message from
         List<Person> classmates = new ArrayList<>();
 
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
-        //names = new ArrayList<>();
-        //names.add("Dummy1");
-        //names.add("Dummy2");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         setTitle("People with Shared Classes");
@@ -85,7 +93,6 @@ public class ViewPersonsList extends AppCompatActivity {
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
         personsViewAdapter = new PersonsViewAdapter(classmates);
-        //personsViewAdapter = new PersonsViewAdapter(names);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //fakedata
@@ -124,6 +131,8 @@ public class ViewPersonsList extends AppCompatActivity {
         Person DupVicki = new Person("Vicki", birds[5], DupVickiClasses);
 
         List<Person> fakedata = new ArrayList<>(Arrays.asList(Rodney, Lucas, Grace, Mark, Vicki, DupVicki));
+
+
         //construct Person object for self-data
         //convert object to byte array using serialization
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -180,7 +189,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    //String msgBody = new String(message.getContent());
+
                     final String gotName;
                     if (deserializedPerson != null) {
                         unchangingDeserializedPerson = deserializedPerson;
@@ -236,7 +245,12 @@ public class ViewPersonsList extends AppCompatActivity {
                 startButtonOn = true;
                 //start sharing and receiving data
                 //Utilities.sendAlert((Activity) getApplicationContext(), "Starting share", "Test");
-                System.out.println("Starting share");
+                Log.i(TAG, "Starting Share");
+
+                Intent intent = new Intent(this, NearbyService.class);
+                //startService(intent);
+                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
                 shareButton.setText("Stop");
                 subscribe();
                 publish();
@@ -244,7 +258,15 @@ public class ViewPersonsList extends AppCompatActivity {
                 startButtonOn = false;
                 //stop sharing and receiving data
                 //Utilities.sendAlert(this, "Stopping share", "Test");
-                System.out.println("Stopping share");
+                Log.i(TAG, "Stopping share");
+
+                //Intent intent = new Intent(this, NearbyService.class);
+                //stopService(intent);
+                if(isBound){
+                    unbindService(serviceConnection);
+                    isBound = false;
+                }
+
                 shareButton.setText("Start");
                 unsubscribe();
                 unpublish();
@@ -274,7 +296,9 @@ public class ViewPersonsList extends AppCompatActivity {
          */
     }
 
-        //subscribe to messages from nearby devices
+
+
+    //subscribe to messages from nearby devices
         //update recyclerview
         private void subscribe(){
             Log.i(TAG, "Subscribing");

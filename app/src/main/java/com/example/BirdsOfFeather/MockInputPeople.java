@@ -28,14 +28,11 @@ public class MockInputPeople extends AppCompatActivity {
 
         classes = new ArrayList<Course>();
 
-
-
         TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
         String inputData = inputTextView.getText().toString();
 
         //split text in textbox at newline character into string array
 
-        //copying and pasting example data results in two line breaks per line
         //String[] inputDataSplit = inputData.split("\n\n");
         String[] inputDataSplit = inputData.split(System.lineSeparator());
 
