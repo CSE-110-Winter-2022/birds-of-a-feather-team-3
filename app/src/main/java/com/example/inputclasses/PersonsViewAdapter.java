@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,16 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         this.profileInformationList = new HashMap<>();
     }
 
+    //for testing purposes
+    public List<Person> getPeople() {
+        return this.persons;
+    }
+
+    //for testing purposes
+    public Map<Person, ProfileInfo> getPeopleInfoMap() {
+        return profileInformationList;
+    }
+
     public void addPerson(Person person, ProfileInfo newProfileInfo){
         boolean alreadyContained = false;
         for (Person existingPerson : persons) {
@@ -34,10 +45,22 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             }
         }
         if (!alreadyContained) {
-            this.persons.add(person);
+            int addPosition = 0;
+            for (Person listPerson : persons) {
+                ProfileInfo listProfileInfo = profileInformationList.get(listPerson);
+                if (listProfileInfo != null) {
+                    int newMatches = newProfileInfo.getCommonCourses().size();
+                    int comparingMatches = listProfileInfo.getCommonCourses().size();
+                    if (newMatches >= comparingMatches) {
+                        break;
+                    }
+                    addPosition++;
+                }
+            }
+            this.persons.add(addPosition, person);
             profileInformationList.put(person, newProfileInfo);
             System.out.println("added");
-            this.notifyItemInserted(this.persons.size()-1);
+            this.notifyItemInserted(addPosition);//this.persons.size()-1);
             System.out.println("notified");
         }
     }
@@ -104,7 +127,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             Context context = view.getContext();
             Intent intent = new Intent(context, ProfileActivity.class);
             String concatenatedStr = "";
-
+            Collections.sort(this.profileInfo.getCommonCourses(), new ChronologicalComparator());
             for (Course course : this.profileInfo.getCommonCourses()) {
                 concatenatedStr += course.toString() + '\n';
             }

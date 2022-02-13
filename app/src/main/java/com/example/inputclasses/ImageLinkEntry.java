@@ -66,16 +66,11 @@ public class ImageLinkEntry extends AppCompatActivity {
 class URLDownload extends AsyncTask<String, Void, Bitmap> {
     ImageView imageView;
     Bitmap bitmap;
-    boolean error;
 
     public URLDownload(ImageView imageView) {
-        error = false;
         this.imageView = imageView;
     }
 
-    public boolean getError() {
-        return error;
-    }
     public Bitmap getBitmap() {
         return this.bitmap;
     }
@@ -88,7 +83,6 @@ class URLDownload extends AsyncTask<String, Void, Bitmap> {
             decodedBitmap = BitmapFactory.decodeStream(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
-            error = true;
         }
         return decodedBitmap;
     }

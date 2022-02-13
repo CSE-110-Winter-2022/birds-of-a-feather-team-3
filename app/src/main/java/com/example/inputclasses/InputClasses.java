@@ -126,16 +126,12 @@ public class InputClasses extends AppCompatActivity {
         }
     }
     public boolean checkValuesEmpty(String quarter, String year, String subject, String classNumber) {
-        /*Log.d("quarter", quarter);
-        Log.d("year: ", year);
-        Log.d("subject: ", subject);
-        Log.d("classnum: ", classNumber);
-        */
         return quarter.equals("") || year.equals("") || subject.equals("") || classNumber.equals("");
     }
+
     public boolean checkIsDuplicate(List<Course> compareList, Course potentialCourse) {
         for (int i = 0; i < compareList.size(); i++) {
-            if (potentialCourse.equals(compareList.get(i))) {
+            if (potentialCourse.toString().equals(compareList.get(i).toString())) {
                 return true;
             }
         }

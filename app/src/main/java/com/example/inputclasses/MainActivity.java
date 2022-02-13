@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,16 +33,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickSave(View view) {
-        TextView textView = findViewById(R.id.name);
+        EditText textView = findViewById(R.id.enter_name_view);
         String name = textView.getText().toString();
         if (!name.equals("")) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
             editor.apply();
-//        Intent intent = new Intent(this, InputClasses.class);
-//        intent.putExtra("database_type", "actual");
-            // go to InputClasses Activity
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);
         }

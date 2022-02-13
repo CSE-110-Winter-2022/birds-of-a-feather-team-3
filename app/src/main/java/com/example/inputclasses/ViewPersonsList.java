@@ -53,11 +53,12 @@ public class ViewPersonsList extends AppCompatActivity {
 
     //list of user's inputted courses
     private List<Course> myCourses;
-
+    PersonSerializer personSerializer;
     AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        personSerializer = new PersonSerializer();
         List<String> names;
 //        // fake data of my classes
 //        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
@@ -97,10 +98,10 @@ public class ViewPersonsList extends AppCompatActivity {
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //fakedata
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -124,6 +125,7 @@ public class ViewPersonsList extends AppCompatActivity {
                 "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/303800251/1800",
                 "https://static.wikia.nocookie.net/dbxfanon/images/c/cc/The_Impostor.png/revision/latest?cb=20201223005217"
         };
+
         Person Rodney = new Person("Rodney", birds[0], RodneyClasses);
         Person Lucas = new Person("Lucas", birds[1], LucasClasses);
         Person Grace = new Person("Grace", birds[2], GraceClasses);
@@ -184,7 +186,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     final Person unchangingDeserializedPerson;
                     final ProfileInfo personsProfileInfo;
                     try {
-                        deserializedPerson = (Person) convertFromByteArray(serializedPerson);
+                        deserializedPerson = (Person) personSerializer.convertFromByteArray(serializedPerson);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -226,7 +228,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     byte[] msgBody = message.getContent();
                     String senderName = null;
                     try {
-                        senderName = convertFromByteArray(msgBody).getName();
+                        senderName = personSerializer.convertFromByteArray(msgBody).getName();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -258,28 +260,6 @@ public class ViewPersonsList extends AppCompatActivity {
                 unpublish();
             }
         });
-
-
-        /*
-        List<Course> dummyClasses= new ArrayList<>();
-        dummyClasses.add(new Course("Fall", "2022","cats", "8008"));
-
-        Person dummyPerson = new Person("Test", dummyClasses);
-
-         */
-
-
-        //persons  = SearchClassmates.search(fakedata,Rodney);
-        //List<String> classmates = SearchClassmates.search(nearbyPeople, self);
-
-
-        /*
-        List<String> classmates = new ArrayList<>();
-        for(Person classmate: nearbyPeople){
-            classmates.add(classmate.getName());
-        }
-
-         */
     }
 
         //subscribe to messages from nearby devices
@@ -332,15 +312,4 @@ public class ViewPersonsList extends AppCompatActivity {
             Log.i(TAG, "Unpublishing");
             Nearby.getMessagesClient(this).unpublish(classesMessage);
         }
-
-
-    public Person convertFromByteArray(byte[] data) throws Exception{
-        ByteArrayInputStream bis = new ByteArrayInputStream(data);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-
-        Person person = (Person) ois.readObject();
-        bis.close();
-        ois.close();
-        return person;
-    }
 }

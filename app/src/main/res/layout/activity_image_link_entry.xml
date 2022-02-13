@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/informative_enter_link_text_view" />
 
     <Button
-        android:id="@+id/confirm_profile_picture"
+        android:id="@+id/confirm_profile_picture_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button"
