@@ -8,13 +8,14 @@
 
         <ImageView
             android:id="@+id/profile_picture_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="195dp"
+            android:layout_height="193dp"
             android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:src = "@mipmap/ic_launcher" />
+
 
         <TextView
             android:id="@+id/profile_name_view"
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:text="First Name"
-            android:textSize="20sp"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_picture_view" />
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:text="Classes in common"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

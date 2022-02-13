@@ -27,9 +27,9 @@ public class TestInputClasses {
     //Unit Tests
     @Test
     public void testCheckIsDuplicate() {
-        Course course1 = new Course("FA", "2020", "CSE", "100");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
+        Course course1 = new Course("Fall", "2020", "CSE", "100");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
         List<Course> mockCourseList = new ArrayList<>();
         mockCourseList.add(course1);
         InputClasses inputClasses = new InputClasses();
@@ -39,14 +39,14 @@ public class TestInputClasses {
 
     @Test
     public void testCheckValuesEmpty () {
-        Course course1 = new Course("FA", "2020", "CSE", "100");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
+        Course course1 = new Course("Fall", "2020", "CSE", "100");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
         InputClasses inputClasses = new InputClasses();
-        boolean empty1 = inputClasses.checkValuesEmpty("FA", "2020", "ECE" ,"");
+        boolean empty1 = inputClasses.checkValuesEmpty("Fall", "2020", "ECE" ,"");
         boolean empty2 = inputClasses.checkValuesEmpty("", "2021", "" ,"2020");
-        boolean full1 = inputClasses.checkValuesEmpty("WI", "2021", "CSE" ,"12");
-        boolean full2 = inputClasses.checkValuesEmpty("SP", "2019", "CSE" ,"15");
+        boolean full1 = inputClasses.checkValuesEmpty("Winter", "2021", "CSE" ,"12");
+        boolean full2 = inputClasses.checkValuesEmpty("Spring", "2019", "CSE" ,"15");
         assertEquals(true, empty1);
         assertEquals(true, empty2);
         assertEquals(false, full1);
@@ -83,7 +83,7 @@ public class TestInputClasses {
             EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
             Spinner quarterSpinner = activity.findViewById(R.id.quarter_dropdown);
             Spinner yearSpinner = activity.findViewById(R.id.year_dropdown);
-            quarterSpinner.setPrompt("FA");
+            quarterSpinner.setPrompt("Fall");
             yearSpinner.setPrompt("2018");
             subjectView.setText("CSE");
             courseNumberView.setText("110");
