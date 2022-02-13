@@ -36,8 +36,8 @@ public class MockInputPeople extends AppCompatActivity {
         //split text in textbox at newline character into string array
 
         //copying and pasting example data results in two line breaks per line
-        String[] inputDataSplit = inputData.split("\n\n");
-        //String[] inputDataSplit = inputData.split(System.lineSeparator());
+        //String[] inputDataSplit = inputData.split("\n\n");
+        String[] inputDataSplit = inputData.split(System.lineSeparator());
 
         //each line split at comma
 
@@ -62,7 +62,7 @@ public class MockInputPeople extends AppCompatActivity {
         }
 
         newStudent = new Person(name,profileURL,classes);
-        //System.out.println(newStudent.toString());
+        System.out.println(newStudent.toString());
 
         Intent intent = new Intent(this, ViewPersonsList.class);
         startActivity(intent);
