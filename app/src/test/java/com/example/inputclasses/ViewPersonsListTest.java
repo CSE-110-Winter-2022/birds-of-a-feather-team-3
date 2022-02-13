@@ -45,10 +45,10 @@ public class ViewPersonsListTest {
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
 */
 
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -62,11 +62,13 @@ public class ViewPersonsListTest {
          * Course4: Vicki, Lucas
          */
 
-        Person Rodney = new Person("Rodney", RodneyClasses);
-        Person Lucas = new Person("Lucas", LucasClasses);
-        Person Grace = new Person("Grace", GraceClasses);
-        Person Mark = new Person("Mark", MarkClasses);
-        Person Vicki = new Person("Vicki", VickiClasses);
+        String img1 = "";
+
+        Person Rodney = new Person("Rodney", img1, RodneyClasses);
+        Person Lucas = new Person("Lucas", img1, LucasClasses);
+        Person Grace = new Person("Grace", img1, GraceClasses);
+        Person Mark = new Person("Mark", img1, MarkClasses);
+        Person Vicki = new Person("Vicki", img1, VickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);
@@ -90,10 +92,10 @@ public class ViewPersonsListTest {
         // fake data of my classes
 
 
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -108,12 +110,14 @@ public class ViewPersonsListTest {
          * Course4: Vicki, Lucas
          */
 
-        Person Rodney = new Person("Rodney", RodneyClasses);
-        Person Lucas = new Person("Lucas", LucasClasses);
-        Person Grace = new Person("Grace", GraceClasses);
-        Person Mark = new Person("Mark", MarkClasses);
-        Person Vicki = new Person("Vicki", VickiClasses);
-        Person DupVicki = new Person("Vicki", DupVickiClasses);
+        String img1 = "";
+
+        Person Rodney = new Person("Rodney", img1,  RodneyClasses);
+        Person Lucas = new Person("Lucas", img1, LucasClasses);
+        Person Grace = new Person("Grace", img1, GraceClasses);
+        Person Mark = new Person("Mark", img1, MarkClasses);
+        Person Vicki = new Person("Vicki", img1, VickiClasses);
+        Person DupVicki = new Person("Vicki", img1, DupVickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);

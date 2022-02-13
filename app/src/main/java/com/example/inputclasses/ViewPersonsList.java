@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +73,6 @@ public class ViewPersonsList extends AppCompatActivity {
 //        fakeData.add(Grace);
 //        fakeData.add(Mark);
 //        fakeData.add(Vicky);
-
 //        names  = SearchClassmates.search(fakeData,Rodney);
 
         //list of people received message from
@@ -89,10 +90,8 @@ public class ViewPersonsList extends AppCompatActivity {
         setTitle("People with Shared Classes");
 
         personsRecyclerView = findViewById(R.id.persons_view);
-
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
-
         personsViewAdapter = new PersonsViewAdapter(classmates);
         //personsViewAdapter = new PersonsViewAdapter(names);
         personsRecyclerView.setAdapter(personsViewAdapter);
@@ -110,24 +109,37 @@ public class ViewPersonsList extends AppCompatActivity {
         List<Course> DupVickiClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
 
         /***commonalities
-         * Course1: Rodney, Grace, Vicki
-         * Course2: Rodney, Grace, Mark
+         * Course1: Rodney, Grace, Vicki, DupVicki
+         * Course2: Rodney, Grace, Mark, DupVicki
          * Course3: Mark
          * Course4: Vicki, Lucas
          */
+        String img1 = "";
 
-        Person Rodney = new Person("Rodney", RodneyClasses);
-        Person Lucas = new Person("Lucas", LucasClasses);
-        Person Grace = new Person("Grace", GraceClasses);
-        Person Mark = new Person("Mark", MarkClasses);
-        Person Vicki = new Person("Vicki", VickiClasses);
-        Person DupVicki = new Person("Vicki", DupVickiClasses);
+        String birds[] = {
+                "https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/AmericanGoldfinch_MattWilliams_4000x2200.jpg?crop=0,0,4000,2200&wid=2000&hei=1100&scl=2.0",
+                "https://www.kaytee.com/-/media/Images/Kaytee-NA/US/learn-care/ask-the-pet-bird-experts/ways-to-show-parrot-love/PARROT%20png.png",
+                "https://images.unsplash.com/photo-1618281377501-88c2328cbb9a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Z3JlZW4lMjBwYXJyb3R8ZW58MHx8MHx8&w=1000&q=80",
+                "https://news.stonybrook.edu/wp-content/uploads/2018/07/Dodo.jpg",
+                "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/303800251/1800",
+                "https://static.wikia.nocookie.net/dbxfanon/images/c/cc/The_Impostor.png/revision/latest?cb=20201223005217"
+        };
+        Person Rodney = new Person("Rodney", birds[0], RodneyClasses);
+        Person Lucas = new Person("Lucas", birds[1], LucasClasses);
+        Person Grace = new Person("Grace", birds[2], GraceClasses);
+        Person Mark = new Person("Mark", birds[3], MarkClasses);
+        Person Vicki = new Person("Vicki", "", VickiClasses);
+        Person DupVicki = new Person("Vicki", birds[5], DupVickiClasses);
 
         List<Person> fakedata = new ArrayList<>(Arrays.asList(Rodney, Lucas, Grace, Mark, Vicki, DupVicki));
         //construct Person object for self-data
         //convert object to byte array using serialization
-        Person self = new Person("Homer", myCourses);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String selfName = preferences.getString("first_name", "First_Name");
+        String selfPictureLink = preferences.getString("profile_picture_url", "");
 
+        System.out.println(selfName + " " + selfPictureLink);
+        Person self = new Person(selfName, selfPictureLink, myCourses);
         System.out.println("User input data:");
         System.out.println(self.getName());
         int i = 1;
@@ -153,7 +165,7 @@ public class ViewPersonsList extends AppCompatActivity {
         MessageListener realMessageListener = new MessageListener() {
             @Override
             public void onFound(@NonNull Message message) {
-                System.out.println("Received message!");
+                //System.out.println("Received message!");
                 //Called when new message found
                 //create person from message
                 /*
@@ -185,7 +197,7 @@ public class ViewPersonsList extends AppCompatActivity {
                         /*personsProfileInfo = new ProfileInfo(deserializedPerson.getName(),
                                 "", deserializedPerson.getClasses());*/
                         gotName = deserializedPerson.getName();
-                        System.out.println("Received message from " + gotName);
+                        //System.out.println("Received message from " + gotName);
                     } else {
                         unchangingDeserializedPerson = null;
                         personsProfileInfo = null;
@@ -211,8 +223,14 @@ public class ViewPersonsList extends AppCompatActivity {
                 //Called when message no longer detectable nearby
                 //should NOT delete message in this case
                 if (startButtonOn) {
-                    String msgBody = new String(message.getContent());
-                    System.out.println("Stopped receiving messages from" + msgBody);
+                    byte[] msgBody = message.getContent();
+                    String senderName = null;
+                    try {
+                        senderName = convertFromByteArray(msgBody).getName();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //System.out.println("Stopped receiving messages from " + senderName);
                 }
             }
         };
@@ -321,8 +339,8 @@ public class ViewPersonsList extends AppCompatActivity {
         ObjectInputStream ois = new ObjectInputStream(bis);
 
         Person person = (Person) ois.readObject();
-        //bis.close();
-        //ois.close();
+        bis.close();
+        ois.close();
         return person;
     }
 }

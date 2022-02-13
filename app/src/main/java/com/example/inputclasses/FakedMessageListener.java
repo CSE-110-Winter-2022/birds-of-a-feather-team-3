@@ -22,8 +22,8 @@ public class FakedMessageListener extends MessageListener {
         oos.writeObject(self);
         oos.flush();
         byte [] data = bos.toByteArray();
-        //bos.close();
-        //oos.close();
+        bos.close();
+        oos.close();
         return data;
     }
     public FakedMessageListener(MessageListener realMessageListener, int frequency, List<Person> personList){
