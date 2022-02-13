@@ -45,10 +45,10 @@ public class ViewPersonsListTest {
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
 */
 
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -92,10 +92,10 @@ public class ViewPersonsListTest {
         // fake data of my classes
 
 
-        Course course1 = new Course("SP", "2020", "CSE", "110");
-        Course course2 = new Course("FA", "2020", "CSE", "100");
-        Course course3 = new Course("WI", "2020", "CSE", "101");
-        Course course4 = new Course("FA", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));

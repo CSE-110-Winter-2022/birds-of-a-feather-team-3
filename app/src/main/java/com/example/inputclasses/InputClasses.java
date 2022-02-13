@@ -24,6 +24,7 @@ public class InputClasses extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent extras = getIntent();
+
         usingMock = true; //For testing purposes
         if (extras != null) { //Use the real database if called by MainActivity
             String databaseType = extras.getStringExtra("database_type");
@@ -67,19 +68,20 @@ public class InputClasses extends AppCompatActivity {
         InputFilter[] currentFilters = subjectView.getFilters();
         InputFilter[] updatedFilters = new InputFilter[currentFilters.length + 1];
         for (int i = 0; i < currentFilters.length; i++) {
-            updatedFilters[currentFilters.length] = currentFilters[i];
+            updatedFilters[i] = currentFilters[i];
         }
         updatedFilters[currentFilters.length] = new InputFilter.AllCaps();
         subjectView.setFilters(updatedFilters);
 
-        EditText numberView = findViewById(R.id.subject_edittext);
+        EditText numberView = findViewById(R.id.class_number_edittext);
         InputFilter[] currentFiltersNumView = numberView.getFilters();
-        InputFilter[] updatedFiltersNumView = new InputFilter[currentFilters.length + 1];
+        InputFilter[] updatedFiltersNumView = new InputFilter[currentFiltersNumView.length + 1];
         for (int i = 0; i < currentFiltersNumView.length; i++) {
-            updatedFilters[currentFiltersNumView.length] = currentFiltersNumView[i];
+            updatedFiltersNumView[i] = currentFiltersNumView[i];
         }
         updatedFiltersNumView[currentFiltersNumView.length] = new InputFilter.AllCaps();
         numberView.setFilters(updatedFiltersNumView);
+
     }
     public void doneInputOnClick(View view){
         if(localCourses.isEmpty()){
