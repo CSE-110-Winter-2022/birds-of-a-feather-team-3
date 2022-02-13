@@ -64,11 +64,22 @@ public class InputClasses extends AppCompatActivity {
         yearSpinner.setAdapter(yearAdapter);
 
         EditText subjectView = findViewById(R.id.subject_edittext);
-        InputFilter[] editFilters = subjectView.getFilters();
-        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
-        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
-        newFilters[editFilters.length] = new InputFilter.AllCaps();
-        subjectView.setFilters(newFilters);
+        InputFilter[] currentFilters = subjectView.getFilters();
+        InputFilter[] updatedFilters = new InputFilter[currentFilters.length + 1];
+        for (int i = 0; i < currentFilters.length; i++) {
+            updatedFilters[currentFilters.length] = currentFilters[i];
+        }
+        updatedFilters[currentFilters.length] = new InputFilter.AllCaps();
+        subjectView.setFilters(updatedFilters);
+
+        EditText numberView = findViewById(R.id.subject_edittext);
+        InputFilter[] currentFiltersNumView = numberView.getFilters();
+        InputFilter[] updatedFiltersNumView = new InputFilter[currentFilters.length + 1];
+        for (int i = 0; i < currentFiltersNumView.length; i++) {
+            updatedFilters[currentFiltersNumView.length] = currentFiltersNumView[i];
+        }
+        updatedFiltersNumView[currentFiltersNumView.length] = new InputFilter.AllCaps();
+        numberView.setFilters(updatedFiltersNumView);
     }
     public void doneInputOnClick(View view){
         if(localCourses.isEmpty()){
@@ -80,15 +91,12 @@ public class InputClasses extends AppCompatActivity {
             //intent.putExtra("COURSES_ARRAY", classes);
             startActivity(intent);
         }
-
-
     }
 
 
     public void enterClassOnClick(View view) {
         Spinner quarterInput = (Spinner) findViewById(R.id.quarter_dropdown);
         Spinner yearInput = (Spinner) findViewById(R.id.year_dropdown);
-
         EditText subjectInput = (EditText) findViewById(R.id.subject_edittext);
         EditText classNumberInput = (EditText) findViewById(R.id.class_number_edittext);
 

@@ -7,11 +7,10 @@ public class Person implements Serializable {
     private String profileURL;
     private List<Course> classes;
     private int matches;
-
-    public Person(String name, List<Course> classes){
+    public Person(String name, String profileURL, List<Course> classes){
         this.name = name;
         this.classes = classes;
-        this.profileURL = "";
+        this.profileURL = profileURL;
     }
 
     public List<Course> getClasses(){
@@ -26,6 +25,8 @@ public class Person implements Serializable {
         return this.classes;
     }
 */
+    public String getURL(){ return this.profileURL; }
+
     public String getName(){
         return this.name;
     }

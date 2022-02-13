@@ -62,11 +62,13 @@ public class ViewPersonsListTest {
          * Course4: Vicki, Lucas
          */
 
-        Person Rodney = new Person("Rodney", RodneyClasses);
-        Person Lucas = new Person("Lucas", LucasClasses);
-        Person Grace = new Person("Grace", GraceClasses);
-        Person Mark = new Person("Mark", MarkClasses);
-        Person Vicki = new Person("Vicki", VickiClasses);
+        String img1 = "";
+
+        Person Rodney = new Person("Rodney", img1, RodneyClasses);
+        Person Lucas = new Person("Lucas", img1, LucasClasses);
+        Person Grace = new Person("Grace", img1, GraceClasses);
+        Person Mark = new Person("Mark", img1, MarkClasses);
+        Person Vicki = new Person("Vicki", img1, VickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);
@@ -108,12 +110,14 @@ public class ViewPersonsListTest {
          * Course4: Vicki, Lucas
          */
 
-        Person Rodney = new Person("Rodney", RodneyClasses);
-        Person Lucas = new Person("Lucas", LucasClasses);
-        Person Grace = new Person("Grace", GraceClasses);
-        Person Mark = new Person("Mark", MarkClasses);
-        Person Vicki = new Person("Vicki", VickiClasses);
-        Person DupVicki = new Person("Vicki", DupVickiClasses);
+        String img1 = "";
+
+        Person Rodney = new Person("Rodney", img1,  RodneyClasses);
+        Person Lucas = new Person("Lucas", img1, LucasClasses);
+        Person Grace = new Person("Grace", img1, GraceClasses);
+        Person Mark = new Person("Mark", img1, MarkClasses);
+        Person Vicki = new Person("Vicki", img1, VickiClasses);
+        Person DupVicki = new Person("Vicki", img1, DupVickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
         fakeData.add(Lucas);

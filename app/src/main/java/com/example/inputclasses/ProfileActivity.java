@@ -30,6 +30,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         nameTextView.setText(name);
         commonCoursesTextView.setText(courses);
+        if (!URL.equals("")) {
+            URLDownload downloadClass = new URLDownload(profileImageView);
+            //System.out.println(URL);
+            downloadClass.execute(URL);
+        }
         //Set the title with the person
         setTitle("Profile");
     }
