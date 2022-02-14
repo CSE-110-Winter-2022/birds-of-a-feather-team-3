@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
         else {
             EditText textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickSave(View view) {
         EditText textView = findViewById(R.id.enter_name_view);
         String name = textView.getText().toString();
+        //save name to sharedPreferences if not empty input
         if (!name.equals("")) {
             Log.i(TAG, "saving non-empty name");
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
