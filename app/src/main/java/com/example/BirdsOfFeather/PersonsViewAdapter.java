@@ -62,10 +62,9 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             }
             this.persons.add(addPosition, person);
             profileInformationList.put(person, newProfileInfo);
-            Log.i(TAG, "Added list item");
             if (!testing) {
                 this.notifyItemInserted(addPosition);//this.persons.size()-1);
-                Log.i(TAG, "Notified view adapter of new person");
+                Log.i(TAG, "Added list item and notified view adapter of new person");
             }
         }
     }

@@ -96,6 +96,13 @@ public class ViewPersonsList extends AppCompatActivity {
             Log.i("Self inputted courses", "Course " + i + ":" + course.toString());
             i++;
         }
+        byte[] empty = {};
+        classesMessage = new Message(empty);
+        try {
+            classesMessage = new Message(personSerializer.convertToByteArray(self));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         MessageListener realMessageListener = new MessageListener() {
             @Override
