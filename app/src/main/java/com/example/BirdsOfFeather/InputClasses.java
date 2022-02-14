@@ -34,21 +34,21 @@ public class InputClasses extends AppCompatActivity {
                 usingMock = true;
             }
         }
-        Log.d("Mock Type", String.valueOf(usingMock));
+        Log.i("Mock Type", String.valueOf(usingMock));
 
         if (usingMock) {
             localCourses = new ArrayList<>();
         }
-        else {
+        else { //retrieve classes from local database
             db = AppDatabase.singleton(this);
             localCourses = db.classesDao().getAll();
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_classes);
+
+
         //quarter spinner
-
-
         Spinner quarterSpinner = (Spinner) findViewById(R.id.quarter_dropdown);
         ArrayAdapter<CharSequence> quarterAdapter = ArrayAdapter.createFromResource(this, R.array.QuarterSelection,
                 android.R.layout.simple_spinner_item);
@@ -63,6 +63,7 @@ public class InputClasses extends AppCompatActivity {
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
 
+        //enter subject textView
         EditText subjectView = findViewById(R.id.subject_edittext);
         InputFilter[] currentFilters = subjectView.getFilters();
         InputFilter[] updatedFilters = new InputFilter[currentFilters.length + 1];
@@ -72,6 +73,7 @@ public class InputClasses extends AppCompatActivity {
         updatedFilters[currentFilters.length] = new InputFilter.AllCaps();
         subjectView.setFilters(updatedFilters);
 
+        //enter course number textView
         EditText numberView = findViewById(R.id.class_number_edittext);
         InputFilter[] currentFiltersNumView = numberView.getFilters();
         InputFilter[] updatedFiltersNumView = new InputFilter[currentFiltersNumView.length + 1];
@@ -82,16 +84,14 @@ public class InputClasses extends AppCompatActivity {
         numberView.setFilters(updatedFiltersNumView);
 
     }
+
     public void doneInputOnClick(View view){
         if(localCourses.isEmpty()){
             //do not proceed and send warning if no classes entered
             Utilities.sendAlert(this,"Please enter at least one class", "Warning");
         }
-        else{
-            //Intent intent = new Intent(this, ViewPersonsList.class);
+        else{ //proceed
             Intent intent = new Intent(this, ViewPersonsList.class);
-
-            ////intent.putExtra("COURSES_ARRAY", classes);
             startActivity(intent);
             finish();
         }
@@ -109,23 +109,26 @@ public class InputClasses extends AppCompatActivity {
         String subject = subjectInput.getText().toString() + "";
         String classNumber = classNumberInput.getText().toString() + "";
 
+        //alert and do not continue if not all entries filled
         if (checkValuesEmpty(quarter, year, subject, classNumber)) {
             Utilities.sendAlert(this, "Fill in all the inputs", "Warning");
         }
         else {
             Course potentialCourse = new Course(quarter, year, subject, classNumber);
+            //alert and do not continue if entry matches previous entry
             if (checkIsDuplicate(localCourses, potentialCourse)) {
                 Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
             }
             else {
+                //save class to local database
                 if (!usingMock) {
                     ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
                     db.classesDao().insert(classEntity);
                 }
                 localCourses.add(potentialCourse);
+                //alert user of successful course entry
                 String courseConfirmed = potentialCourse.toString() + " Added";
                 Toast.makeText(this, courseConfirmed, Toast.LENGTH_SHORT).show();
-                //System.out.println(localCourses);
             }
         }
     }

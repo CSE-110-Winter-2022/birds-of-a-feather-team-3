@@ -24,13 +24,17 @@ public class ImageLinkEntry extends AppCompatActivity {
     }
 
     public void onSubmitLinkClick(View v) {
+
+        //editor for writing to sharePreferences to store URL
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        //validate();
+
         EditText linkView = findViewById(R.id.image_link_edit_text);
         boolean validated = true;
         String inputtedLink = linkView.getText().toString();
-        if (inputtedLink.equals("")) { //chose to go with default
+
+        //if no URL input, then set profile to default URL
+        if (inputtedLink.equals("")) {
             Intent intent = new Intent(this, InputClasses.class);
             intent.putExtra("database_type", "actual");
             startActivity(intent);
@@ -38,6 +42,7 @@ public class ImageLinkEntry extends AppCompatActivity {
         }
         else {
             ImageView profilePicture = (ImageView) findViewById(R.id.image_view_in_link_entry);
+            //download profile picture
             URLDownload downloadClass = new URLDownload(profilePicture);
             Bitmap bitmap = null;
             try {
@@ -52,15 +57,13 @@ public class ImageLinkEntry extends AppCompatActivity {
                 Intent intent = new Intent(this, InputClasses.class);
                 startActivity(intent);
                 finish();
-            } else { //invalid link
+            } else { //invalid link sends alert
                 Utilities.sendAlert(this, "Invalid link", "Warning");
             }
         }
     }
 
-    //public void onClick(View v) {
-    //startActivity(new Intent(this, ImageLinkEntry.class));
-    //}
+
 }
 
 //Allows the image to be downloaded in the background,
