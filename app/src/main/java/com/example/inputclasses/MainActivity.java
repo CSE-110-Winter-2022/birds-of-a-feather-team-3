@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 //            Intent intent = new Intent(this, ViewPersonsList.class);
 //            startActivity(intent);
 //        }
-
         TextView textview = findViewById(R.id.name);
         textview.setText(getNameFromGoogle());
     }
@@ -35,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
         AccountManager manager = AccountManager.get(this);
         Account[] accounts = manager.getAccounts();
         if (accounts.length == 0) {
+            Utilities.sendAlert(this,"Wanring: No account detected","Warning");
             return "No account detected";
+
+
         }
         else {
             return accounts[0].name;
