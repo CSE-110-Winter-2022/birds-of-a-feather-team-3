@@ -17,29 +17,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         //If its not their first use, skip inputting name/link
-
-
         if (!sharedPreferences.getString("first_name", "").equals("")) {
             Intent intent = new Intent(this, ViewPersonsList.class);
             startActivity(intent);
             finish();
         }
 
-
-
-          // InputClasses Activity
-        //Intent intent = new Intent(this, ImageLinkEntry.class);
-        //startActivity(intent);
-
-        // ViewPersonsList Activity
-        //Intent intent = new Intent(this, ViewPersonsList.class);
-        //startActivity(intent);
     }
 
     public void onClickSave(View view) {
         EditText textView = findViewById(R.id.enter_name_view);
         String name = textView.getText().toString();
+        //save name to sharedPreferences if not empty input
         if (!name.equals("")) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -52,6 +43,5 @@ public class MainActivity extends AppCompatActivity {
         else {
             Utilities.sendAlert(this, "Name can't be blank", "Warning");
         }
-        //Intent intent = new Intent(this, InputClasses.class);
     }
 }

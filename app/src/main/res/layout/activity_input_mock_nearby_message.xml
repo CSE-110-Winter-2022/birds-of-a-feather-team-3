@@ -16,7 +16,7 @@
         android:layout_marginBottom="32dp"
         android:ems="10"
         android:hint="Enter data"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine|text"
         app:layout_constraintBottom_toTopOf="@+id/mock_enterButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
