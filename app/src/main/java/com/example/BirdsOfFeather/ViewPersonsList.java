@@ -5,16 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ComponentName;
-import android.content.ContentValues;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
@@ -52,65 +50,48 @@ public class ViewPersonsList extends AppCompatActivity {
     //list of user's inputted courses
     private List<Course> myCourses;
 
-/*
-    //Service stuff
-    private NearbyService nearbyService;
-    private boolean isBound;
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            NearbyService.NearbyBinder nearbyBinder = (NearbyService.NearbyBinder)iBinder;
-            nearbyService = nearbyBinder.getService();
-            isBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            isBound = false;
-
-        }
-    };
-    //end Service stuff*/
-
+    private List<Person> fakedSubscribers;
+    PersonSerializer personSerializer;
     AppDatabase db;
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == 500) {
+            byte[] result = intent.getByteArrayExtra("deserialized");
+            System.out.println("RESULT: " + result);
+            try {
+                fakedSubscribers.add(personSerializer.convertFromByteArray(result));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onMockClicked(View v) {
+        Intent intent = new Intent(this, MockInputPeople.class);
+        //startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-
+    protected void onResume() {
+        System.out.println("RESUMED");
+        System.out.println(myCourses.toString());
+        super.onResume();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(savedInstanceState !=  null){
-            //restore state from previous use
-            System.out.println("Some instance state data is being saved");
-        }
 
-        Intent intent = getIntent();
-        byte[] newPersonMessage = intent.getByteArrayExtra("person");
+        System.out.println("CREATED FOR FIRST TIME");
+        personSerializer = new PersonSerializer();
+        List<String> names;
 
-
-        Person newNearbyStudent = null;
-        final Person unchangingDeserializedPerson;
-        final ProfileInfo personsProfileInfo;
-        try {
-            newNearbyStudent = (Person) convertFromByteArray(newPersonMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        List<Person> fakedata = new ArrayList<Person>();
-        fakedata.add(newNearbyStudent);
-
-
-
-
-
-        //list of names received message from
+        //list of people received message from
+        List<Person> nearbyPeople = new ArrayList<Person>();
+      
+        //list of names received message from (for testing
         List<Person> classmates = new ArrayList<>();
 
         db = AppDatabase.singleton(this);
@@ -154,6 +135,7 @@ public class ViewPersonsList extends AppCompatActivity {
                 "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/303800251/1800",
                 "https://static.wikia.nocookie.net/dbxfanon/images/c/cc/The_Impostor.png/revision/latest?cb=20201223005217"
         };
+
         Person Rodney = new Person("Rodney", birds[0], RodneyClasses);
         Person Lucas = new Person("Lucas", birds[1], LucasClasses);
         Person Grace = new Person("Grace", birds[2], GraceClasses);
@@ -216,7 +198,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     final Person unchangingDeserializedPerson;
                     final ProfileInfo personsProfileInfo;
                     try {
-                        deserializedPerson = (Person) convertFromByteArray(serializedPerson);
+                        deserializedPerson = (Person) personSerializer.convertFromByteArray(serializedPerson);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -244,7 +226,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     if (personsProfileInfo != null) {
 
                         runOnUiThread(() -> {
-                            personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo);
+                            personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
                         });
                     }
                 }
@@ -258,7 +240,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     byte[] msgBody = message.getContent();
                     String senderName = null;
                     try {
-                        senderName = convertFromByteArray(msgBody).getName();
+                        senderName = personSerializer.convertFromByteArray(msgBody).getName();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -268,7 +250,8 @@ public class ViewPersonsList extends AppCompatActivity {
         };
 
         //fake receiving message
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
+        fakedSubscribers = new ArrayList<>();
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
@@ -307,28 +290,6 @@ public class ViewPersonsList extends AppCompatActivity {
                 unpublish();
             }
         });
-
-
-        /*
-        List<Course> dummyClasses= new ArrayList<>();
-        dummyClasses.add(new Course("Fall", "2022","cats", "8008"));
-
-        Person dummyPerson = new Person("Test", dummyClasses);
-
-         */
-
-
-        //persons  = SearchClassmates.search(fakedata,Rodney);
-        //List<String> classmates = SearchClassmates.search(nearbyPeople, self);
-
-
-        /*
-        List<String> classmates = new ArrayList<>();
-        for(Person classmate: nearbyPeople){
-            classmates.add(classmate.getName());
-        }
-
-         */
     }
 
 
@@ -383,15 +344,4 @@ public class ViewPersonsList extends AppCompatActivity {
             Log.i(TAG, "Unpublishing");
             Nearby.getMessagesClient(this).unpublish(classesMessage);
         }
-
-
-    public Person convertFromByteArray(byte[] data) throws Exception{
-        ByteArrayInputStream bis = new ByteArrayInputStream(data);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-
-        Person person = (Person) ois.readObject();
-        bis.close();
-        ois.close();
-        return person;
-    }
 }

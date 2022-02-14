@@ -25,7 +25,13 @@ public class MockInputPeople extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_mock_nearby_message);
+        String sample = "Bill,,,\n" +
+                "https://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,\n" +
+                "2022,WI,CSE,110";
+        TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
+        inputTextView.setText(sample);
     }
+
 
     public void onEnterClicked(View v) throws IOException {
 
@@ -42,6 +48,7 @@ public class MockInputPeople extends AppCompatActivity {
 
             //String[] inputDataSplit = inputData.split("\n\n");
             String[] inputDataSplit = inputData.split(System.lineSeparator());
+
 
             //each line split at comma
 
@@ -61,35 +68,26 @@ public class MockInputPeople extends AppCompatActivity {
 
                 newCourse = new Course(quarter, year, subject, number);
 
-                classes.add(newCourse);
 
-            }
-            newStudent = new Person(name,profileURL,classes);
-            Intent intent = new Intent(this, ViewPersonsList.class);
-            //intent.putExtra("studenName", name);
-            //intent.putExtra("studentURL", profileURL);
-
-            byte[] serializedPerson = null;
-            try {
-                serializedPerson = convertToByteArray(newStudent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if(serializedPerson != null){
-                intent.putExtra("person", serializedPerson);
-            }
-
-            startActivity(intent);
-
+            newCourse = new Course(quarter,year,subject,number);
+            classes.add(newCourse);
         }
+
+        newStudent = new Person(name,profileURL,classes);
+        System.out.println(newStudent.toString());
+        Intent intent = new Intent();
+        PersonSerializer personSerializer = new PersonSerializer();
+        intent.putExtra("deserialized", personSerializer.convertToByteArray(newStudent));
+        setResult(500, intent);
+        finish();
+        //Intent intent = new Intent(this, ViewPersonsList.class);
+        //startActivity(intent);
 
 
     }
 
-
     public String quarterCodeToQuarter(String code){
         String[] quarters = this.getResources().getStringArray(R.array.QuarterSelection);
-
         if(code.equals("FA")){return quarters[0];}
         else if(code.equals("WI")){return quarters[1];}
         else if (code.equals("SP")){return quarters[2];}
