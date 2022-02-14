@@ -18,13 +18,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link
-        /*
+
+
         if (!sharedPreferences.getString("first_name", "").equals("")) {
             Intent intent = new Intent(this, ViewPersonsList.class);
             startActivity(intent);
+            finish();
         }
 
-         */
+
 
           // InputClasses Activity
         //Intent intent = new Intent(this, ImageLinkEntry.class);
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);
+            finish();
         }
         else {
             Utilities.sendAlert(this, "Name can't be blank", "Warning");
