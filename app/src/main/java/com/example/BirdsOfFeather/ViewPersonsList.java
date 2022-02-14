@@ -110,7 +110,7 @@ public class ViewPersonsList extends AppCompatActivity {
         //names.add("Dummy2");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
-        setTitle("People with Shared Classes");
+        setTitle("BoFs");
 
         personsRecyclerView = findViewById(R.id.persons_view);
         personsLayoutManager = new LinearLayoutManager(this);

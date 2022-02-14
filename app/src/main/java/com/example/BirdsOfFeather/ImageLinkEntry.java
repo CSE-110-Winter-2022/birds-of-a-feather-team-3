@@ -34,6 +34,7 @@ public class ImageLinkEntry extends AppCompatActivity {
             Intent intent = new Intent(this, InputClasses.class);
             intent.putExtra("database_type", "actual");
             startActivity(intent);
+            finish();
         }
         else {
             ImageView profilePicture = (ImageView) findViewById(R.id.image_view_in_link_entry);
@@ -50,6 +51,7 @@ public class ImageLinkEntry extends AppCompatActivity {
                 editor.apply();
                 Intent intent = new Intent(this, InputClasses.class);
                 startActivity(intent);
+                finish();
             } else { //invalid link
                 Utilities.sendAlert(this, "Invalid link", "Warning");
             }

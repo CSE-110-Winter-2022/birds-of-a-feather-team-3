@@ -90,8 +90,10 @@ public class InputClasses extends AppCompatActivity {
         else{
             //Intent intent = new Intent(this, ViewPersonsList.class);
             Intent intent = new Intent(this, ViewPersonsList.class);
+
             ////intent.putExtra("COURSES_ARRAY", classes);
             startActivity(intent);
+            finish();
         }
     }
 
