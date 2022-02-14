@@ -1,7 +1,6 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 

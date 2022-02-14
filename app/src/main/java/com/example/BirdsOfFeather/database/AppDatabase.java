@@ -1,4 +1,4 @@
-package com.example.inputclasses.database;
+package com.example.BirdsOfFeather.database;
 
 
 import android.content.Context;
@@ -6,8 +6,6 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
-import com.example.inputclasses.Course;
 
 @Database(entities= {ClassEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {

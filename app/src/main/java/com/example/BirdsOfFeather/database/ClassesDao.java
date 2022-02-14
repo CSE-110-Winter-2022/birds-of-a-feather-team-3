@@ -1,4 +1,4 @@
-package com.example.inputclasses.database;
+package com.example.BirdsOfFeather.database;
 
 
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Query;
 import androidx.room.RoomWarnings;
 import androidx.room.Transaction;
 
-import com.example.inputclasses.Course;
+import com.example.BirdsOfFeather.Course;
 
 import java.util.List;
 

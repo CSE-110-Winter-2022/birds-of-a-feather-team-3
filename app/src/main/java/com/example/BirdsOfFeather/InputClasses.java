@@ -1,18 +1,17 @@
-package com.example.inputclasses;
+package com.example.BirdsOfFeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.*;
 
-import com.example.inputclasses.database.AppDatabase;
-import com.example.inputclasses.database.ClassEntity;
+import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.ClassEntity;
 
 import java.util.*;
 
@@ -89,8 +88,9 @@ public class InputClasses extends AppCompatActivity {
             Utilities.sendAlert(this,"Please enter at least one class", "Warning");
         }
         else{
-            Intent intent = new Intent(this, ViewPersonsList.class);
-            //intent.putExtra("COURSES_ARRAY", classes);
+            //Intent intent = new Intent(this, ViewPersonsList.class);
+            Intent intent = new Intent(this, MockInputPeople.class);
+            ////intent.putExtra("COURSES_ARRAY", classes);
             startActivity(intent);
         }
     }
@@ -121,21 +121,19 @@ public class InputClasses extends AppCompatActivity {
                     db.classesDao().insert(classEntity);
                 }
                 localCourses.add(potentialCourse);
+                String courseConfirmed = potentialCourse.toString() + " Added";
+                Toast.makeText(this, courseConfirmed, Toast.LENGTH_SHORT).show();
                 //System.out.println(localCourses);
             }
         }
     }
     public boolean checkValuesEmpty(String quarter, String year, String subject, String classNumber) {
-        /*Log.d("quarter", quarter);
-        Log.d("year: ", year);
-        Log.d("subject: ", subject);
-        Log.d("classnum: ", classNumber);
-        */
         return quarter.equals("") || year.equals("") || subject.equals("") || classNumber.equals("");
     }
+
     public boolean checkIsDuplicate(List<Course> compareList, Course potentialCourse) {
         for (int i = 0; i < compareList.size(); i++) {
-            if (potentialCourse.equals(compareList.get(i))) {
+            if (potentialCourse.toString().equals(compareList.get(i).toString())) {
                 return true;
             }
         }

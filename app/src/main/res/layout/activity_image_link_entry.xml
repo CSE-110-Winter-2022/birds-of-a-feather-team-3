@@ -20,11 +20,11 @@
         app:layout_constraintTop_toBottomOf="@+id/informative_enter_link_text_view" />
 
     <Button
-        android:id="@+id/confirm_profile_picture"
+        android:id="@+id/confirm_profile_picture_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
         android:onClick="onSubmitLinkClick"
+        android:text="Confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Enter a valid link below to a profile picture"
+        android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
