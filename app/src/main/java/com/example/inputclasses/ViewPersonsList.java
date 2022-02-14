@@ -214,7 +214,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     if (personsProfileInfo != null) {
 
                         runOnUiThread(() -> {
-                            personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo);
+                            personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
                         });
                     }
                 }

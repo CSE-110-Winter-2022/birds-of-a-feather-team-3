@@ -36,7 +36,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         return profileInformationList;
     }
 
-    public void addPerson(Person person, ProfileInfo newProfileInfo){
+    public void addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
         boolean alreadyContained = false;
         for (Person existingPerson : persons) {
             if (person.toString().equals(existingPerson.toString())) {
@@ -60,7 +60,9 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.persons.add(addPosition, person);
             profileInformationList.put(person, newProfileInfo);
             System.out.println("added");
-            this.notifyItemInserted(addPosition);//this.persons.size()-1);
+            if (!testing) {
+                this.notifyItemInserted(addPosition);//this.persons.size()-1);
+            }
             System.out.println("notified");
         }
     }
