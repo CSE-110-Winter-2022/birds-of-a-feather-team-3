@@ -23,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
         EditText textView = findViewById(R.id.enter_name_view);
         textView.setText(getNameFromGoogle());
 
-        if (!sharedPreferences.getString("first_name", "").equals("")) {
-            Intent intent = new Intent(this, ViewPersonsList.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (!sharedPreferences.getString("first_name", "").equals("")) {
+//            Intent intent = new Intent(this, ViewPersonsList.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
 
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         AccountManager manager = AccountManager.get(this);
         Account[] accounts = manager.getAccounts();
         if (accounts.length == 0) {
-            Utilities.sendAlert(this,"Wanring: No account detected","Warning");
+            Utilities.sendAlert(this,"Warning: No account detected","Warning");
             return "";
         }
         else {
