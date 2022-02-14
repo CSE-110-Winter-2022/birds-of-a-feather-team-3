@@ -2,6 +2,7 @@ package com.example.BirdsOfFeather;
 
 import java.util.List;
 
+//Stores information of another user in relation to the app user
 public class ProfileInfo {
     List<Course> commonCourses;
     String name;

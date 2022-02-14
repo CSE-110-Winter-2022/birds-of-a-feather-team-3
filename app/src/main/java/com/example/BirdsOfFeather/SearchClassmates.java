@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+
 public class SearchClassmates {
+    //Returns null if no classes in common, otherwise populates a ProfileInfo object
     public static ProfileInfo detectAndReturnSharedClasses(Person firstPerson, Person secondPerson) {
         List<Course> sharedCourses = new ArrayList<>();
         List<Course> firstPersonCourses = firstPerson.getClasses();
@@ -26,6 +28,7 @@ public class SearchClassmates {
     }
 }
 
+//For listing the shared courses on the profile chronologically
 class ChronologicalComparator implements Comparator<Course> {
     List<String> quarterOrder = new ArrayList<>(Arrays.asList("Winter",
             "Spring", "Summer Session I", "Summer Session II", "Special Summer Session", "Fall"));
@@ -38,5 +41,4 @@ class ChronologicalComparator implements Comparator<Course> {
         }
         return quarterOrder.indexOf(course1.getQuarter()) - quarterOrder.indexOf(course2.getQuarter());
     }
-
 }

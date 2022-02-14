@@ -2,6 +2,7 @@ package com.example.BirdsOfFeather;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
     private final List<Person> persons;
     private final Map<Person, ProfileInfo> profileInformationList;
+    private static final String TAG = PersonsViewAdapter.class.getSimpleName();
 
     public PersonsViewAdapter(List<Person> persons) {
         super();
@@ -30,7 +32,6 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     public List<Person> getPeople() {
         return this.persons;
     }
-
     //for testing purposes
     public Map<Person, ProfileInfo> getPeopleInfoMap() {
         return profileInformationList;
@@ -44,10 +45,12 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
                 break;
             }
         }
+        //Checks if a potential BoF has already been stored in the list
         if (!alreadyContained) {
             int addPosition = 0;
             for (Person listPerson : persons) {
                 ProfileInfo listProfileInfo = profileInformationList.get(listPerson);
+                //Sorts according to match amount
                 if (listProfileInfo != null) {
                     int newMatches = newProfileInfo.getCommonCourses().size();
                     int comparingMatches = listProfileInfo.getCommonCourses().size();
@@ -59,11 +62,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             }
             this.persons.add(addPosition, person);
             profileInformationList.put(person, newProfileInfo);
-            System.out.println("added");
             if (!testing) {
                 this.notifyItemInserted(addPosition);//this.persons.size()-1);
+                Log.i(TAG, "Added list item and notified view adapter of new person");
             }
-            System.out.println("notified");
         }
     }
 
@@ -89,10 +91,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         return this.persons.size();
     }
 
-    public static class ViewHolder
-            extends RecyclerView.ViewHolder
-            implements View.OnClickListener
-            {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView personNameView;
         private final ImageView profilePictureView;
         private final TextView matchCountView;
@@ -104,13 +103,13 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.personNameView = itemView.findViewById(R.id.person_row_name);
             this.profilePictureView = itemView.findViewById(R.id.profile_thumbnail_view);
             this.matchCountView = itemView.findViewById(R.id.course_match_count_view);
-            //maybe comment out below, it was before.
             itemView.setOnClickListener(this);
         }
 
         public void setPerson(Person person) {
             this.personName = person.getName();
             this.personNameView.setText(personName);
+            //default image check
             if (!person.getURL().equals("")) {
                 URLDownload downloadClass = new URLDownload(this.profilePictureView);
                 System.out.println(person.getURL());
@@ -130,12 +129,14 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             Intent intent = new Intent(context, ProfileActivity.class);
             String concatenatedStr = "";
             Collections.sort(this.profileInfo.getCommonCourses(), new ChronologicalComparator());
+            //Listing courses in chronological order
             for (Course course : this.profileInfo.getCommonCourses()) {
                 concatenatedStr += course.toString() + '\n';
             }
             intent.putExtra("name", this.profileInfo.getName());
             intent.putExtra("courses", concatenatedStr);
             intent.putExtra("URL", this.profileInfo.getURL());
+            Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);
         }
     }

@@ -22,33 +22,24 @@ public class MockInputPeople extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_mock_nearby_message);
-
-        //default mock student data input
-        String sample = "Bill,,," + System.lineSeparator() +
-                "https://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IG" +
-                "STwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4X" +
-                "NOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,," + System.lineSeparator() +
-                "2022,WI,CSE,110";
-        TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
-        inputTextView.setText(sample);
     }
 
 
     public void onMockEnterClicked(View v) throws Exception {
-
         classes = new ArrayList<Course>();
 
         TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
         String inputData = inputTextView.getText().toString();
-
         if(inputData == null || inputData == ""){
             //no data inputted
             Utilities.sendAlert(this, "No Nearby Students", "No Data Entered");
         }
-        else{//split text in textbox at newline character into string array
+        else{
+            //split text in textbox at newline character into string array
             String[] inputDataSplit = inputData.split(System.lineSeparator());
-
-
+            name = inputDataSplit[0].split(",")[0];
+            profileURL = inputDataSplit[1].split(",")[0];
+            //each line split at comma
             //take first input only from first and second lines
             name = inputDataSplit[0].split(",")[0];
             profileURL = inputDataSplit[1].split(",")[0];
@@ -87,7 +78,6 @@ public class MockInputPeople extends AppCompatActivity {
     //convert from string to course object, splitting at commas
     public Course parseCourse(String input){
         String[] splitCourse = input.split(",");
-
         String quarter = quarterCodeToQuarter(splitCourse[1]);
         String year = splitCourse[0];
         String subject = splitCourse[2];
@@ -95,6 +85,4 @@ public class MockInputPeople extends AppCompatActivity {
 
         return new Course(quarter, year, subject, number);
     }
-
-
 }
