@@ -6,7 +6,6 @@ public class Person implements Serializable {
     private String name;
     private String profileURL;
     private List<Course> classes;
-    private int matches;
     public Person(String name, String profileURL, List<Course> classes){
         this.name = name;
         this.classes = classes;
