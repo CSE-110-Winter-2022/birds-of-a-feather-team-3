@@ -1,32 +1,42 @@
 package com.example.inputclasses;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class SearchClassmates {
-    public static List<String> search(List<Person> Persons, Person me) {
-        String [] mycourse = me.getClasses();
-        List<String> namelist = new ArrayList<>();
-        for (int i = 0 ; i < mycourse.length; i++){
-            String currcouse = mycourse[i];
-
-            for (int j = 0; j < Persons.size(); j ++){
-                Person curr = Persons.get(j);
-                for (int k = 0; k < curr.getClasses().length;k++){
-                    String[] currclasses = curr.getClasses();
-                    if (currcouse.equals(currclasses[k]))  {
-                        if (!namelist.contains(curr.getName())){
-                            namelist.add(curr.getName());
-                        }
-                    }
+    public static ProfileInfo detectAndReturnSharedClasses(Person firstPerson, Person secondPerson) {
+        List<Course> sharedCourses = new ArrayList<>();
+        List<Course> firstPersonCourses = firstPerson.getClasses();
+        List<Course> secondPersonCourses = secondPerson.getClasses();
+        for (Course compareCourse : firstPersonCourses) {
+            for (Course comparingCourse : secondPersonCourses) {
+                if (compareCourse.toString().equals(comparingCourse.toString())) {
+                    sharedCourses.add(compareCourse);
                 }
             }
-
         }
 
-        return namelist;
+        if (sharedCourses.size() > 0) {
+            ProfileInfo newProfileInfo = new ProfileInfo(secondPerson.getName(), secondPerson.getURL(), sharedCourses);
+            return newProfileInfo;
+        }
+        return null;
     }
+}
 
+class ChronologicalComparator implements Comparator<Course> {
+    List<String> quarterOrder = new ArrayList<>(Arrays.asList("Winter",
+            "Spring", "Summer Session I", "Summer Session II", "Special Summer Session", "Fall"));
 
+    @Override
+    public int compare(Course course1, Course course2) {
+        int diff = Integer.valueOf(course1.getYear()) - Integer.valueOf(course2.getYear());
+        if (diff != 0) {
+            return diff;
+        }
+        return quarterOrder.indexOf(course1.getQuarter()) - quarterOrder.indexOf(course2.getQuarter());
+    }
 
 }

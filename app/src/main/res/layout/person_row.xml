@@ -21,7 +21,7 @@
         tools:text="@tools:sample/lorem" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/profile_thumbnail_view"
         android:layout_width="57sp"
         android:layout_height="45sp"
         android:layout_marginStart="20dp"
@@ -29,5 +29,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src = "@mipmap/ic_launcher" />
-        / tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/course_match_count_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        android:text="0"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" /><![CDATA[
+
+    / tools:srcCompat="@tools:sample/avatars" />
+]]>
 </androidx.constraintlayout.widget.ConstraintLayout>

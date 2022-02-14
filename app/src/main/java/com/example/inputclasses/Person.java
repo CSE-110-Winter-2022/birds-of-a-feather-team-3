@@ -1,19 +1,31 @@
 package com.example.inputclasses;
-public class Person {
-    private String name;
-    private String[] classes;
+import java.io.Serializable;
+import java.util.List;
 
-    public Person(String name, String[] classes){
+public class Person implements Serializable {
+    private String name;
+    private String profileURL;
+    private List<Course> classes;
+    private int matches;
+    public Person(String name, String profileURL, List<Course> classes){
         this.name = name;
         this.classes = classes;
+        this.profileURL = profileURL;
     }
 
-    public String[] getClasses(){
+    public List<Course> getClasses(){
         return this.classes;
     }
+
+    public String getURL(){ return this.profileURL; }
 
     public String getName(){
         return this.name;
     }
 
+    public String toString() {
+        return name + ", " + profileURL + ", " + this.classes.toString() + ", " + this.classes.size();
+    }
 }
+
+
