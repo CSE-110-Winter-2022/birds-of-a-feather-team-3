@@ -24,13 +24,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link
 
+
         if (!sharedPreferences.getString("first_name", "").equals("")) {
             Intent intent = new Intent(this, ViewPersonsList.class);
             startActivity(intent);
+            finish();
         }
         TextView textview = findViewById(R.id.enter_name_view);
         textview.setText(getNameFromGoogle());
     }
+
 
 
     public String getNameFromGoogle() {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         if (accounts.length == 0) {
             Utilities.sendAlert(this,"Wanring: No account detected","Warning");
             return "";
+
 
 
 
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);
+            finish();
         }
         else {
             Utilities.sendAlert(this, "Name can't be blank", "Warning");

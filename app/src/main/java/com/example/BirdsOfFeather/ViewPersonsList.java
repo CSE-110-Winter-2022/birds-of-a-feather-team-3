@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
@@ -45,11 +47,39 @@ public class ViewPersonsList extends AppCompatActivity {
 
     //list of user's inputted courses
     private List<Course> myCourses;
+    private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
     AppDatabase db;
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == 500) {
+            byte[] result = intent.getByteArrayExtra("deserialized");
+            System.out.println("RESULT: " + result);
+            try {
+                fakedSubscribers.add(personSerializer.convertFromByteArray(result));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onMockClicked(View v) {
+        Intent intent = new Intent(this, MockInputPeople.class);
+        //startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("RESUMED");
+        System.out.println(myCourses.toString());
+        super.onResume();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("CREATED FOR FIRST TIME");
         personSerializer = new PersonSerializer();
         List<String> names;
 //        // fake data of my classes
@@ -80,7 +110,7 @@ public class ViewPersonsList extends AppCompatActivity {
         //names.add("Dummy2");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
-        setTitle("People with Shared Classes");
+        setTitle("BoFs");
 
         personsRecyclerView = findViewById(R.id.persons_view);
         personsLayoutManager = new LinearLayoutManager(this);
@@ -230,7 +260,8 @@ public class ViewPersonsList extends AppCompatActivity {
         };
 
         //fake receiving message
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
+        fakedSubscribers = new ArrayList<>();
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
