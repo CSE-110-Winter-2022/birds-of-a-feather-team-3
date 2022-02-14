@@ -30,7 +30,7 @@ public class MockInputPeople extends AppCompatActivity {
     }
 
 
-    public void onMockEnterClicked(View v){
+    public void onMockEnterClicked(View v) throws Exception {
 
         classes = new ArrayList<Course>();
         TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
@@ -63,17 +63,18 @@ public class MockInputPeople extends AppCompatActivity {
 
         newStudent = new Person(name,profileURL,classes);
         System.out.println(newStudent.toString());
-
+        Intent intent = new Intent();
+        PersonSerializer personSerializer = new PersonSerializer();
+        intent.putExtra("deserialized", personSerializer.convertToByteArray(newStudent));
+        setResult(500, intent);
         finish();
         //Intent intent = new Intent(this, ViewPersonsList.class);
         //startActivity(intent);
 
     }
 
-
     public String quarterCodeToQuarter(String code){
         String[] quarters = this.getResources().getStringArray(R.array.QuarterSelection);
-
         if(code.equals("FA")){return quarters[0];}
         else if(code.equals("WI")){return quarters[1];}
         else if (code.equals("SP")){return quarters[2];}

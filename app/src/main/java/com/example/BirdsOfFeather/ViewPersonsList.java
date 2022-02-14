@@ -47,12 +47,27 @@ public class ViewPersonsList extends AppCompatActivity {
 
     //list of user's inputted courses
     private List<Course> myCourses;
+    private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
     AppDatabase db;
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == 500) {
+            byte[] result = intent.getByteArrayExtra("deserialized");
+            System.out.println("RESULT: " + result);
+            try {
+                fakedSubscribers.add(personSerializer.convertFromByteArray(result));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void onMockClicked(View v) {
         Intent intent = new Intent(this, MockInputPeople.class);
-        startActivity(intent);
+        //startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -245,7 +260,8 @@ public class ViewPersonsList extends AppCompatActivity {
         };
 
         //fake receiving message
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
+        fakedSubscribers = new ArrayList<>();
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
