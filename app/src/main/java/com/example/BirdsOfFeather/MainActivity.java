@@ -2,6 +2,8 @@ package com.example.BirdsOfFeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,13 +20,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link
+        EditText textView = findViewById(R.id.enter_name_view);
+        textView.setText(getNameFromGoogle());
 
-
-        if (!sharedPreferences.getString("first_name", "").equals("")) {
-            Intent intent = new Intent(this, ViewPersonsList.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (!sharedPreferences.getString("first_name", "").equals("")) {
+//            Intent intent = new Intent(this, ViewPersonsList.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
 
 
@@ -53,5 +56,17 @@ public class MainActivity extends AppCompatActivity {
             Utilities.sendAlert(this, "Name can't be blank", "Warning");
         }
         //Intent intent = new Intent(this, InputClasses.class);
+    }
+
+    public String getNameFromGoogle() {
+        AccountManager manager = AccountManager.get(this);
+        Account[] accounts = manager.getAccounts();
+        if (accounts.length == 0) {
+            Utilities.sendAlert(this,"Warning: No account detected","Warning");
+            return "";
+        }
+        else {
+            return accounts[0].name;
+        }
     }
 }
