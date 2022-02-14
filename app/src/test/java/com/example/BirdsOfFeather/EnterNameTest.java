@@ -27,10 +27,12 @@ public class EnterNameTest {
         scenario.onActivity(activity -> {
             Button saveButton = activity.findViewById(R.id.save_name_button);
             EditText nameView = activity.findViewById(R.id.enter_name_view);
-            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+//            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
             nameView.setText("");
             saveButton.performClick();
-            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
+//            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
+            assertEquals(2, ShadowAlertDialog.getShownDialogs().size());
             //Sends warning
         });
     }
@@ -43,10 +45,10 @@ public class EnterNameTest {
         scenario.onActivity(activity -> {
             Button saveButton = activity.findViewById(R.id.save_name_button);
             EditText nameView = activity.findViewById(R.id.enter_name_view);
-            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
             nameView.setText("Bob");
             saveButton.performClick();
-            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
             //No warning
         });
     }
