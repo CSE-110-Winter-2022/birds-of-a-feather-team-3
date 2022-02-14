@@ -17,7 +17,6 @@ import java.util.*;
 
 public class InputClasses extends AppCompatActivity {
     private List<Course> localCourses;
-    //private Course[] classes;
     AppDatabase db;
     boolean usingMock;
     @Override
@@ -64,6 +63,7 @@ public class InputClasses extends AppCompatActivity {
         yearSpinner.setAdapter(yearAdapter);
 
         //enter subject textView
+        //Restrict input to uppercase
         EditText subjectView = findViewById(R.id.subject_edittext);
         InputFilter[] currentFilters = subjectView.getFilters();
         InputFilter[] updatedFilters = new InputFilter[currentFilters.length + 1];
@@ -74,6 +74,8 @@ public class InputClasses extends AppCompatActivity {
         subjectView.setFilters(updatedFilters);
 
         //enter course number textView
+        //Restrict input to uppercase
+
         EditText numberView = findViewById(R.id.class_number_edittext);
         InputFilter[] currentFiltersNumView = numberView.getFilters();
         InputFilter[] updatedFiltersNumView = new InputFilter[currentFiltersNumView.length + 1];

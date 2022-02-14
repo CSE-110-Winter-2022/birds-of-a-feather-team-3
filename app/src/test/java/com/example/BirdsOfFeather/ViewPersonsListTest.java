@@ -24,6 +24,7 @@ import static java.util.Collections.sort;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 //import java.util.Arrays;
 import java.util.Arrays;
@@ -55,29 +56,42 @@ public class ViewPersonsListTest {
         */
 
         String img1 = "";
-
+        //Rodney is app user
         Person Rodney = new Person("Rodney", img1, RodneyClasses);
         Person Lucas = new Person("Lucas", img1, LucasClasses);
         Person Grace = new Person("Grace", img1, GraceClasses);
         Person Mark = new Person("Mark", img1, MarkClasses);
         Person Vicki = new Person("Vicki", img1, VickiClasses);
 
-        List<Person> fakeData = new ArrayList<>();
         persons.add(Lucas);
         persons.add(Grace);
         persons.add(Mark);
         persons.add(Vicki);
 
+        ProfileInfo LucasInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Lucas);
+        ProfileInfo GraceInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Grace);
+        ProfileInfo MarkInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Mark);
+        ProfileInfo VickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Vicki);
+
+        personViewAdapter.addPerson(Lucas, LucasInfo, true);
+        personViewAdapter.addPerson(Grace, GraceInfo, true);
+        personViewAdapter.addPerson(Mark, MarkInfo, true);
+        personViewAdapter.addPerson(Vicki, VickiInfo, true);
+
         List<Person> output = personViewAdapter.getPeople();
-        List<String> expectedOutput = new ArrayList<>(Arrays.asList("Grace", "Vicki", "Mark"));
-        assertEquals(expectedOutput, output);
+        List<String> nameList = new ArrayList<>();
+        for (Person person : output) {
+            nameList.add(person.getName());
+        }
+        String expectedOutput = "[Lucas, Grace, Mark, Vicki]";
+        assertEquals(expectedOutput, nameList.toString());
     }
 
     // unit test
     @Test
     public void testSearchClassmatesDupNames() {
-        List<Person> persons;
-        // fake data of my classes
+        List<Person> persons = new ArrayList<>();
+        PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
         Course course3 = new Course("Winter", "2020", "CSE", "101");
@@ -94,54 +108,42 @@ public class ViewPersonsListTest {
          * Course2: Rodney, Grace, Mark, DupVicki
          * Course3: Mark, DupVicki
          * Course4: Vicki, Lucas
-        */
+         */
 
         String img1 = "";
-        Person Rodney = new Person("Rodney", img1,  RodneyClasses);
+        //Rodney is app user
+        Person Rodney = new Person("Rodney", img1, RodneyClasses);
         Person Lucas = new Person("Lucas", img1, LucasClasses);
         Person Grace = new Person("Grace", img1, GraceClasses);
         Person Mark = new Person("Mark", img1, MarkClasses);
         Person Vicki = new Person("Vicki", img1, VickiClasses);
-        Person DupVicki = new Person("Vicki", img1, DupVickiClasses);
+        Person DupVicki = new Person("Vicki", "", DupVickiClasses);
 
-        List<Person> fakeData = new ArrayList<>();
-        fakeData.add(Lucas);
-        fakeData.add(Grace);
-        fakeData.add(DupVicki);
-        fakeData.add(Mark);
-        fakeData.add(Vicki);
+        persons.add(Lucas);
+        persons.add(Grace);
+        persons.add(Mark);
+        persons.add(Vicki);
+        persons.add(DupVicki);
 
 
-        persons  = SearchClassmates.search(fakeData,Rodney);
-        List<String> output = new ArrayList<>();
-        for (int i = 0; i < persons.size(); i++) {
-            output.add(persons.get(i).getName());
+        ProfileInfo LucasInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Lucas);
+        ProfileInfo GraceInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Grace);
+        ProfileInfo MarkInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Mark);
+        ProfileInfo VickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Vicki);
+        ProfileInfo DupVickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, DupVicki);
+
+        personViewAdapter.addPerson(Lucas, LucasInfo, true);
+        personViewAdapter.addPerson(Grace, GraceInfo, true);
+        personViewAdapter.addPerson(Mark, MarkInfo, true);
+        personViewAdapter.addPerson(Vicki, VickiInfo, true);
+        personViewAdapter.addPerson(DupVicki, DupVickiInfo, true);
+
+        List<Person> output = personViewAdapter.getPeople();
+        List<String> nameList = new ArrayList<>();
+        for (Person person : output) {
+            nameList.add(person.getName());
         }
-
-        List<String> expectedOutput = new ArrayList<>(Arrays.asList("Vicki", "Vicki", "Grace", "Mark"));
-        sort(expectedOutput); //alphabetical order so it can be compared correctly
-        sort(output);
-
-        assertEquals(expectedOutput, output);
-    }
-
-    //Integration Tests
-    @Rule
-    public ActivityScenarioRule<InputClasses> scenarioRule = new ActivityScenarioRule<>(ViewPersonsList.class);
-    @Test
-    public void testViewPersonsList() {
-        ActivityScenario<InputClasses> scenario = scenarioRule.getScenario();
-        scenario.moveToState(Lifecycle.State.CREATED);
-
-        scenario.onActivity(activity -> {
-
-            EditText subjectView = activity.findViewById(R.id.subject_edittext);
-            EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
-            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
-            subjectView.setText("");
-            courseNumberView.setText("");
-
-            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
-        });
+        String expectedOutput = "[Lucas, Grace, Mark, Vicki, Vicki]";
+        assertEquals(expectedOutput, nameList.toString());
     }
 }
