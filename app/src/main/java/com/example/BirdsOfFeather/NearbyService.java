@@ -129,7 +129,7 @@ public class NearbyService extends Service {
         //getting data from mock nearby input
 
         //fake receiving message
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
+        //this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedata);
 
 
 
@@ -173,9 +173,7 @@ public class NearbyService extends Service {
         return person;
     }
 
-    public byte[] convertToByteArray(Person person) throws Exception{
 
-    }
 
 
 

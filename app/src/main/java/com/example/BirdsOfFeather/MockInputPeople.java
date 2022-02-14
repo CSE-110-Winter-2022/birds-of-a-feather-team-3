@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,45 +27,62 @@ public class MockInputPeople extends AppCompatActivity {
         setContentView(R.layout.activity_input_mock_nearby_message);
     }
 
-    public void onEnterClicked(View v){
+    public void onEnterClicked(View v) throws IOException {
 
         classes = new ArrayList<Course>();
 
         TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
         String inputData = inputTextView.getText().toString();
 
-        //split text in textbox at newline character into string array
+        if(inputData == null || inputData.equals("")){
+            Utilities.sendAlert(this, "No mock data entered", "No Data Entered");
+        }
+        else{
+            //split text in textbox at newline character into string array
 
-        //String[] inputDataSplit = inputData.split("\n\n");
-        String[] inputDataSplit = inputData.split(System.lineSeparator());
+            //String[] inputDataSplit = inputData.split("\n\n");
+            String[] inputDataSplit = inputData.split(System.lineSeparator());
 
-        //each line split at comma
+            //each line split at comma
 
-        //take first input only from first and second lines
-        name = inputDataSplit[0].split(",")[0];
-        profileURL = inputDataSplit[1].split(",")[0];
+            //take first input only from first and second lines
+            name = inputDataSplit[0].split(",")[0];
+            profileURL = inputDataSplit[1].split(",")[0];
 
-        // for all remaining entries, convert to courses
-        for(int i = 2; i < inputDataSplit.length; i++){
-            String courseToSplit = inputDataSplit[i];
-            String[] splitCourse = courseToSplit.split(",");
+            // for all remaining entries, convert to courses
+            for (int i = 2; i < inputDataSplit.length; i++) {
+                String courseToSplit = inputDataSplit[i];
+                String[] splitCourse = courseToSplit.split(",");
 
-            String quarter = quarterCodeToQuarter(splitCourse[1]);
-            String year = splitCourse[0];
-            String subject = splitCourse[2];
-            String number = splitCourse[3];
+                String quarter = quarterCodeToQuarter(splitCourse[1]);
+                String year = splitCourse[0];
+                String subject = splitCourse[2];
+                String number = splitCourse[3];
 
-            newCourse = new Course(quarter,year,subject,number);
+                newCourse = new Course(quarter, year, subject, number);
 
-            classes.add(newCourse);
+                classes.add(newCourse);
+
+            }
+            newStudent = new Person(name,profileURL,classes);
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            //intent.putExtra("studenName", name);
+            //intent.putExtra("studentURL", profileURL);
+
+            byte[] serializedPerson = null;
+            try {
+                serializedPerson = convertToByteArray(newStudent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(serializedPerson != null){
+                intent.putExtra("person", serializedPerson);
+            }
+
+            startActivity(intent);
 
         }
 
-        newStudent = new Person(name,profileURL,classes);
-        System.out.println(newStudent.toString());
-
-        Intent intent = new Intent(this, ViewPersonsList.class);
-        startActivity(intent);
 
     }
 
@@ -79,5 +99,18 @@ public class MockInputPeople extends AppCompatActivity {
 
         return "";
     }
+
+    public byte[] convertToByteArray(Person self) throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+
+        oos.writeObject(self);
+        oos.flush();
+        byte [] data = bos.toByteArray();
+        bos.close();
+        oos.close();
+        return data;
+    }
+
 
 }

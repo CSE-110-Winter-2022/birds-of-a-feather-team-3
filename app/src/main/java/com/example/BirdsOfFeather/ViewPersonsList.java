@@ -52,7 +52,7 @@ public class ViewPersonsList extends AppCompatActivity {
     //list of user's inputted courses
     private List<Course> myCourses;
 
-
+/*
     //Service stuff
     private NearbyService nearbyService;
     private boolean isBound;
@@ -71,13 +71,44 @@ public class ViewPersonsList extends AppCompatActivity {
 
         }
     };
-    //end Service stuff
+    //end Service stuff*/
 
     AppDatabase db;
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(savedInstanceState !=  null){
+            //restore state from previous use
+            System.out.println("Some instance state data is being saved");
+        }
+
+        Intent intent = getIntent();
+        byte[] newPersonMessage = intent.getByteArrayExtra("person");
+
+
+        Person newNearbyStudent = null;
+        final Person unchangingDeserializedPerson;
+        final ProfileInfo personsProfileInfo;
+        try {
+            newNearbyStudent = (Person) convertFromByteArray(newPersonMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Person> fakedata = new ArrayList<Person>();
+        fakedata.add(newNearbyStudent);
+
+
+
+
 
         //list of names received message from
         List<Person> classmates = new ArrayList<>();
@@ -95,7 +126,7 @@ public class ViewPersonsList extends AppCompatActivity {
         personsViewAdapter = new PersonsViewAdapter(classmates);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
-        //fakedata
+        /*//fakedata
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
         Course course3 = new Course("Winter", "2020", "CSE", "101");
@@ -107,12 +138,12 @@ public class ViewPersonsList extends AppCompatActivity {
         List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
         List<Course> DupVickiClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
 
-        /***commonalities
+        *//***commonalities
          * Course1: Rodney, Grace, Vicki, DupVicki
          * Course2: Rodney, Grace, Mark, DupVicki
          * Course3: Mark
          * Course4: Vicki, Lucas
-         */
+         *//*
         String img1 = "";
 
         String birds[] = {
@@ -131,7 +162,7 @@ public class ViewPersonsList extends AppCompatActivity {
         Person DupVicki = new Person("Vicki", birds[5], DupVickiClasses);
 
         List<Person> fakedata = new ArrayList<>(Arrays.asList(Rodney, Lucas, Grace, Mark, Vicki, DupVicki));
-
+*/
 
         //construct Person object for self-data
         //convert object to byte array using serialization
@@ -246,10 +277,12 @@ public class ViewPersonsList extends AppCompatActivity {
                 //start sharing and receiving data
                 //Utilities.sendAlert((Activity) getApplicationContext(), "Starting share", "Test");
                 Log.i(TAG, "Starting Share");
+/*
 
                 Intent intent = new Intent(this, NearbyService.class);
                 //startService(intent);
                 bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+*/
 
                 shareButton.setText("Stop");
                 subscribe();
@@ -259,6 +292,7 @@ public class ViewPersonsList extends AppCompatActivity {
                 //stop sharing and receiving data
                 //Utilities.sendAlert(this, "Stopping share", "Test");
                 Log.i(TAG, "Stopping share");
+/*
 
                 //Intent intent = new Intent(this, NearbyService.class);
                 //stopService(intent);
@@ -266,6 +300,7 @@ public class ViewPersonsList extends AppCompatActivity {
                     unbindService(serviceConnection);
                     isBound = false;
                 }
+*/
 
                 shareButton.setText("Start");
                 unsubscribe();
