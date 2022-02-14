@@ -8,42 +8,42 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = ProfileActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //If its not their first use, skip inputting name/link
-        EditText textView = findViewById(R.id.enter_name_view);
-        textView.setText(getNameFromGoogle());
-
-//        if (!sharedPreferences.getString("first_name", "").equals("")) {
-//            Intent intent = new Intent(this, ViewPersonsList.class);
-//            startActivity(intent);
-//            finish();
-//        }
-
-
-
-          // InputClasses Activity
-        //Intent intent = new Intent(this, ImageLinkEntry.class);
-        //startActivity(intent);
-
-        // ViewPersonsList Activity
-        //Intent intent = new Intent(this, ViewPersonsList.class);
-        //startActivity(intent);
+        //If its not their first use, skip inputting name/link and courses
+        if (!sharedPreferences.getString("first_name", "").equals("")) {
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            EditText textView = findViewById(R.id.enter_name_view);
+            String autoFilledName = this.getNameFromGoogle();
+            if (!autoFilledName.equals("")) {
+                textView.setText(autoFilledName);
+            } else {
+                Utilities.sendAlert(this, "No google account detected", "Warning");
+                Log.i(TAG, "could not find google account");
+            }
+        }
     }
 
     public void onClickSave(View view) {
         EditText textView = findViewById(R.id.enter_name_view);
         String name = textView.getText().toString();
         if (!name.equals("")) {
+            Log.i(TAG, "saving non-empty name");
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
@@ -54,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Utilities.sendAlert(this, "Name can't be blank", "Warning");
+            Log.i(TAG, "empty name");
         }
-        //Intent intent = new Intent(this, InputClasses.class);
     }
 
     public String getNameFromGoogle() {
         AccountManager manager = AccountManager.get(this);
         Account[] accounts = manager.getAccounts();
         if (accounts.length == 0) {
-            Utilities.sendAlert(this,"Warning: No account detected","Warning");
             return "";
         }
         else {
