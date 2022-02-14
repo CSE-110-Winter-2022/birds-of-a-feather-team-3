@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class toStringTest {
+public class ToStringTest {
     @Test
     public void testPersonToString() {
         Course course1 = new Course("Spring", "2020", "CSE", "110");

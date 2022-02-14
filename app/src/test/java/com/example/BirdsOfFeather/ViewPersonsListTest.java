@@ -1,9 +1,6 @@
 //package com.example.inputclasses;
-/**
-=======
-package com.example.BirdsOfFeather;
 
->>>>>>> a27b3b83195d4dc4020614536523918524ab12be:app/src/test/java/com/example/BirdsOfFeather/ViewPersonsListTest.java
+package com.example.BirdsOfFeather;
 //import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import org.junit.Rule;
 import org.checkerframework.checker.units.qual.A;
@@ -38,17 +35,8 @@ public class ViewPersonsListTest {
     //Unit Tests
     @Test
     public void testSearchClassmatesNormal() {
-        List<Person> persons;
-
-        // fake data of my classes
-        /*
-        Person Rodney = new Person("Rodney", new String[]{"CSE21","MATH18"});
-        Person Lucas = new Person("Lucas", new String[]{"ECE45","ECE35","CSE21"});
-        Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
-        Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
-        Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
-
-
+        List<Person> persons = new ArrayList<>();
+        PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
         Course course3 = new Course("Winter", "2020", "CSE", "101");
@@ -59,12 +47,12 @@ public class ViewPersonsListTest {
         List<Course> MarkClasses = new ArrayList<>(Arrays.asList(course3, course2));
         List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
 
-        **commonalities
+        /**commonalities
          * Course1: Rodney, Grace, Vicki
          * Course2: Rodney, Grace, Mark
          * Course3: Mark
          * Course4: Vicki, Lucas
-
+        */
 
         String img1 = "";
 
@@ -75,16 +63,12 @@ public class ViewPersonsListTest {
         Person Vicki = new Person("Vicki", img1, VickiClasses);
 
         List<Person> fakeData = new ArrayList<>();
-        fakeData.add(Lucas);
-        fakeData.add(Grace);
-        fakeData.add(Mark);
-        fakeData.add(Vicki);
-        persons  = SearchClassmates.search(fakeData, Rodney);
+        persons.add(Lucas);
+        persons.add(Grace);
+        persons.add(Mark);
+        persons.add(Vicki);
 
-        List<String> output = new ArrayList<>();
-        for (int i = 0; i < persons.size(); i++) {
-            output.add(persons.get(i).getName());
-        }
+        List<Person> output = personViewAdapter.getPeople();
         List<String> expectedOutput = new ArrayList<>(Arrays.asList("Grace", "Vicki", "Mark"));
         assertEquals(expectedOutput, output);
     }
@@ -94,8 +78,6 @@ public class ViewPersonsListTest {
     public void testSearchClassmatesDupNames() {
         List<Person> persons;
         // fake data of my classes
-
-
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
         Course course3 = new Course("Winter", "2020", "CSE", "101");
@@ -107,15 +89,14 @@ public class ViewPersonsListTest {
         List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
         List<Course> DupVickiClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
 
-        **commonalities
+        /**commonalities
          * Course1: Rodney, Grace, Vicki, DupVicki
          * Course2: Rodney, Grace, Mark, DupVicki
          * Course3: Mark, DupVicki
          * Course4: Vicki, Lucas
-
+        */
 
         String img1 = "";
-
         Person Rodney = new Person("Rodney", img1,  RodneyClasses);
         Person Lucas = new Person("Lucas", img1, LucasClasses);
         Person Grace = new Person("Grace", img1, GraceClasses);
@@ -144,24 +125,23 @@ public class ViewPersonsListTest {
         assertEquals(expectedOutput, output);
     }
 
-//    //Integration Tests
-//    @Rule
-//    public ActivityScenarioRule<InputClasses> scenarioRule = new ActivityScenarioRule<>(ViewPersonsList.class);
-//    @Test
-//    public void testViewPersonsList() {
-//        ActivityScenario<InputClasses> scenario = scenarioRule.getScenario();
-//        scenario.moveToState(Lifecycle.State.CREATED);
-//
-//        scenario.onActivity(activity -> {
-//
-//            EditText subjectView = activity.findViewById(R.id.subject_edittext);
-//            EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
-//            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
-//            subjectView.setText("");
-//            courseNumberView.setText("");
-//
-//            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
-//        });
-//    }
+    //Integration Tests
+    @Rule
+    public ActivityScenarioRule<InputClasses> scenarioRule = new ActivityScenarioRule<>(ViewPersonsList.class);
+    @Test
+    public void testViewPersonsList() {
+        ActivityScenario<InputClasses> scenario = scenarioRule.getScenario();
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+
+            EditText subjectView = activity.findViewById(R.id.subject_edittext);
+            EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
+            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+            subjectView.setText("");
+            courseNumberView.setText("");
+
+            assertEquals(1, ShadowAlertDialog.getShownDialogs().size());
+        });
+    }
 }
-**/

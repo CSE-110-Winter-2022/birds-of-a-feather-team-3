@@ -10,9 +10,7 @@ import java.util.Map;
 
 public class PersonViewAdapterTest {
     @Test
-    public void properMatchAmount() {
-        List<Person> persons = new ArrayList<>();
-        PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
+    public void detectAndReturnSharedUnitTest() {
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
         Course course3 = new Course("Winter", "2020", "CSE", "101");
