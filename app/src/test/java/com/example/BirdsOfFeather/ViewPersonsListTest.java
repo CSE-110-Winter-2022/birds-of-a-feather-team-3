@@ -1,5 +1,9 @@
+//package com.example.inputclasses;
+/**
+=======
 package com.example.BirdsOfFeather;
 
+>>>>>>> a27b3b83195d4dc4020614536523918524ab12be:app/src/test/java/com/example/BirdsOfFeather/ViewPersonsListTest.java
 //import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import org.junit.Rule;
 import org.checkerframework.checker.units.qual.A;
@@ -43,7 +47,7 @@ public class ViewPersonsListTest {
         Person Grace = new Person("Grace", new String[]{"ECE45","ECE35","MATH18"});
         Person Mark = new Person("Mark", new String[]{"CSE21","MATH18","WCWP10A"});
         Person Vicky = new Person("Vicky", new String[]{"WCWP10B","ECON109","WCWP10A"});
-*/
+
 
         Course course1 = new Course("Spring", "2020", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "CSE", "100");
@@ -55,12 +59,12 @@ public class ViewPersonsListTest {
         List<Course> MarkClasses = new ArrayList<>(Arrays.asList(course3, course2));
         List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
 
-        /***commonalities
+        **commonalities
          * Course1: Rodney, Grace, Vicki
          * Course2: Rodney, Grace, Mark
          * Course3: Mark
          * Course4: Vicki, Lucas
-         */
+
 
         String img1 = "";
 
@@ -103,12 +107,12 @@ public class ViewPersonsListTest {
         List<Course> VickiClasses = new ArrayList<>(Arrays.asList(course1, course4));
         List<Course> DupVickiClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
 
-        /***commonalities
+        **commonalities
          * Course1: Rodney, Grace, Vicki, DupVicki
          * Course2: Rodney, Grace, Mark, DupVicki
          * Course3: Mark, DupVicki
          * Course4: Vicki, Lucas
-         */
+
 
         String img1 = "";
 
@@ -160,3 +164,4 @@ public class ViewPersonsListTest {
 //        });
 //    }
 }
+**/
