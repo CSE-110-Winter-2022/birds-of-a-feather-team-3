@@ -22,17 +22,19 @@ public class MockInputPeople extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_mock_nearby_message);
+        String sample = "Bill,,,\n" +
+                "https://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,\n" +
+                "2022,WI,CSE,110";
+        TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
+        inputTextView.setText(sample);
     }
 
-    public void onEnterClicked(View v){
+
+    public void onMockEnterClicked(View v){
 
         classes = new ArrayList<Course>();
-
-
-
         TextView inputTextView = (TextView)findViewById(R.id.mockDataTextView);
         String inputData = inputTextView.getText().toString();
-
         //split text in textbox at newline character into string array
 
         //copying and pasting example data results in two line breaks per line
@@ -56,16 +58,15 @@ public class MockInputPeople extends AppCompatActivity {
             String number = splitCourse[3];
 
             newCourse = new Course(quarter,year,subject,number);
-
             classes.add(newCourse);
-
         }
 
         newStudent = new Person(name,profileURL,classes);
         System.out.println(newStudent.toString());
 
-        Intent intent = new Intent(this, ViewPersonsList.class);
-        startActivity(intent);
+        finish();
+        //Intent intent = new Intent(this, ViewPersonsList.class);
+        //startActivity(intent);
 
     }
 
