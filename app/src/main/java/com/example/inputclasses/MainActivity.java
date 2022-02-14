@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Account[] accounts = manager.getAccounts();
         if (accounts.length == 0) {
             Utilities.sendAlert(this,"Wanring: No account detected","Warning");
-            return "No account detected";
+            return "";
 
 
         }
