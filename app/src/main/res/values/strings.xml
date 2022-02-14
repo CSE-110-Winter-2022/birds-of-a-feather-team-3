@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InputClasses</string>
+    <string name="app_name">Birds of Feather</string>
     <string-array name="QuarterSelection">
         <item>Fall</item>
         <item>Winter</item>
