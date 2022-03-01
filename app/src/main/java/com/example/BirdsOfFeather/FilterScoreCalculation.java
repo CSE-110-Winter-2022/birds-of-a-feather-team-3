@@ -2,7 +2,7 @@ package com.example.BirdsOfFeather;
 
 import java.util.List;
 
-//flitter score calculation class for different type of flitters
+//filter score calculation class for different type of flitters
 
 //                Course course1 = new Course("Winter", "2020", "CSE", "101");
 //                Course course2 = new Course("Spring", "2020", "CSE", "101");
@@ -14,7 +14,7 @@ import java.util.List;
 //                Course course8 = new Course("Winter", "2022", "CSE", "101");
 //                Course course9 = new Course("Summer Session I", "2022", "CSE", "101");
 
-public class FliterScoreCalculation {
+public class FilterScoreCalculation {
 
     //claim this year's information
     String thisyear = "2022";

@@ -6,9 +6,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-public class FlitterScoreCalculationTest {
+public class FilterScoreCalculationTest {
     @Test
     public void properMatchAmount() {
         List<Person> persons = new ArrayList<>();
@@ -55,7 +54,7 @@ public class FlitterScoreCalculationTest {
         assertEquals(2, VickiInfo.getCommonCourses().size());
         assertEquals(3, DupVickiInfo.getCommonCourses().size());
 
-        FliterScoreCalculation fliterScoreCalculation = new FliterScoreCalculation();
+        FilterScoreCalculation fliterScoreCalculation = new FilterScoreCalculation();
         assertEquals(12,fliterScoreCalculation.score_recent(Rodney,self));
         assertEquals(5,fliterScoreCalculation.score_recent(Lucas,self));
         assertEquals(13,fliterScoreCalculation.score_recent(Mark,self));
