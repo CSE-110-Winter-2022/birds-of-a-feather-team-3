@@ -1,6 +1,8 @@
 package com.example.BirdsOfFeather;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
 
 //filter score calculation class for different type of flitters
 
@@ -17,30 +19,85 @@ import java.util.List;
 public class FilterScoreCalculation {
 
     //claim this year's information
-    String thisyear = "2022";
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH) + 1;
+
+    public int getYear(){
+        return this.year;
+    }
+    public String getQuarter(){
+        if (month>8){
+            return "Fall";
+        }else if (month>6){
+            return "Summer";
+        }else if (month>3){
+            return "Spring";
+        }else return "Winter";
+    }
+
     //String thisquarter = "Winter";
 
     //calculate score for one person using recent
     public int score_recent(Person person, Person self){
 
 
+        int thisyear = getYear();
+        String thisquarter = getQuarter();
         int score = 0;
         ProfileInfo profileInfo = SearchClassmates.detectAndReturnSharedClasses(self, person);
         List<Course> commonCourses = profileInfo.getCommonCourses();
+
+
+
         for (Course c:commonCourses){
+
             int quarterage = 0;
             String year = c.getYear();
             String quarter = c.getQuarter();
-            int yeardiff = 4*(Integer.parseInt(thisyear) - Integer.parseInt(year));
+            int yeardiff = 4*(thisyear - Integer.parseInt(year));
             int quardiff = 0;
-            if (quarter == "Winter"){quardiff = 0;}
-            if (quarter == "Fall"){quardiff = -3;}
-            if (quarter == "Summer Session I" || quarter == "Summer Session II" ||quarter =="Special Summer Session"){
-                quardiff = -2;
-            }
-            if (quarter == "Spring"){quardiff = -1;}
 
-            quarterage = quarterage + yeardiff + quardiff;
+            if (thisquarter.equals("Winter")){
+                if (quarter == "Winter"){quardiff = 0;}
+                if (quarter == "Fall"){quardiff = -3;}
+                if (quarter == "Summer Session I" || quarter == "Summer Session II" ||quarter =="Special Summer Session"){
+                    quardiff = -2;
+                }
+                if (quarter == "Spring"){quardiff = -1;}
+                quarterage = quarterage + yeardiff + quardiff;
+            }
+
+            else if (thisquarter.equals("Spring")){
+                if (quarter == "Spring"){quardiff = 0;}
+                if (quarter == "Winter"){quardiff = -3;}
+                if (quarter == "Summer Session I" || quarter == "Summer Session II" ||quarter =="Special Summer Session"){
+                    quardiff = -1;
+                }
+                if (quarter == "Fall"){quardiff = -2;}
+                quarterage = quarterage + yeardiff + quardiff;
+            }
+
+            else if (thisquarter.equals("Summer")){
+                if (quarter == "Winter"){quardiff = -2;}
+                if (quarter == "Fall"){quardiff = -1;}
+                if (quarter == "Summer Session I" || quarter == "Summer Session II" ||quarter =="Special Summer Session"){
+                    quardiff = 0;
+                }
+                if (quarter == "Spring"){quardiff = -3;}
+                quarterage = quarterage + yeardiff + quardiff;
+            }
+
+            else if (thisquarter.equals("Fall")){
+                if (quarter == "Winter"){quardiff = -1;}
+                if (quarter == "Fall"){quardiff = 0;}
+                if (quarter == "Summer Session I" || quarter == "Summer Session II" ||quarter =="Special Summer Session"){
+                    quardiff = -3;
+                }
+                if (quarter == "Spring"){quardiff = -2;}
+                quarterage = quarterage + yeardiff + quardiff;
+            }
+
             if (quarterage == 0){
                 score += 5;
             }else if (quarterage == 1){
@@ -50,8 +107,6 @@ public class FilterScoreCalculation {
             }else if (quarterage == 3){
                 score += 2;
             }else {score += 1;}
-
-
         }
 
         return score;
