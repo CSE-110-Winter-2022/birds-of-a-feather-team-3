@@ -66,8 +66,8 @@ public class InputClasses extends AppCompatActivity {
         Spinner sizeSpinner = (Spinner) findViewById(R.id.size_dropdown);
         ArrayAdapter<CharSequence> sizeAdapter = ArrayAdapter.createFromResource(this, R.array.SizeSelection,
                 android.R.layout.simple_spinner_item);
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        yearSpinner.setAdapter(yearAdapter);
+        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizeSpinner.setAdapter(sizeAdapter);
 
 
 
