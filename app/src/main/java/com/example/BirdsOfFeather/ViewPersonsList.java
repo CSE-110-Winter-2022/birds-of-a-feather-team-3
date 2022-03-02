@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.google.android.gms.nearby.Nearby;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ViewPersonsList extends AppCompatActivity {
+public class ViewPersonsList extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     protected RecyclerView personsRecyclerView;
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
@@ -79,11 +81,13 @@ public class ViewPersonsList extends AppCompatActivity {
         personSerializer = new PersonSerializer();
 
         // create the sort(filter) spinner
-        Spinner quarterSpinner = (Spinner) findViewById(R.id.filter_dropdown);
-        ArrayAdapter<CharSequence> quarterAdapter = ArrayAdapter.createFromResource(this, R.array.SortSelection,
+        Spinner spinner = (Spinner) findViewById(R.id.filter_dropdown);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SortSelection,
                 android.R.layout.simple_spinner_item);
-        quarterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        quarterSpinner.setAdapter(quarterAdapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         //empty arraylist to be used by PersonsViewAdapter for storing info
         List<Person> classmates = new ArrayList<>();
@@ -231,5 +235,19 @@ public class ViewPersonsList extends AppCompatActivity {
     public void unpublish(){
         Log.i(TAG, "Unpublishing");
         Nearby.getMessagesClient(this).unpublish(classesMessage);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//        personsViewAdapter.setSortType(i);
+//        String text = Integer.toString(i);
+//        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+
+        personsViewAdapter.setSortType(i);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        personsViewAdapter.setSortType(0);
     }
 }

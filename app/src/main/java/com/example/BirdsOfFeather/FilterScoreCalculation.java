@@ -39,13 +39,12 @@ public class FilterScoreCalculation {
     //String thisquarter = "Winter";
 
     //calculate score for one person using recent
-    public int score_recent(Person person, Person self){
+    public int score_recent(Person person, ProfileInfo profileInfo){
 
 
         int thisyear = getYear();
         String thisquarter = getQuarter();
         int score = 0;
-        ProfileInfo profileInfo = SearchClassmates.detectAndReturnSharedClasses(self, person);
         List<Course> commonCourses = profileInfo.getCommonCourses();
 
 
@@ -111,5 +110,9 @@ public class FilterScoreCalculation {
 
         return score;
 
+    }
+
+    public float score_size(Person person, ProfileInfo profileInfo) {
+        return 0;
     }
 }
