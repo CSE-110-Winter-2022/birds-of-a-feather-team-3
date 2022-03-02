@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.google.android.gms.nearby.Nearby;
@@ -75,6 +77,14 @@ public class ViewPersonsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
+
+        // create the sort(filter) spinner
+        Spinner quarterSpinner = (Spinner) findViewById(R.id.filter_dropdown);
+        ArrayAdapter<CharSequence> quarterAdapter = ArrayAdapter.createFromResource(this, R.array.SortSelection,
+                android.R.layout.simple_spinner_item);
+        quarterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        quarterSpinner.setAdapter(quarterAdapter);
+
         //empty arraylist to be used by PersonsViewAdapter for storing info
         List<Person> classmates = new ArrayList<>();
         db = AppDatabase.singleton(this);
