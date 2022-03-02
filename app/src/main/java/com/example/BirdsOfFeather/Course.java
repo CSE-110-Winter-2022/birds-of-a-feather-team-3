@@ -35,7 +35,7 @@ public class Course implements Serializable {
     public String getClassSize() {return this.classSize;}
 
     public String toString(){
-        String toReturn = this.quarter + " " + this.year + " " + this.subject + " " + this.classNumber + " " + this.classSize;
+        String toReturn = this.quarter + " " + this.year + " " + this.classSize + " " + this.subject + " " + this.classNumber;
         return toReturn;
     }
 
