@@ -24,10 +24,11 @@ public class FilterScoreCalculation {
     public int score_recent(Person person, Person self){
 
 
-        int finalscore = 0;
+        int score = 0;
         ProfileInfo profileInfo = SearchClassmates.detectAndReturnSharedClasses(self, person);
         List<Course> commonCourses = profileInfo.getCommonCourses();
         for (Course c:commonCourses){
+            int quarterage = 0;
             String year = c.getYear();
             String quarter = c.getQuarter();
             int yeardiff = 4*(Integer.parseInt(thisyear) - Integer.parseInt(year));
@@ -39,13 +40,21 @@ public class FilterScoreCalculation {
             }
             if (quarter == "Spring"){quardiff = -1;}
 
-            finalscore = finalscore + yeardiff + quardiff;
-
+            quarterage = quarterage + yeardiff + quardiff;
+            if (quarterage == 0){
+                score += 5;
+            }else if (quarterage == 1){
+                score += 4;
+            }else if (quarterage == 2){
+                score += 3;
+            }else if (quarterage == 3){
+                score += 2;
+            }else {score += 1;}
 
 
         }
 
-        return finalscore;
+        return score;
 
     }
 }

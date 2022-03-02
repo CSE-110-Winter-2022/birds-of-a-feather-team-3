@@ -12,9 +12,9 @@ public class FilterScoreCalculationTest {
     public void properMatchAmount() {
         List<Person> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
-        Course course1 = new Course("Spring", "2020", "CSE", "110");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
-        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course1 = new Course("Winter", "2022", "CSE", "110");
+        Course course2 = new Course("Fall", "2021", "CSE", "100");
+        Course course3 = new Course("Spring", "2021", "CSE", "101");
         Course course4 = new Course("Fall", "2020", "WCWP", "10A");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
@@ -55,8 +55,8 @@ public class FilterScoreCalculationTest {
         assertEquals(3, DupVickiInfo.getCommonCourses().size());
 
         FilterScoreCalculation fliterScoreCalculation = new FilterScoreCalculation();
-        assertEquals(12,fliterScoreCalculation.score_recent(Rodney,self));
-        assertEquals(5,fliterScoreCalculation.score_recent(Lucas,self));
-        assertEquals(13,fliterScoreCalculation.score_recent(Mark,self));
+        assertEquals(9,fliterScoreCalculation.score_recent(Rodney,self));
+        assertEquals(1,fliterScoreCalculation.score_recent(Lucas,self));
+        assertEquals(6,fliterScoreCalculation.score_recent(Mark,self));
     }
 }
