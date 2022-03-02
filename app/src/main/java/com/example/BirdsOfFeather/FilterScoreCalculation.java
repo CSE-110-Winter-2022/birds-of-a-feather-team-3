@@ -39,7 +39,7 @@ public class FilterScoreCalculation {
     //String thisquarter = "Winter";
 
     //calculate score for one person using recent
-    public int score_recent(Person person, ProfileInfo profileInfo){
+    public int score_recent(ProfileInfo profileInfo){
 
 
         int thisyear = getYear();
