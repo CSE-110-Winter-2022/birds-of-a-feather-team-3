@@ -93,8 +93,8 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         //Checks if a potential BoF has already been stored in the list
         if (!alreadyContained) {
             FilterScoreCalculation helper = new FilterScoreCalculation();
-            person.setScoreRecent(helper.score_recent(person, newProfileInfo));
-            person.setScoreClassSize(helper.score_size(person, newProfileInfo));
+            person.setScoreRecent(helper.score_recent(newProfileInfo));
+            person.setScoreClassSize(helper.score_size(newProfileInfo));
             this.persons.add(person);
             profileInformationList.put(person, newProfileInfo);
             // sort persons

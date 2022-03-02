@@ -13,10 +13,10 @@ public class PersonViewAdapterTest {
     public void properMatchAmount() {
         List<Person> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
-        Course course1 = new Course("Spring", "2020", "CSE", "110");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
-        Course course3 = new Course("Winter", "2020", "CSE", "101");
-        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110","Large");
+        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A","Large");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -59,10 +59,10 @@ public class PersonViewAdapterTest {
     public void orderedByMatchAmount() {
         List<Person> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
-        Course course1 = new Course("Spring", "2020", "CSE", "110");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
-        Course course3 = new Course("Winter", "2020", "CSE", "101");
-        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
+        Course course1 = new Course("Spring", "2020", "CSE", "110","Large");
+        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A","Large");
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));

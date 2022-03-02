@@ -12,10 +12,14 @@ public class FilterScoreCalculationTest {
     public void properMatchAmount() {
         List<Person> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
-        Course course1 = new Course("Winter", "2022", "CSE", "110");
-        Course course2 = new Course("Fall", "2021", "CSE", "100");
-        Course course3 = new Course("Spring", "2021", "CSE", "101");
-        Course course4 = new Course("Fall", "2020", "WCWP", "10A");
+        Course course1 = new Course("Winter", "2022", "CSE", "110","Large");
+        //score = 5, 0.1
+        Course course2 = new Course("Fall", "2021", "CSE", "100","Gigantic");
+        //score = 4, 0.03
+        Course course3 = new Course("Spring", "2021", "CSE", "101","Small");
+        //score = 2, 0.33
+        Course course4 = new Course("Fall", "2020", "WCWP", "10A","Tiny");
+        //score = 1, 1.00
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
         List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
@@ -26,7 +30,7 @@ public class FilterScoreCalculationTest {
         /***commonalities
          * Course1: Rodney, Grace, Vicki, DupVicki
          * Course2: Rodney, Grace, Mark, DupVicki
-         * Course3: Mark
+         * Course3: Mark, Grace, DupVicki
          * Course4: Vicki, Lucas
          */
 
@@ -54,9 +58,18 @@ public class FilterScoreCalculationTest {
         assertEquals(2, VickiInfo.getCommonCourses().size());
         assertEquals(3, DupVickiInfo.getCommonCourses().size());
 
-        FilterScoreCalculation fliterScoreCalculation = new FilterScoreCalculation();
-        assertEquals(9,fliterScoreCalculation.score_recent(Rodney,self));
-        assertEquals(1,fliterScoreCalculation.score_recent(Lucas,self));
-        assertEquals(6,fliterScoreCalculation.score_recent(Mark,self));
+
+        //here check if the score calculation with time is correct
+        FilterScoreCalculation filterScoreCalculation = new FilterScoreCalculation();
+        assertEquals(9,filterScoreCalculation.score_recent(RodneyInfo));
+        assertEquals(1,filterScoreCalculation.score_recent(LucasInfo));
+        assertEquals(6,filterScoreCalculation.score_recent(MarkInfo));
+        assertEquals(11,filterScoreCalculation.score_recent(GraceInfo));
+
+        //here check if the size score calculation is correct
+        assertEquals(0.13,filterScoreCalculation.score_size(RodneyInfo),0.001);
+        assertEquals(1.00,filterScoreCalculation.score_size(LucasInfo),0.001);
+        assertEquals(0.36,filterScoreCalculation.score_size(MarkInfo),0.001);
+        assertEquals(0.46,filterScoreCalculation.score_size(GraceInfo),0.001);
     }
 }

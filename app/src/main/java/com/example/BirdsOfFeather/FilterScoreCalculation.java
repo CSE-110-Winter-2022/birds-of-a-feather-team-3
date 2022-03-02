@@ -39,7 +39,7 @@ public class FilterScoreCalculation {
     //String thisquarter = "Winter";
 
     //calculate score for one person using recent
-    public int score_recent(Person person, ProfileInfo profileInfo){
+    public int score_recent(ProfileInfo profileInfo){
 
 
         int thisyear = getYear();
@@ -112,7 +112,19 @@ public class FilterScoreCalculation {
 
     }
 
-    public float score_size(Person person, ProfileInfo profileInfo) {
-        return 0;
+
+
+    public float score_size(ProfileInfo profileInfo) {
+
+        float score = 0;
+        List<Course> commonCourses = profileInfo.getCommonCourses();
+
+        for (Course c: commonCourses){
+            String clasSize = c.getSize();
+            double clasScore = ( clasSize.equals("Tiny") ) ? 1 : (clasSize.equals("Small")) ? 0.33 : (clasSize.equals("Medium")) ? 0.18 : (clasSize.equals("Large")) ? 0.10 : (clasSize.equals("Huge")) ? 0.06 : 0.03;
+            score += clasScore;
+        }
+
+        return score;
     }
 }

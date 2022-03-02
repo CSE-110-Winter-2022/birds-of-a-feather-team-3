@@ -24,9 +24,9 @@ public class TestInputClasses {
     //Unit Tests
     @Test
     public void testCheckIsDuplicate() {
-        Course course1 = new Course("Fall", "2020", "CSE", "100");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
-        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course1 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
         List<Course> mockCourseList = new ArrayList<>();
         mockCourseList.add(course1);
         InputClasses inputClasses = new InputClasses();
@@ -36,9 +36,9 @@ public class TestInputClasses {
 
     @Test
     public void testCheckValuesEmpty () {
-        Course course1 = new Course("Fall", "2020", "CSE", "100");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
-        Course course3 = new Course("Winter", "2020", "CSE", "101");
+        Course course1 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
+        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
         InputClasses inputClasses = new InputClasses();
         boolean empty1 = inputClasses.checkValuesEmpty("Fall", "2020", "ECE" ,"");
         boolean empty2 = inputClasses.checkValuesEmpty("", "2021", "" ,"2020");
