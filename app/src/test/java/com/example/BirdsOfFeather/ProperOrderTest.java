@@ -19,15 +19,15 @@ public class ProperOrderTest {
     @Test
     public void chronologicalCompareTest() {
         //
-        Course course1 = new Course("Winter", "2020", "CSE", "101");
-        Course course2 = new Course("Spring", "2020", "CSE", "101");
-        Course course3 = new Course("Summer Session I", "2020", "CSE", "101");
-        Course course4 = new Course("Summer Session II", "2020", "CSE", "101");
-        Course course5 = new Course("Special Summer Session", "2020", "CSE", "101");
-        Course course6 = new Course("Fall", "2020", "CSE", "101");
-        Course course7 = new Course("Fall", "2021", "CSE", "101");
-        Course course8 = new Course("Winter", "2022", "CSE", "101");
-        Course course9 = new Course("Summer Session I", "2022", "CSE", "101");
+        Course course1 = new Course("Winter", "2020", "CSE", "101","Large");
+        Course course2 = new Course("Spring", "2020", "CSE", "101","Large");
+        Course course3 = new Course("Summer Session I", "2020", "CSE", "101","Large");
+        Course course4 = new Course("Summer Session II", "2020", "CSE", "101","Large");
+        Course course5 = new Course("Special Summer Session", "2020", "CSE", "101","Large");
+        Course course6 = new Course("Fall", "2020", "CSE", "101","Large");
+        Course course7 = new Course("Fall", "2021", "CSE", "101","Large");
+        Course course8 = new Course("Winter", "2022", "CSE", "101","Large");
+        Course course9 = new Course("Summer Session I", "2022", "CSE", "101","Large");
 
         Map<Course, Integer> courseOrder = new HashMap<>();
 

@@ -12,8 +12,8 @@ import java.util.List;
 public class toStringTest {
     @Test
     public void testPersonToString() {
-        Course course1 = new Course("Spring", "2020", "CSE", "110");
-        Course course2 = new Course("Fall", "2020", "CSE", "100");
+        Course course1 = new Course("Spring", "2020", "CSE", "110","Large");
+        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
         List<Course> TestClasses = new ArrayList<>(Arrays.asList(course1, course2));
         Person testPerson = new Person("Test", "test.com", TestClasses);
         String expectedToString = "Test, test.com, [Spring 2020 CSE 110, Fall 2020 CSE 100], 2";
@@ -22,7 +22,7 @@ public class toStringTest {
 
     @Test
     public void testCourseToString() {
-        Course course1 = new Course("Spring", "2020", "CSE", "110");
+        Course course1 = new Course("Spring", "2020", "CSE", "110","Large");
         String expectedToString = "Spring 2020 CSE 110";
         assertEquals(expectedToString, course1.toString());
     }

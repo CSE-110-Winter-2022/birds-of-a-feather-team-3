@@ -7,11 +7,13 @@ public class Course implements Serializable {
     public String year;
     public String subject;
     public String classNumber;
-    public Course (String quarter, String year, String subject, String classNumber) {
+    public String size;
+    public Course (String quarter, String year, String subject, String classNumber, String size) {
         this.quarter = quarter;
         this.year = year;
         this.subject = subject;
         this.classNumber = classNumber;
+        this.size = size;
     }
     public String getQuarter() {
         return this.quarter;
@@ -25,6 +27,7 @@ public class Course implements Serializable {
     public String getClassNumber() {
         return this.classNumber;
     }
+    public String getSize(){return this.size;}
     public String toString(){
         String toReturn = this.quarter + " " + this.year + " " + this.subject + " " + this.classNumber;
         return toReturn;
