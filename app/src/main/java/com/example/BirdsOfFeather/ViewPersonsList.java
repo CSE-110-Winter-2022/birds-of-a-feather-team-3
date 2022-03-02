@@ -244,6 +244,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 //        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
 
         personsViewAdapter.setSortType(i);
+        if (i == 0) {
+            personsViewAdapter.sortByMatches();
+        } else if (i == 1) {
+            personsViewAdapter.sortByRecent();
+        } else {
+            personsViewAdapter.sortBySize();
+        }
     }
 
     @Override
