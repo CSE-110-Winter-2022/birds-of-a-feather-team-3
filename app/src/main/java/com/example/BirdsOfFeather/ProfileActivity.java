@@ -1,11 +1,16 @@
 package com.example.BirdsOfFeather;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //Displays the image, name, and classes.
 public class ProfileActivity extends AppCompatActivity {
@@ -35,5 +40,13 @@ public class ProfileActivity extends AppCompatActivity {
         }
         //Set the title with the person
         setTitle("Profile");
+    }
+
+    public void onWaveClicked(View view) {
+        //Button wave = this.findViewById(R.id.wave_button);
+        Context context = getApplicationContext();
+        Toast waveToast = Toast.makeText(context, "wave sent", Toast.LENGTH_LONG);
+        waveToast.show();
+
     }
 }
