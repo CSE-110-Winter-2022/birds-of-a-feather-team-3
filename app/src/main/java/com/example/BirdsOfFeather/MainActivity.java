@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link and courses
+        // commenting the code for developing TODO: cancel commenting and remove if(false){} when done
 //        if (!sharedPreferences.getString("first_name", "").equals("")) {
 //            Intent intent = new Intent(this, ViewPersonsList.class);
 //            startActivity(intent);
