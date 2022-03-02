@@ -62,6 +62,15 @@ public class InputClasses extends AppCompatActivity {
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
 
+        //size spinner
+        Spinner sizeSpinner = (Spinner) findViewById(R.id.size_dropdown);
+        ArrayAdapter<CharSequence> sizeAdapter = ArrayAdapter.createFromResource(this, R.array.SizeSelection,
+                android.R.layout.simple_spinner_item);
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        yearSpinner.setAdapter(yearAdapter);
+
+
+
         //enter subject textView
         //Restrict input to uppercase
         EditText subjectView = findViewById(R.id.subject_edittext);
@@ -73,9 +82,9 @@ public class InputClasses extends AppCompatActivity {
         updatedFilters[currentFilters.length] = new InputFilter.AllCaps();
         subjectView.setFilters(updatedFilters);
 
+
         //enter course number textView
         //Restrict input to uppercase
-
         EditText numberView = findViewById(R.id.class_number_edittext);
         InputFilter[] currentFiltersNumView = numberView.getFilters();
         InputFilter[] updatedFiltersNumView = new InputFilter[currentFiltersNumView.length + 1];
@@ -103,20 +112,22 @@ public class InputClasses extends AppCompatActivity {
     public void enterClassOnClick(View view) {
         Spinner quarterInput = (Spinner) findViewById(R.id.quarter_dropdown);
         Spinner yearInput = (Spinner) findViewById(R.id.year_dropdown);
+        Spinner sizeInput = (Spinner) findViewById(R.id.size_dropdown);
         EditText subjectInput = (EditText) findViewById(R.id.subject_edittext);
         EditText classNumberInput = (EditText) findViewById(R.id.class_number_edittext);
 
         String quarter = quarterInput.getSelectedItem().toString() + "";
         String year = yearInput.getSelectedItem().toString() + "";
+        String size = sizeInput.getSelectedItem().toString() + "";
         String subject = subjectInput.getText().toString() + "";
         String classNumber = classNumberInput.getText().toString() + "";
 
         //alert and do not continue if not all entries filled
-        if (checkValuesEmpty(quarter, year, subject, classNumber)) {
+        if (checkValuesEmpty(quarter, year, size, subject, classNumber)) {
             Utilities.sendAlert(this, "Fill in all the inputs", "Warning");
         }
         else {
-            Course potentialCourse = new Course(quarter, year, subject, classNumber);
+            Course potentialCourse = new Course(quarter, year, size, subject, classNumber);
             //alert and do not continue if entry matches previous entry
             if (checkIsDuplicate(localCourses, potentialCourse)) {
                 Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
@@ -124,7 +135,7 @@ public class InputClasses extends AppCompatActivity {
             else {
                 //save class to local database
                 if (!usingMock) {
-                    ClassEntity classEntity = new ClassEntity(quarter, year, subject, classNumber);
+                    ClassEntity classEntity = new ClassEntity(quarter, year, size, subject, classNumber);
                     db.classesDao().insert(classEntity);
                 }
                 localCourses.add(potentialCourse);
@@ -134,8 +145,8 @@ public class InputClasses extends AppCompatActivity {
             }
         }
     }
-    public boolean checkValuesEmpty(String quarter, String year, String subject, String classNumber) {
-        return quarter.equals("") || year.equals("") || subject.equals("") || classNumber.equals("");
+    public boolean checkValuesEmpty(String quarter, String year, String size, String subject, String classNumber) {
+        return quarter.equals("") || year.equals("") || size.equals("") || subject.equals("") || classNumber.equals("");
     }
 
     public boolean checkIsDuplicate(List<Course> compareList, Course potentialCourse) {
