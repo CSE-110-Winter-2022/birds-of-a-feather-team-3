@@ -22,14 +22,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link and courses
-        // commenting the code for developing TODO: cancel commenting and remove if(false){} when done
-//        if (!sharedPreferences.getString("first_name", "").equals("")) {
-//            Intent intent = new Intent(this, ViewPersonsList.class);
-//            startActivity(intent);
-//            finish();
-//        }
-        if (false) {}
-
+        if (!sharedPreferences.getString("first_name", "").equals("")) {
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            startActivity(intent);
+            finish();
+        }
         else {
             EditText textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();

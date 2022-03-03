@@ -120,7 +120,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     public void sortByMatches() {
         Collections.sort(persons, SortByMatchesComparator);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public Comparator<Person> SortByRecentComparator = new Comparator<Person>() {
@@ -132,20 +132,20 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     public void sortByRecent() {
         Collections.sort(persons,SortByRecentComparator);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public Comparator<Person> SortByCourseSizeComparator = new Comparator<Person>() {
         @Override
         public int compare(Person p1, Person p2) {
-            if (p1.getScoreRecent() > p2.getScoreClassSize()) {return -1;}
-            else if (p1.getScoreRecent() < p2.getScoreClassSize()) {return 1;}
+            if (p1.getScoreClassSize() > p2.getScoreClassSize()) {return -1;}
+            else if (p1.getScoreClassSize() < p2.getScoreClassSize()) {return 1;}
             else {return 0;}
         }
     };
     public void sortBySize() {
         Collections.sort(persons, SortByCourseSizeComparator);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
 
