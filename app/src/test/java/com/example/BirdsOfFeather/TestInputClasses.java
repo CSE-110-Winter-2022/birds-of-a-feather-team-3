@@ -24,9 +24,9 @@ public class TestInputClasses {
     //Unit Tests
     @Test
     public void testCheckIsDuplicate() {
-        Course course1 = new Course("Fall", "2020", "CSE", "100","Large");
-        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
-        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
+        Course course1 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
+        Course course2 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
+        Course course3 = new Course("Winter", "2020", "Medium (75-150)","CSE", "101");
         List<Course> mockCourseList = new ArrayList<>();
         mockCourseList.add(course1);
         InputClasses inputClasses = new InputClasses();
@@ -36,16 +36,23 @@ public class TestInputClasses {
 
     @Test
     public void testCheckValuesEmpty () {
-        Course course1 = new Course("Fall", "2020", "CSE", "100","Large");
-        Course course2 = new Course("Fall", "2020", "CSE", "100","Large");
-        Course course3 = new Course("Winter", "2020", "CSE", "101","Large");
+        //Course course1 = new Course("Fall", "2020", "Large (150-250)", "CSE", "100");
+        //Course course2 = new Course("Fall", "2020", "Large (150-250)", "CSE", "100");
+        //Course course3 = new Course("Winter", "2020", "Medium (75-150)", "CSE", "101");
+
         InputClasses inputClasses = new InputClasses();
-        boolean empty1 = inputClasses.checkValuesEmpty("Fall", "2020", "ECE" ,"");
-        boolean empty2 = inputClasses.checkValuesEmpty("", "2021", "" ,"2020");
-        boolean full1 = inputClasses.checkValuesEmpty("Winter", "2021", "CSE" ,"12");
-        boolean full2 = inputClasses.checkValuesEmpty("Spring", "2019", "CSE" ,"15");
+        boolean empty1 = inputClasses.checkValuesEmpty("", "2021", "Large (150-250)", "CSE" ,"101");
+        boolean empty2 = inputClasses.checkValuesEmpty("Fall","" ,"Large (150-250)", "CSE" ,"101");
+        boolean empty3 = inputClasses.checkValuesEmpty("Fall","2021", "", "CSE", "101" );
+        boolean empty4 = inputClasses.checkValuesEmpty("Fall", "2021", "Large (150-250)", "", "101");
+        boolean empty5 = inputClasses.checkValuesEmpty("Fall", "2021", "Large (150-250)", "CSE", "");
+        boolean full1 = inputClasses.checkValuesEmpty("Winter", "2021", "Large (150-250)","CSE" ,"12");
+        boolean full2 = inputClasses.checkValuesEmpty("Spring", "2019", "Medium (75-150)","CSE" ,"15");
         assertEquals(true, empty1);
         assertEquals(true, empty2);
+        assertEquals(true, empty3);
+        assertEquals(true, empty4);
+        assertEquals(true, empty5);
         assertEquals(false, full1);
         assertEquals(false, full2);
     }
@@ -80,8 +87,10 @@ public class TestInputClasses {
             EditText courseNumberView = activity.findViewById(R.id.class_number_edittext);
             Spinner quarterSpinner = activity.findViewById(R.id.quarter_dropdown);
             Spinner yearSpinner = activity.findViewById(R.id.year_dropdown);
+            Spinner sizeSpinner = activity.findViewById(R.id.size_dropdown);
             quarterSpinner.setPrompt("Fall");
             yearSpinner.setPrompt("2018");
+            sizeSpinner.setPrompt("Medium (75-150)");
             subjectView.setText("CSE");
             courseNumberView.setText("110");
             enterButton.performClick();

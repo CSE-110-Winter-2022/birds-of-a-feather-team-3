@@ -68,14 +68,14 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     @Override
     protected void onResume() {
-        Log.i("View Person Class", "RESUMED");
+        Log.i(TAG, "RESUMED");
         System.out.println(myCourses.toString());
         super.onResume();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("View Person Class", "CREATED");
+        Log.i(TAG, "CREATED");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
@@ -103,11 +103,11 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String selfName = preferences.getString("first_name", "First_Name");
         String selfPictureLink = preferences.getString("profile_picture_url", "");
-        Log.i("Self details", selfName + " " + selfPictureLink);
+        Log.i(TAG, selfName + " " + selfPictureLink);
         Person self = new Person(selfName, selfPictureLink, myCourses);
         int i = 1;
         for(Course course: self.getClasses()){
-            Log.i("Self inputted courses", "Course " + i + ":" + course.toString());
+            Log.i(TAG, "Course " + i + ":" + course.toString());
             i++;
         }
         byte[] empty = {};
@@ -137,7 +137,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                         personsProfileInfo = SearchClassmates
                                 .detectAndReturnSharedClasses(self, deserializedPerson);
                         gotName = deserializedPerson.getName();
-                        Log.i("Message Listener", "Received message from " + gotName);
+                        Log.i(TAG, "Received message from " + gotName);
                     } else {
                         unchangingDeserializedPerson = null;
                         personsProfileInfo = null;
@@ -164,7 +164,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.i("onLost", "Stopped receiving messages from " + senderName);
+                    Log.i(TAG, "Stopped receiving messages from " + senderName);
                 }
             }
         };
@@ -178,14 +178,14 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             if (shareButton.getText().equals("Start")) {
                 startButtonOn = true;
                 //start sharing and receiving data
-                Log.i("Share", "Starting share");
+                Log.i(TAG, "Starting share");
                 shareButton.setText("Stop");
                 subscribe();
                 publish();
             } else if (shareButton.getText().equals("Stop")) {
                 startButtonOn = false;
                 //stop sharing and receiving data
-                Log.i("Share", "Starting share");
+                Log.i(TAG, "Starting share");
                 shareButton.setText("Start");
                 unsubscribe();
                 unpublish();

@@ -82,7 +82,7 @@ public class MockInputPeople extends AppCompatActivity {
         String year = splitCourse[0];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-        String size = splitCourse[4];
-        return new Course(quarter, year, subject, number,size);
+        String size = "temp";
+        return new Course(quarter, year, size, subject, number);
     }
 }
