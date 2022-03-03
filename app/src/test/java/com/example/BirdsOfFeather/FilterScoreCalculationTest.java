@@ -12,13 +12,13 @@ public class FilterScoreCalculationTest {
     public void properMatchAmount() {
         List<Person> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
-        Course course1 = new Course("Winter", "2022", "CSE", "110","Large");
+        Course course1 = new Course("Winter", "2022", "Large (150-250)", "CSE","110");
         //score = 5, 0.1
-        Course course2 = new Course("Fall", "2021", "CSE", "100","Gigantic");
+        Course course2 = new Course("Fall", "2021", "Gigantic (400+)", "CSE","100");
         //score = 4, 0.03
-        Course course3 = new Course("Spring", "2021", "CSE", "101","Small");
+        Course course3 = new Course("Spring", "2021", "Small (40-75)", "CSE","101");
         //score = 2, 0.33
-        Course course4 = new Course("Fall", "2020", "WCWP", "10A","Tiny");
+        Course course4 = new Course("Fall", "2020", "Tiny (<40)", "WCWP","10A");
         //score = 1, 1.00
         List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
         List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));

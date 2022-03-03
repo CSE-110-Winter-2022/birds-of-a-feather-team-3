@@ -121,7 +121,7 @@ public class FilterScoreCalculation {
 
         for (Course c: commonCourses){
             String clasSize = c.getClassSize();
-            double clasScore = ( clasSize.equals("Tiny") ) ? 1 : (clasSize.equals("Small")) ? 0.33 : (clasSize.equals("Medium")) ? 0.18 : (clasSize.equals("Large")) ? 0.10 : (clasSize.equals("Huge")) ? 0.06 : 0.03;
+            double clasScore = ( clasSize.equals("Tiny (<40)") ) ? 1 : (clasSize.equals("Small (40-75)")) ? 0.33 : (clasSize.equals("Medium (75-150)")) ? 0.18 : (clasSize.equals("Large (150-250)")) ? 0.10 : (clasSize.equals("Huge (250-400)")) ? 0.06 : 0.03;
             score += clasScore;
         }
 
