@@ -120,7 +120,7 @@ public class FilterScoreCalculation {
         List<Course> commonCourses = profileInfo.getCommonCourses();
 
         for (Course c: commonCourses){
-            String clasSize = c.getSize();
+            String clasSize = c.getClassSize();
             double clasScore = ( clasSize.equals("Tiny") ) ? 1 : (clasSize.equals("Small")) ? 0.33 : (clasSize.equals("Medium")) ? 0.18 : (clasSize.equals("Large")) ? 0.10 : (clasSize.equals("Huge")) ? 0.06 : 0.03;
             score += clasScore;
         }
