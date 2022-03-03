@@ -80,10 +80,10 @@ public class MockInputPeople extends AppCompatActivity {
         String[] splitCourse = input.split(",");
         String quarter = quarterCodeToQuarter(splitCourse[1]);
         String year = splitCourse[0];
+        String classSize = splitCourse[4];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-        String size = "temp";
 
-        return new Course(quarter, year, size, subject, number);
+        return new Course(quarter, year, classSize, subject, number);
     }
 }

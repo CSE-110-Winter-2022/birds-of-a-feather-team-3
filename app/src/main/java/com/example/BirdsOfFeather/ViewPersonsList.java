@@ -180,7 +180,7 @@ public class ViewPersonsList extends AppCompatActivity {
                 unpublish();
 
                 //prompt to save session
-                //Utilities.sendAlert(this,"Do you want to save your session?", "Save Session");
+                Utilities.sendAlert(this,"Do you want to save your session?", "Save Session");
             }
         });
     }
