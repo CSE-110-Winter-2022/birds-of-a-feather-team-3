@@ -1,6 +1,7 @@
 package com.example.BirdsOfFeather;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +12,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.google.android.gms.nearby.Nearby;
@@ -43,6 +47,14 @@ public class ViewPersonsList extends AppCompatActivity {
     private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
     AppDatabase db;
+
+    //popup stuff
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private EditText customName_editText;
+    private Button saveSession_button;
+    private Spinner classes_spinner;
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -180,7 +192,8 @@ public class ViewPersonsList extends AppCompatActivity {
                 unpublish();
 
                 //prompt to save session
-                Utilities.sendAlert(this,"Do you want to save your session?", "Save Session");
+                saveSessionDialog();
+
             }
         });
     }
@@ -228,4 +241,68 @@ public class ViewPersonsList extends AppCompatActivity {
         Log.i(TAG, "Unpublishing");
         Nearby.getMessagesClient(this).unpublish(classesMessage);
     }
+
+    public void saveSessionDialog(){
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View saveSessionPopupView = getLayoutInflater().inflate(R.layout.popup_save_session_prompt, null);
+        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.custom_name_edittext);
+        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.save_session_button);
+        classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.classes_spinner);
+
+        loadSpinnerData(classes_spinner);
+
+        dialogBuilder.setView(saveSessionPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        saveSession_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+
+                //no need to check for empty input as cannot reach this screen unless has at least one class -> default session name
+
+                String sessionName;
+
+                //if there is any text in custom name box
+                if(customName_editText.getText().toString() != null && !customName_editText.getText().toString().equals("")){
+                    sessionName = customName_editText.getText().toString();
+                }
+                else{
+                    sessionName = classes_spinner.getSelectedItem().toString();
+                }
+
+                System.out.println("Selected session name is: " + sessionName);
+
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    public void loadSpinnerData(Spinner spinner){
+        List<String> courseNameList = new ArrayList<String>();
+        for(Course c: myCourses){
+            courseNameList.add(c.getSubject() + " " + c.getClassNumber());
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, courseNameList);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+    }
+
+    public boolean isSessionNameEmpty(EditText editText, Spinner spinner){
+        boolean isEmpty = false;
+
+        if(editText.getText() == null || editText.getText().toString().equals("")){
+            if(spinner.getSelectedItem() == null || spinner.getSelectedItem().toString().equals("")){
+                isEmpty = true;
+            }
+        }
+        return isEmpty;
+    }
+
+
 }

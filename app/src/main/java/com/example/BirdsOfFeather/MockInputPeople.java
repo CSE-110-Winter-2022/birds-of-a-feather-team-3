@@ -24,6 +24,13 @@ public class MockInputPeople extends AppCompatActivity {
         setContentView(R.layout.activity_input_mock_nearby_message);
     }
 
+    /*
+        expected mock input:
+        Name,,,
+        url,,,
+        year,quarter abbrev,subject,number,size
+     */
+
 
     public void onMockEnterClicked(View v) throws Exception {
         classes = new ArrayList<Course>();
