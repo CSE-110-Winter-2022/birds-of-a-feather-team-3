@@ -47,13 +47,14 @@ public class MockInputTest {
 
         MockInputPeople mockInputPeople = new MockInputPeople();
 
-        String courseToParse = "2022,WI,CSE,110";
+        String courseToParse = "2022,WI,CSE,110,Tiny (<40)";
         Course parsedCourse = mockInputPeople.parseCourse(courseToParse);
 
         assertEquals("2022", parsedCourse.year);
         assertEquals("Winter", parsedCourse.quarter);
         assertEquals("CSE", parsedCourse.subject);
         assertEquals("110", parsedCourse.classNumber);
+        assertEquals("Tiny (<40)", parsedCourse.classSize);
 
     }
 
