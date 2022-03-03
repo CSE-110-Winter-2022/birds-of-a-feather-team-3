@@ -75,8 +75,10 @@ public class ViewPersonsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
+
         //empty arraylist to be used by PersonsViewAdapter for storing info
         List<Person> classmates = new ArrayList<>();
+
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
         setTitle("BoFs");
@@ -85,6 +87,7 @@ public class ViewPersonsList extends AppCompatActivity {
         personsRecyclerView.setLayoutManager(personsLayoutManager);
         personsViewAdapter = new PersonsViewAdapter(classmates);
         personsRecyclerView.setAdapter(personsViewAdapter);
+
         //construct Person object for self
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String selfName = preferences.getString("first_name", "First_Name");
@@ -171,10 +174,13 @@ public class ViewPersonsList extends AppCompatActivity {
             } else if (shareButton.getText().equals("Stop")) {
                 startButtonOn = false;
                 //stop sharing and receiving data
-                Log.i(TAG, "Starting share");
+                Log.i(TAG, "Stopping share");
                 shareButton.setText("Start");
                 unsubscribe();
                 unpublish();
+
+                //prompt to save session
+                //Utilities.sendAlert(this,"Do you want to save your session?", "Save Session");
             }
         });
     }
