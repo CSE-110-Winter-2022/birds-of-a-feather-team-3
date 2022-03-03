@@ -118,16 +118,16 @@ public class InputClasses extends AppCompatActivity {
 
         String quarter = quarterInput.getSelectedItem().toString() + "";
         String year = yearInput.getSelectedItem().toString() + "";
-        String size = sizeInput.getSelectedItem().toString() + "";
+        String classSize = sizeInput.getSelectedItem().toString() + "";
         String subject = subjectInput.getText().toString() + "";
         String classNumber = classNumberInput.getText().toString() + "";
-
+        // String size = classNumberInput.getText().toString()+"";
         //alert and do not continue if not all entries filled
-        if (checkValuesEmpty(quarter, year, size, subject, classNumber)) {
+        if (checkValuesEmpty(quarter, year, classSize, subject, classNumber)) {
             Utilities.sendAlert(this, "Fill in all the inputs", "Warning");
         }
         else {
-            Course potentialCourse = new Course(quarter, year, size, subject, classNumber);
+            Course potentialCourse = new Course(quarter, year, classSize, subject, classNumber);
             //alert and do not continue if entry matches previous entry
             if (checkIsDuplicate(localCourses, potentialCourse)) {
                 Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
@@ -135,7 +135,7 @@ public class InputClasses extends AppCompatActivity {
             else {
                 //save class to local database
                 if (!usingMock) {
-                    ClassEntity classEntity = new ClassEntity(quarter, year, size, subject, classNumber);
+                    ClassEntity classEntity = new ClassEntity(quarter, year, classSize, subject, classNumber);
                     db.classesDao().insert(classEntity);
                 }
                 localCourses.add(potentialCourse);

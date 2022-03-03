@@ -29,6 +29,7 @@ public class ProperOrderTest {
         Course course8 = new Course("Winter", "2022", "Large (150-250)","CSE", "101");
         Course course9 = new Course("Summer Session I", "2022", "Large (150-250)","CSE", "101");
 
+
         Map<Course, Integer> courseOrder = new HashMap<>();
 
         courseOrder.put(course1, 1);

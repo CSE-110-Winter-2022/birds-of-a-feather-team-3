@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
         else {
             EditText textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
