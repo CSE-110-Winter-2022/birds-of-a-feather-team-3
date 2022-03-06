@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.ClassEntity;
+import com.example.BirdsOfFeather.database.SessionEntity;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -54,6 +56,7 @@ public class ViewPersonsList extends AppCompatActivity {
     private EditText customName_editText;
     private Button saveSession_button;
     private Spinner classes_spinner;
+    String sessionName;
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -262,9 +265,8 @@ public class ViewPersonsList extends AppCompatActivity {
 
                 //no need to check for empty input as cannot reach this screen unless has at least one class -> default session name
 
-                String sessionName;
-
                 //if there is any text in custom name box
+
                 if(customName_editText.getText().toString() != null && !customName_editText.getText().toString().equals("")){
                     sessionName = customName_editText.getText().toString();
                 }
@@ -272,7 +274,18 @@ public class ViewPersonsList extends AppCompatActivity {
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
-                System.out.println("Selected session name is: " + sessionName);
+                //System.out.println("Selected session name is: " + sessionName);
+
+                //create new session object
+                SessionEntity sessionEntity = new SessionEntity(sessionName);
+                db.sessionDao().insert(sessionEntity);
+
+                List<Session> mySessions = db.sessionDao().getAll();
+
+                System.out.println("Sessions: ");
+                for(Session s: mySessions){
+                    System.out.println(s.sessionName);
+                }
 
                 dialog.dismiss();
             }
@@ -293,6 +306,7 @@ public class ViewPersonsList extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
+    //should never be called as session will always have a default name
     public boolean isSessionNameEmpty(EditText editText, Spinner spinner){
         boolean isEmpty = false;
 
@@ -305,4 +319,9 @@ public class ViewPersonsList extends AppCompatActivity {
     }
 
 
+    public void onSessionClicked(View view) {
+        Intent intent = new Intent(this, ViewSessionsList.class);
+        startActivity(intent);
+        finish();
+    }
 }
