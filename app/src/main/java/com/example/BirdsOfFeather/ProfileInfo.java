@@ -4,19 +4,19 @@ import java.util.List;
 
 //Stores information of another user in relation to the app user
 public class ProfileInfo {
-    List<Course> commonCourses;
+    List<Course> profileCourses;
     String name;
     String URL;
     String uniqueId;
-    public ProfileInfo(String name, String URL, List<Course> commonCourses, String uniqueId) {
+    public ProfileInfo(String name, String URL, List<Course> profileCourses, String uniqueId) {
         this.name = name;
         this.URL = URL;
-        this.commonCourses = commonCourses;
+        this.profileCourses = profileCourses;
         this.uniqueId = uniqueId;
     }
-
+  
     public List<Course> getCommonCourses() {
-        return this.commonCourses;
+        return this.profileCourses;
     }
     public String getName() {
         return this.name;
