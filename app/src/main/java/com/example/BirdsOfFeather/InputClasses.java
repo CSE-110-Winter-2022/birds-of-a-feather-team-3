@@ -121,7 +121,7 @@ public class InputClasses extends AppCompatActivity {
         String classSize = sizeInput.getSelectedItem().toString() + "";
         String subject = subjectInput.getText().toString() + "";
         String classNumber = classNumberInput.getText().toString() + "";
-
+        // String size = classNumberInput.getText().toString()+"";
         //alert and do not continue if not all entries filled
         if (checkValuesEmpty(quarter, year, classSize, subject, classNumber)) {
             Utilities.sendAlert(this, "Fill in all the inputs", "Warning");

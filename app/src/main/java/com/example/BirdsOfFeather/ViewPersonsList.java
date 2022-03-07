@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.example.BirdsOfFeather.database.ProfileEntity;
@@ -32,7 +35,7 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPersonsList extends AppCompatActivity {
+public class ViewPersonsList extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     protected RecyclerView personsRecyclerView;
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
@@ -92,6 +95,16 @@ public class ViewPersonsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
+
+
+        // create the sort(filter) spinner
+        Spinner spinner = (Spinner) findViewById(R.id.filter_dropdown);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SortSelection,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         //empty arraylist to be used by PersonsViewAdapter for storing info
         List<Person> classmates = new ArrayList<>();
@@ -250,6 +263,7 @@ public class ViewPersonsList extends AppCompatActivity {
         Nearby.getMessagesClient(this).unpublish(classesMessage);
     }
 
+
     public void saveSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View saveSessionPopupView = getLayoutInflater().inflate(R.layout.popup_save_session_prompt, null);
@@ -390,6 +404,27 @@ public class ViewPersonsList extends AppCompatActivity {
 
     public void onSessionClicked(View view) {
 
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//        personsViewAdapter.setSortType(i);
+//        String text = Integer.toString(i);
+//        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+
+        personsViewAdapter.setSortType(i);
+        if (i == 0) {
+            personsViewAdapter.sortByMatches();
+        } else if (i == 1) {
+            personsViewAdapter.sortByRecent();
+        } else {
+            personsViewAdapter.sortBySize();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        personsViewAdapter.setSortType(0);
 
     }
 }

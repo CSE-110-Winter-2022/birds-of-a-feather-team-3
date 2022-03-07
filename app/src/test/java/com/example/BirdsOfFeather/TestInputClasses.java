@@ -39,6 +39,7 @@ public class TestInputClasses {
         //Course course1 = new Course("Fall", "2020", "Large (150-250)", "CSE", "100");
         //Course course2 = new Course("Fall", "2020", "Large (150-250)", "CSE", "100");
         //Course course3 = new Course("Winter", "2020", "Medium (75-150)", "CSE", "101");
+
         InputClasses inputClasses = new InputClasses();
         boolean empty1 = inputClasses.checkValuesEmpty("", "2021", "Large (150-250)", "CSE" ,"101");
         boolean empty2 = inputClasses.checkValuesEmpty("Fall","" ,"Large (150-250)", "CSE" ,"101");
