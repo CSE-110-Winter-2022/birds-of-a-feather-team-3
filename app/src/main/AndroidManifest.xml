@@ -28,8 +28,6 @@
         <activity
             android:name=".ViewPersonsList"
             android:exported="false" />
-        <activity android:name=".ViewSessionsList"
-            android:exported="false" />
         <activity
             android:name=".InputClasses"
             android:exported="false" />

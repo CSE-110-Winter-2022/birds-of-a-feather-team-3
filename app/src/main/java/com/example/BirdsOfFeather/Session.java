@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class Session implements Serializable {
+public class Session implements Serializable{
     String sessionName;
 
     //String timeStamp;
@@ -41,5 +41,6 @@ public class Session implements Serializable {
     public String getName(){return sessionName;}
 
     public String toString(){return sessionName;}
+
 
 }

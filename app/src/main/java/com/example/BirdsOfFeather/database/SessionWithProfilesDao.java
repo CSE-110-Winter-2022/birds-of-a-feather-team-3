@@ -15,16 +15,10 @@ public interface SessionWithProfilesDao {
     @Query("SELECT * FROM sessions")
     List<SessionWithProfiles> getAll();
 
-    @Query("SELECT * FROM sessions WHERE sessionId=:sessionId")
-    SessionWithProfiles get(int sessionId);
+    @Query("SELECT * FROM sessions WHERE id=:id")
+    SessionWithProfiles get(int id);
 
-//    @Insert
-//    void insertSession(SessionEntity sessionEntity);
-
-//    @Update
-//    void updateSession(SessionEntity sessionEntity);
-
-//    @Delete
-//    void deleteSession(SessionEntity sessionEntity);
+    @Query("SELECT COUNT(*) from sessions")
+    int count();
 
 }

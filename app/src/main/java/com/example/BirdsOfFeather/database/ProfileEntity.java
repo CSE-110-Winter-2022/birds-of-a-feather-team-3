@@ -4,20 +4,21 @@ import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.example.BirdsOfFeather.Course;
 
 import java.util.List;
 
-//@Entity(foreignKeys = @ForeignKey(entity = SessionEntity.class, parentColumns = "sessionId", childColumns = "profileSessionId", onUpdate = CASCADE), tableName = "profiles")
+
 @Entity(tableName = "profiles")
 public class ProfileEntity {
 
-    @PrimaryKey//(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     public int profileId;
 
+    @ColumnInfo(name = "session_id")
     public int profileSessionId;
 
     @ColumnInfo(name = "name")
@@ -26,53 +27,16 @@ public class ProfileEntity {
     @ColumnInfo(name = "URL")
     public String profileURL;
 
-    @ColumnInfo(name = "commonCourses")
-    public List<Course> profileCommonCourses;
+    @ColumnInfo(name = "profileCourses")
+    public List<Course> profileCourses;
 
-//    public int getProfileId(){
-//        return profileId;
-//    }
-//
-//    public void setProfileId(int profileId){
-//        this.profileId = profileId;
-//    }
-//
-//    public String getProfileName(){
-//        return profileName;
-//    }
-//
-//    public void setProfileName(String profileName){
-//        this.profileName = profileName;
-//    }
-//
-//    public String getProfileURL(){
-//        return profileURL;
-//    }
-//
-//    public void setProfileURL(String profileURL){
-//        this.profileURL = profileURL;
-//    }
-//
-//    public String getProfileCommonCourses(){
-//        return profileCommonCourses;
-//    }
-//
-//    public void setProfileCommonCourses(String profileCommonCourses){
-//        this.profileCommonCourses = profileCommonCourses;
-//    }
 
-//    public int getProfileSessionId(){
-//        return profileSessionId;
-//    }
-
-//    public void setProfileSessionId(int profileSessionId){
-//        this.profileSessionId = profileSessionId;
-//    }
-
-    public ProfileEntity(String profileName, String profileURL, List<Course> profileCommonCourses){
+    public ProfileEntity(String profileName, String profileURL, int profileSessionId, List<Course> profileCourses){
         this.profileName = profileName;
         this.profileURL = profileURL;
-        this.profileCommonCourses = profileCommonCourses;
+        //this.profileId = profileId;
+        this.profileSessionId = profileSessionId;
+        this.profileCourses = profileCourses;
     }
 
 }

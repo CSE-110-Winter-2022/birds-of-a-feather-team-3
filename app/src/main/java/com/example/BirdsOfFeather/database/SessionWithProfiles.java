@@ -3,21 +3,28 @@ package com.example.BirdsOfFeather.database;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import com.example.BirdsOfFeather.ProfileInfo;
+
 import java.util.List;
 
-public class SessionWithProfiles {
+public class SessionWithProfiles{
     @Embedded
     public SessionEntity sessionEntity;
 
     @Relation(
-            parentColumn = "sessionId",
-            entityColumn = "profileSessionId",
-            entity = ProfileEntity.class
-    )
-    public List<ProfileEntity> profileEntities;
+            parentColumn = "id",
+            entityColumn = "session_id",
+            entity = ProfileEntity.class)
+//            projection = {"name"}
+    public List<ProfileInfo> profileEntities;
 
-    public SessionWithProfiles(SessionEntity sessionEntity, List<ProfileEntity> profileEntities){
-        this.sessionEntity = sessionEntity;
-        this.profileEntities = profileEntities;
-    }
+    public int getId(){return this.sessionEntity.sessionIndex;}
+
+    public String getName(){return this.sessionEntity.sessionName;}
+
+    public List<ProfileInfo> getProfiles(){return this.profileEntities;}
+
+
+
+
 }

@@ -19,7 +19,9 @@ import android.widget.Spinner;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.example.BirdsOfFeather.database.ClassEntity;
+import com.example.BirdsOfFeather.database.ProfileEntity;
 import com.example.BirdsOfFeather.database.SessionEntity;
+import com.example.BirdsOfFeather.database.SessionWithProfiles;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -274,18 +276,41 @@ public class ViewPersonsList extends AppCompatActivity {
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
-                //System.out.println("Selected session name is: " + sessionName);
 
-                //create new session object
+                //create new session and add to database
                 SessionEntity sessionEntity = new SessionEntity(sessionName);
                 db.sessionDao().insert(sessionEntity);
 
+
+                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count() + 1);
+                //add all profiles to session
+                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses);
+                db.profilesDao().insert(newProfile);
+
+
+                //test print all sessions
                 List<Session> mySessions = db.sessionDao().getAll();
 
                 System.out.println("Sessions: ");
                 for(Session s: mySessions){
                     System.out.println(s.sessionName);
+
                 }
+
+                System.out.println("Testing linked database now:");
+
+                List<SessionWithProfiles> sessionProfiles = db.sessionWithProfilesDao().getAll();
+
+                for(SessionWithProfiles swp : sessionProfiles){
+                    System.out.println("Session name: " + swp.getName() + "with id=" + swp.getId());
+                    List<ProfileInfo> profiles = swp.getProfiles();
+                    System.out.println("Number of profiles in "+swp.getName()+":"+profiles.size());
+                    for(ProfileInfo p: profiles){
+                        System.out.println(p.name + p.URL);
+                    }
+                }
+
+
 
                 dialog.dismiss();
             }
@@ -320,8 +345,6 @@ public class ViewPersonsList extends AppCompatActivity {
 
 
     public void onSessionClicked(View view) {
-        Intent intent = new Intent(this, ViewSessionsList.class);
-        startActivity(intent);
-        finish();
+
     }
 }

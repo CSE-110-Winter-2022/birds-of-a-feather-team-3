@@ -24,7 +24,7 @@ public class SessionEntity {
 
 
 //    public int getSessionId(){
-//        return sessionId;
+//        return sessionIndex;
 //    }
 //
 //    public void setSessionId(int sessionId){
