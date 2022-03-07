@@ -402,7 +402,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
 
 
-    public void onSessionClicked(View view) {
+    public void onSessionClicked(View view) {}
 
 
 
