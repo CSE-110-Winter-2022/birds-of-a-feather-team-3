@@ -21,10 +21,7 @@ public class MockInputPeople extends AppCompatActivity {
     public Person newStudent;
     public HashMap<String, String> sizeMap;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_mock_nearby_message);
+    MockInputPeople() {
         sizeMap = new HashMap<>();
         sizeMap.put("Tiny", "Tiny (<40)");
         sizeMap.put("Small", "Small (40-75)");
@@ -32,13 +29,12 @@ public class MockInputPeople extends AppCompatActivity {
         sizeMap.put("Large", "Large (150-250)");
         sizeMap.put("Huge", "Huge (250-400)");
         sizeMap.put("Gigantic", "Gigantic (400+)");
+    }
 
-        /*<item>Tiny (<![CDATA[<]]>40)</item>
-        <item>Small (40-75)</item>
-        <item>Medium (75-150)</item>
-        <item>Large (150-250)</item>
-        <item>Huge (250-400)</item>
-        <item>Gigantic (400+)</item>*/
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_input_mock_nearby_message);
     }
 
 

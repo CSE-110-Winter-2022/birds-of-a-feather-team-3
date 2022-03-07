@@ -16,7 +16,8 @@ public class ToStringTest {
         Course course2 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
         List<Course> TestClasses = new ArrayList<>(Arrays.asList(course1, course2));
         Person testPerson = new Person("Test", "test.com", TestClasses);
-        String expectedToString = "Test, test.com, [Spring 2020 Large (150-250) CSE 110, Fall 2020 Large (150-250) CSE 100], 2";
+        testPerson.setUniqueId("abababababbabbabbabab");
+        String expectedToString = "abababababbabbabbabab";
         assertEquals(expectedToString, testPerson.toString());
     }
 

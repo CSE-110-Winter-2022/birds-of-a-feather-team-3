@@ -47,13 +47,14 @@ public class MockInputTest {
 
         MockInputPeople mockInputPeople = new MockInputPeople();
 
-        String courseToParse = "2022,WI,CSE,110,Tiny (<40)";
+        String courseToParse = "2022,WI,CSE,110,Tiny";
         Course parsedCourse = mockInputPeople.parseCourse(courseToParse);
 
         assertEquals("2022", parsedCourse.year);
         assertEquals("Winter", parsedCourse.quarter);
         assertEquals("CSE", parsedCourse.subject);
         assertEquals("110", parsedCourse.classNumber);
+        assertEquals("Tiny (<40)", parsedCourse.classSize);
 
     }
 
@@ -70,7 +71,8 @@ public class MockInputTest {
             Button enterButton = activity.findViewById(R.id.mock_enterButton);
             EditText inputText = activity.findViewById(R.id.mockDataTextView);
 
-            inputText.setText("Joe,,,"+ System.lineSeparator() + "URL,,,");
+            inputText.setText("UNIQUEID,,,," + System.lineSeparator() + "Joe,,,,"+ System.lineSeparator() +
+                    "URL,,,,");
             enterButton.performClick();
 
             assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
