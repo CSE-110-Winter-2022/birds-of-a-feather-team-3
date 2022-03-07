@@ -12,9 +12,10 @@ public class Course implements Serializable {
     public Course (String quarter, String year, String classSize, String subject, String classNumber) {
         this.quarter = quarter;
         this.year = year;
+        this.classSize = classSize;
         this.subject = subject;
         this.classNumber = classNumber;
-        this.classSize = classSize;
+
     }
     public String getQuarter() {
         return this.quarter;

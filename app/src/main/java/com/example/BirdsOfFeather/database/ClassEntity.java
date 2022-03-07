@@ -12,12 +12,16 @@ public class ClassEntity {
 
     @ColumnInfo(name = "quarter")
     public String quarter;
+
     @ColumnInfo(name = "year")
     public String year;
+
     @ColumnInfo(name = "classSize")
     public String classSize;
+
     @ColumnInfo(name = "subject")
     public String subject;
+
     @ColumnInfo(name = "classNumber")
     public String classNumber;
 

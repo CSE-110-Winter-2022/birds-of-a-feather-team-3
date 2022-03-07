@@ -54,6 +54,7 @@ public class MockInputTest {
         assertEquals("Winter", parsedCourse.quarter);
         assertEquals("CSE", parsedCourse.subject);
         assertEquals("110", parsedCourse.classNumber);
+        assertEquals("Tiny (<40)", parsedCourse.classSize);
 
     }
 

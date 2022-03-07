@@ -24,6 +24,13 @@ public class MockInputPeople extends AppCompatActivity {
         setContentView(R.layout.activity_input_mock_nearby_message);
     }
 
+    /*
+        expected mock input:
+        Name,,,
+        url,,,
+        year,quarter abbrev,subject,number,size
+     */
+
 
     public void onMockEnterClicked(View v) throws Exception {
         classes = new ArrayList<Course>();
@@ -80,9 +87,9 @@ public class MockInputPeople extends AppCompatActivity {
         String[] splitCourse = input.split(",");
         String quarter = quarterCodeToQuarter(splitCourse[1]);
         String year = splitCourse[0];
+        String classSize = splitCourse[4];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-        String classSize = splitCourse[4];
 //        String size = "temp";
 //        return new Course(quarter, year, size, subject, number);
         return new Course(quarter, year, classSize, subject, number);
