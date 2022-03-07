@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
-import com.example.BirdsOfFeather.database.ClassEntity;
 import com.example.BirdsOfFeather.database.ProfileEntity;
 import com.example.BirdsOfFeather.database.SessionEntity;
 import com.example.BirdsOfFeather.database.SessionWithProfiles;
@@ -30,11 +29,7 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ViewPersonsList extends AppCompatActivity {
@@ -52,13 +47,18 @@ public class ViewPersonsList extends AppCompatActivity {
     PersonSerializer personSerializer;
     AppDatabase db;
 
-    //popup stuff
+    //save popup stuff
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private EditText customName_editText;
     private Button saveSession_button;
     private Spinner classes_spinner;
     String sessionName;
+
+    //start popup stuff
+    private Spinner sessionsSpinner;
+    private Button continueButton;
+    private Button newButton;
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -183,6 +183,9 @@ public class ViewPersonsList extends AppCompatActivity {
         shareButton.setOnClickListener(v -> {
             if (shareButton.getText().equals("Start")) {
                 startButtonOn = true;
+
+                startSessionDialog();
+
                 //start sharing and receiving data
                 Log.i(TAG, "Starting share");
                 shareButton.setText("Stop");
@@ -250,9 +253,9 @@ public class ViewPersonsList extends AppCompatActivity {
     public void saveSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View saveSessionPopupView = getLayoutInflater().inflate(R.layout.popup_save_session_prompt, null);
-        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.custom_name_edittext);
-        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.save_session_button);
-        classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.classes_spinner);
+        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.session_name_edittext);
+        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.continue_session_button);
+        classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.sessions_spinner);
 
         loadSpinnerData(classes_spinner);
 
@@ -306,7 +309,10 @@ public class ViewPersonsList extends AppCompatActivity {
                     List<ProfileInfo> profiles = swp.getProfiles();
                     System.out.println("Number of profiles in "+swp.getName()+":"+profiles.size());
                     for(ProfileInfo p: profiles){
-                        System.out.println(p.name + p.URL);
+                        System.out.println(p.name + " " + p.URL);
+                        for(Course c: p.getCommonCourses()){
+                            System.out.println(c.toString());
+                        }
                     }
                 }
 
@@ -331,20 +337,59 @@ public class ViewPersonsList extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
-    //should never be called as session will always have a default name
-    public boolean isSessionNameEmpty(EditText editText, Spinner spinner){
-        boolean isEmpty = false;
 
-        if(editText.getText() == null || editText.getText().toString().equals("")){
-            if(spinner.getSelectedItem() == null || spinner.getSelectedItem().toString().equals("")){
-                isEmpty = true;
+    public void startSessionDialog(){
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View startSessionPopupView = getLayoutInflater().inflate(R.layout.popup_start_session_prompt, null);
+        //customName_editText = (EditText) startSessionPopupView.findViewById(R.id.session_name_edittext);
+        //saveSession_button = (Button) startSessionPopupView.findViewById(R.id.continue_session_button);
+        //classes_spinner = (Spinner) startSessionPopupView.findViewById(R.id.sessions_spinner);
+
+        //loadSpinnerData(sessionsSpinner);
+
+        dialogBuilder.setView(startSessionPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        sessionsSpinner = (Spinner) startSessionPopupView.findViewById(R.id.sessions_spinner);
+        continueButton = (Button) startSessionPopupView.findViewById(R.id.continue_session_button);
+        newButton = (Button) startSessionPopupView.findViewById(R.id.new_session_button);
+
+
+
+
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+
+
+
+
+                dialog.dismiss();
             }
-        }
-        return isEmpty;
+        });
+
+        newButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+
+
+
+                dialog.dismiss();
+            }
+        });
+
     }
 
 
+
+
     public void onSessionClicked(View view) {
+
 
     }
 }
