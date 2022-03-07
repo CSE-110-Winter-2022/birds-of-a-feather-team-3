@@ -7,6 +7,7 @@ import com.google.android.gms.nearby.messages.MessageListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,6 +42,12 @@ public class FakedMessageListener extends MessageListener {
                     Message message = new Message(serializedPerson);
                     this.messageListener.onFound(message);
                     this.messageListener.onLost(message);
+                    for (String personToWaveToId : person.getWaveMocks()) {
+                        String waveFormatString = "WAVE:" + person.getUniqueId() + ":::" + personToWaveToId;
+                        Message waveMessage = new Message(waveFormatString.getBytes(StandardCharsets.UTF_8));
+                        this.messageListener.onFound(waveMessage);
+                        this.messageListener.onLost(waveMessage);
+                    }
                 }
             }
         }, 0, frequency, TimeUnit.SECONDS);

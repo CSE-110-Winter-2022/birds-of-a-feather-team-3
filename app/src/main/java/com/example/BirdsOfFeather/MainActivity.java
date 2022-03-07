@@ -13,9 +13,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.AccountPicker;
+
+import java.util.UUID;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
-
+    EditText textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         else {
-            EditText textView = findViewById(R.id.enter_name_view);
+            textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
             if (!autoFilledName.equals("")) {
                 textView.setText(autoFilledName);
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
+            editor.putString("unique_identifer", UUID.randomUUID().toString());
             editor.apply();
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);
@@ -59,9 +64,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+  /*  @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        textView.setText(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+    }*/
+
+
     public String getNameFromGoogle() {
         AccountManager manager = AccountManager.get(this);
         Account[] accounts = manager.getAccounts();
+
+        //Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+         //       false, null, null, null, null);
+        //startActivityForResult(intent, 10);
         if (accounts.length == 0) {
             return "";
         }

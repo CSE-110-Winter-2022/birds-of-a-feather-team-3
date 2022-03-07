@@ -9,19 +9,36 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MockInputPeople extends AppCompatActivity {
 
     public String name;
     public String profileURL;
+    public String uniqueId;
     public List<Course> classes;
     public Person newStudent;
+    public HashMap<String, String> sizeMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_mock_nearby_message);
+        sizeMap = new HashMap<>();
+        sizeMap.put("Tiny", "Tiny (<40)");
+        sizeMap.put("Small", "Small (40-75)");
+        sizeMap.put("Medium", "Medium (75-150)");
+        sizeMap.put("Large", "Large (150-250)");
+        sizeMap.put("Huge", "Huge (250-400)");
+        sizeMap.put("Gigantic", "Gigantic (400+)");
+
+        /*<item>Tiny (<![CDATA[<]]>40)</item>
+        <item>Small (40-75)</item>
+        <item>Medium (75-150)</item>
+        <item>Large (150-250)</item>
+        <item>Huge (250-400)</item>
+        <item>Gigantic (400+)</item>*/
     }
 
 
@@ -37,21 +54,30 @@ public class MockInputPeople extends AppCompatActivity {
         else{
             //split text in textbox at newline character into string array
             String[] inputDataSplit = inputData.split(System.lineSeparator());
-            name = inputDataSplit[0].split(",")[0];
-            profileURL = inputDataSplit[1].split(",")[0];
+            uniqueId = inputDataSplit[0].split(",")[0];
+            name = inputDataSplit[1].split(",")[0];
+            profileURL = inputDataSplit[2].split(",")[0];
             //each line split at comma
             //take first input only from first and second lines
-            name = inputDataSplit[0].split(",")[0];
-            profileURL = inputDataSplit[1].split(",")[0];
 
             // for all remaining entries, convert to courses
-            for (int i = 2; i < inputDataSplit.length; i++) {
-                classes.add(parseCourse(inputDataSplit[i]));
+            List<String> wavePersonIds = new ArrayList<>();
+            for (int i = 3; i < inputDataSplit.length; i++) {
+                if (inputDataSplit[i].contains(",,,")) {//this is a wave
+                    //4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,
+                    wavePersonIds.add(parseWave(inputDataSplit[i]));
+                }
+                else { // this is a course
+                    classes.add(parseCourse(inputDataSplit[i]));
+                }
             }
 
             newStudent = new Person(name, profileURL, classes);
+            newStudent.setUniqueId(uniqueId);
+            for (String waveId : wavePersonIds) {
+                newStudent.addWaveMocks(waveId);
+            }
             Log.i("New Mock Student", newStudent.toString());
-
             //send new person object with intent to ViewPersonList
             Intent intent = new Intent();
             PersonSerializer personSerializer = new PersonSerializer();
@@ -82,9 +108,17 @@ public class MockInputPeople extends AppCompatActivity {
         String year = splitCourse[0];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-        String classSize = splitCourse[4];
+        String classSize = sizeMap.get(splitCourse[4]);
 //        String size = "temp";
 //        return new Course(quarter, year, size, subject, number);
         return new Course(quarter, year, classSize, subject, number);
     }
-}
+
+    public String parseWave(String input) {
+        //4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,
+        return input.split(",")[0];
+    }
+
+
+
+    }

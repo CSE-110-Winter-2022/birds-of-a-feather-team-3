@@ -40,4 +40,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_name_view" />
 
+        <Button
+            android:id="@+id/wave_button_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="Wave"
+            android:onClick="sendWave"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_common_classes" />
+
+        <ImageButton
+            android:id="@+id/favorite_button_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:onClick="favoritePerson"
+            app:layout_constraintBottom_toTopOf="@+id/profile_name_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_picture_view"
+            app:srcCompat="@android:drawable/btn_star_big_off" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
