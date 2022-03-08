@@ -59,7 +59,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     //session data
     SessionEntity currentSession;
-    ProfileInfo newProfile;
+    long currSessionId;
+    //ProfileInfo newProfile;
 
     //save popup stuff
     private AlertDialog.Builder dialogBuilder;
@@ -120,6 +121,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         classmates = new ArrayList<>();
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
+
+
+
         setTitle("BoFs");
         personsRecyclerView = findViewById(R.id.persons_view);
         personsLayoutManager = new LinearLayoutManager(this);
@@ -328,19 +332,22 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
-                System.out.println("It thinks the current session index is: " + currentSession.sessionIndex);
+                System.out.println("The current session is called: " + currentSession.sessionName);
+                System.out.println("It thinks the current session index is: " + currentSession.id);
+                //System.out.println("Using the method, it thinks the current session index is: " + currentSession.getSessionId());
+                System.out.println("Using storing method, it thinks the current session index is: " + currSessionId);
 
-                db.sessionDao().update(sessionName, currentSession.sessionIndex);
+                db.sessionDao().update(sessionName, currentSession.id);
 
                 //create new session and add to database
                 //SessionEntity sessionEntity = new SessionEntity(sessionName);
                 //db.sessionDao().insert(sessionEntity);
 
 
-                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
+               // System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
 
                 //add all profiles to session
-                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses, "uniqueID");
+                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
                 db.profilesDao().insert(newProfile);
 
 
@@ -446,7 +453,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //define click behaviour
 
                 currentSession = new SessionEntity(getCurrDayTime());
-                db.sessionDao().insert(currentSession);
+                currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
+                currentSession.id = db.sessionDao().insert(currentSession);
 
                 dialog.dismiss();
             }

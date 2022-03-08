@@ -136,7 +136,9 @@ public class InputClasses extends AppCompatActivity {
                 //save class to local database
                 if (!usingMock) {
                     ClassEntity classEntity = new ClassEntity(quarter, year, classSize, subject, classNumber);
-                    db.classesDao().insert(classEntity);
+                    long val = db.classesDao().insert(classEntity);
+                    System.out.println("insert returned dis: " + val);
+
                 }
                 localCourses.add(potentialCourse);
                 //alert user of successful course entry

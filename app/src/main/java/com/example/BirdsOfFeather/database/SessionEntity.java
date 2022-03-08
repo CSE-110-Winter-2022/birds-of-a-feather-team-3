@@ -13,17 +13,18 @@ public class SessionEntity {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    public int sessionIndex;
+    public long id;
 
     @ColumnInfo(name = "sessionName")
     public String sessionName;
 
     public SessionEntity(String sessionName){
         this.sessionName = sessionName;
+        System.out.println("HEY I CREATED DIS SESSOIN AND ITS ID IS " + this.id);
     }
 
 
-//    public int getSessionId(){
+//    public long getSessionId(){
 //        return sessionIndex;
 //    }
 //

@@ -8,8 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Session implements Serializable{
-    String sessionName;
-    //int id;
+    public String sessionName;
+    //public int id;
 
     //String timeStamp;
 

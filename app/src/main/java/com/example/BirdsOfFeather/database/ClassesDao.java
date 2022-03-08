@@ -23,5 +23,5 @@ public interface ClassesDao {
     Course getCourse(int id);
 
     @Insert
-    void insert(ClassEntity course);
+    long insert(ClassEntity course);
 }

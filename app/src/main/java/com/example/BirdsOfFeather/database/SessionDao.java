@@ -30,11 +30,11 @@ public interface SessionDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     Session getSession(int id);
 
-    @Query("UPDATE sessions SET sessionName=:name WHERE id = :id")
-    void update(String name, int id);
+    @Query("UPDATE sessions SET sessionName=:sessionName WHERE id = :id")
+    void update(String sessionName, long id);
 
 
     @Insert
-    void insert(SessionEntity session);
+    long insert(SessionEntity session);
 
 }
