@@ -102,6 +102,7 @@ public class MockInputPeople extends AppCompatActivity {
         else if (size.equals("Large")) {return "Large (150-250)";}
         else if (size.equals("Huge")) {return "Huge (250-400)";}
         else if (size.equals("Gigantic")) {return "Gigantic (400+)";}
+        return "";
 
     }
 
@@ -112,11 +113,7 @@ public class MockInputPeople extends AppCompatActivity {
         String year = splitCourse[0];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-<<<<<<< HEAD
-        String classSize = sizeMap.get(splitCourse[4]);
-=======
         String classSize = sizeToClassSize(splitCourse[4]);
->>>>>>> 771d261137eb74a70f3f017e385151d957785e9d
 //        String size = "temp";
 //        return new Course(quarter, year, size, subject, number);
         return new Course(quarter, year, classSize, subject, number);

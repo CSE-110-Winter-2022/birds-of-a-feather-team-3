@@ -323,7 +323,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 db.sessionDao().insert(sessionEntity);
 
 
-                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count() + 1);
+                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
                 //add all profiles to session
                 ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses, "uniqueID");
                 db.profilesDao().insert(newProfile);
