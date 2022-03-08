@@ -21,15 +21,6 @@ public class MockInputPeople extends AppCompatActivity {
     public Person newStudent;
     public HashMap<String, String> sizeMap;
 
-    MockInputPeople() {
-        sizeMap = new HashMap<>();
-        sizeMap.put("Tiny", "Tiny (<40)");
-        sizeMap.put("Small", "Small (40-75)");
-        sizeMap.put("Medium", "Medium (75-150)");
-        sizeMap.put("Large", "Large (150-250)");
-        sizeMap.put("Huge", "Huge (250-400)");
-        sizeMap.put("Gigantic", "Gigantic (400+)");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +94,16 @@ public class MockInputPeople extends AppCompatActivity {
         //return empty string if not match defined quarters
         return "";
     }
+    
+    public String sizeToClassSize(String size) {
+        if (size.equals("Tiny")) {return "Tiny (<40)";}
+        else if (size.equals("Small")) {return "Small (40-75)";}
+        else if (size.equals("Medium")) {return "Medium (75-150)";}
+        else if (size.equals("Large")) {return "Large (150-250)";}
+        else if (size.equals("Huge")) {return "Huge (250-400)";}
+        else if (size.equals("Gigantic")) {return "Gigantic (400+)";}
+
+    }
 
     //convert from string to course object, splitting at commas
     public Course parseCourse(String input){
@@ -111,7 +112,7 @@ public class MockInputPeople extends AppCompatActivity {
         String year = splitCourse[0];
         String subject = splitCourse[2];
         String number = splitCourse[3];
-        String classSize = sizeMap.get(splitCourse[4]);
+        String classSize = sizeToClassSize(splitCourse[4]);
 //        String size = "temp";
 //        return new Course(quarter, year, size, subject, number);
         return new Course(quarter, year, classSize, subject, number);
