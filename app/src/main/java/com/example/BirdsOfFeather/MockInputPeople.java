@@ -122,8 +122,4 @@ public class MockInputPeople extends AppCompatActivity {
         //4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,
         return input.split(",")[0];
     }
-
-
-
-    }
 }
