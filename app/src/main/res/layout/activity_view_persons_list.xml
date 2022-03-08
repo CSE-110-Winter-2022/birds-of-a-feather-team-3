@@ -40,6 +40,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/persons_view" />
 
+    <Button
+        android:id="@+id/go_to_sessions_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="onSessionClicked"
+        android:text="Sessions"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/persons_view" />
+
     <Spinner
         android:id="@+id/filter_dropdown"
         android:layout_width="200dp"
@@ -50,4 +62,5 @@
         app:layout_constraintEnd_toStartOf="@+id/shareButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
