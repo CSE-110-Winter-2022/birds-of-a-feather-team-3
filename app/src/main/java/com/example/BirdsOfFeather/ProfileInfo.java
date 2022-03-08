@@ -7,13 +7,14 @@ public class ProfileInfo {
     List<Course> profileCourses;
     String name;
     String URL;
-
-    public ProfileInfo(String name, String URL, List<Course> profileCourses) {
+    String uniqueId;
+    public ProfileInfo(String name, String URL, List<Course> profileCourses, String uniqueId) {
         this.name = name;
         this.URL = URL;
         this.profileCourses = profileCourses;
+        this.uniqueId = uniqueId;
     }
-
+  
     public List<Course> getCommonCourses() {
         return this.profileCourses;
     }
@@ -22,5 +23,8 @@ public class ProfileInfo {
     }
     public String getURL() {
         return this.URL;
+    }
+    public String getUniqueId() {
+        return this.uniqueId;
     }
 }

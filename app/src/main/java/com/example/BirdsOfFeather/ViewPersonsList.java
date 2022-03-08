@@ -32,6 +32,7 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
     AppDatabase db;
+    List<Person> classmates;
 
     //save popup stuff
     private AlertDialog.Builder dialogBuilder;
@@ -107,8 +109,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
 
         //empty arraylist to be used by PersonsViewAdapter for storing info
-        List<Person> classmates = new ArrayList<>();
-
+        classmates = new ArrayList<>();
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
         setTitle("BoFs");
@@ -124,6 +125,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         String selfPictureLink = preferences.getString("profile_picture_url", "");
         Log.i(TAG, selfName + " " + selfPictureLink);
         Person self = new Person(selfName, selfPictureLink, myCourses);
+        self.setUniqueId("4b295157-ba31-4f9f-8401-5d85d9cf659a"); //for mocking example
         int i = 1;
         for(Course course: self.getClasses()){
             Log.i(TAG, "Course " + i + ":" + course.toString());
@@ -133,6 +135,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         classesMessage = new Message(empty);
         try {
             classesMessage = new Message(personSerializer.convertToByteArray(self));
+            Log.i(TAG, "Set classesMessage");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,57 +143,78 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         MessageListener realMessageListener = new MessageListener() {
             @Override
             public void onFound(@NonNull Message message) {
+                Log.i(TAG, "Found a message");
                 if (startButtonOn) {
-                    byte[] serializedPerson = message.getContent();
-                    Person deserializedPerson = null;
-                    final Person unchangingDeserializedPerson;
-                    final ProfileInfo personsProfileInfo;
-                    try {
-                        deserializedPerson = (Person) personSerializer.convertFromByteArray(serializedPerson);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    byte[] messageByteArray = message.getContent();
+                    String messageString = new String(messageByteArray, StandardCharsets.UTF_8);
+                    System.out.println(messageString.substring(0, 5));
+                    if (messageString.substring(0, 5).equals("WAVE:")  ) { // it was  a wave
+                        int indexOfSeparator = messageString.lastIndexOf(":::");
+                        String waveSender = messageString.substring(5, indexOfSeparator);
+                        String waveRecipient = messageString.substring(indexOfSeparator + 3, messageString.length());
+                        System.out.println(waveSender + ", " + waveRecipient);
+                        if (waveRecipient.equals(self.getUniqueId())) { // they are waving at you
+                            System.out.println("process wave");
+                            processWave(waveSender);
+                        }
                     }
-                    final String gotName;
-                    if (deserializedPerson != null) {
-                        unchangingDeserializedPerson = deserializedPerson;
-                        personsProfileInfo = SearchClassmates
-                                .detectAndReturnSharedClasses(self, deserializedPerson);
-                        gotName = deserializedPerson.getName();
-                        Log.i(TAG, "Received message from " + gotName);
-                    } else {
-                        unchangingDeserializedPerson = null;
-                        personsProfileInfo = null;
-                    }
+                    else { // it was a person sharing their classes
+                        Person deserializedPerson = null;
+                        final Person unchangingDeserializedPerson;
+                        final ProfileInfo personsProfileInfo;
+                        try {
+                            deserializedPerson = (Person) personSerializer.convertFromByteArray(messageByteArray);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        final String gotName;
+                        if (deserializedPerson != null) {
+                            unchangingDeserializedPerson = deserializedPerson;
+                            personsProfileInfo = SearchClassmates
+                                    .detectAndReturnSharedClasses(self, deserializedPerson);
+                            gotName = deserializedPerson.getName();
+                            Log.i(TAG, "Received message from " + gotName);
+                        } else {
+                            unchangingDeserializedPerson = null;
+                            personsProfileInfo = null;
+                        }
 
-                    if (personsProfileInfo != null) {
-                        //Was pausing scripts, but running on main thread fixed
-                        runOnUiThread(() -> {
-                            personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
-                        });
+                        if (personsProfileInfo != null) {
+                            //Was pausing scripts, but running on UI thread fixed
+                            runOnUiThread(() -> {
+                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+                            });
+                        }
                     }
                 }
             }
 
+
             @Override
             public void onLost(@NonNull Message message) {
+                Log.i(TAG, "message lost");
                 //Called when message no longer detectable nearby
                 //should NOT delete user from list in this case
                 if (startButtonOn) {
                     byte[] msgBody = message.getContent();
-                    String senderName = "";
-                    try {
-                        senderName = personSerializer.convertFromByteArray(msgBody).getName();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String messageString = new String(msgBody, StandardCharsets.UTF_8);
+                    System.out.println(messageString.substring(0, 5));
+                    if (!messageString.substring(0, 5).equals("WAVE:")  ) { // it was  a wave
+                        String senderName = "";
+                        try {
+                            senderName = personSerializer.convertFromByteArray(msgBody).getName();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Log.i(TAG, "Stopped receiving messages from " + senderName);
                     }
-                    Log.i(TAG, "Stopped receiving messages from " + senderName);
                 }
             }
         };
 
         //Instructor can add a Person to fakedSubscribers via the Mock Nearby Activity
         fakedSubscribers = new ArrayList<>();
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
+        this.classesMessageListener = realMessageListener;//new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
@@ -221,7 +245,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     //subscribe to messages from nearby devices
     private void subscribe(){
-        Log.i(TAG, "Subscribing");
         //msgAdapter.clear();
         SubscribeOptions options = new SubscribeOptions.Builder()
                 .setCallback(new SubscribeCallback() {
@@ -231,13 +254,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                         Log.i(TAG, "No longer subscribing");
                     }
                 }).build();
-
         Nearby.getMessagesClient(this).subscribe(classesMessageListener, options);
+        Log.i(TAG, Nearby.getMessagesClient(this).toString());
+        Log.i(TAG, "Subscribing");
     }
 
     //publish message to nearby devices
     private void publish(){
-        Log.i(TAG, "Publishing");
         PublishOptions options = new PublishOptions.Builder()
                 .setCallback(new PublishCallback() {
                     @Override
@@ -250,17 +273,18 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 }).build();
 
         Nearby.getMessagesClient(this).publish(classesMessage, options);
+        Log.i(TAG, "Publishing");
     }
 
     //stop getting messages from nearby devices
     private void unsubscribe(){
-        Log.i(TAG,"Unsubscribing");
         Nearby.getMessagesClient(this).unsubscribe(classesMessageListener);
+        Log.i(TAG,"Unsubscribing");
     }
 
     public void unpublish(){
-        Log.i(TAG, "Unpublishing");
         Nearby.getMessagesClient(this).unpublish(classesMessage);
+        Log.i(TAG, "Unpublishing");
     }
 
 
@@ -299,9 +323,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 db.sessionDao().insert(sessionEntity);
 
 
-                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count() + 1);
+                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
                 //add all profiles to session
-                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses);
+                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses, "uniqueID");
                 db.profilesDao().insert(newProfile);
 
 
@@ -426,5 +450,32 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
         personsViewAdapter.setSortType(0);
 
+    }
+
+    public void favoritePerson(View view) {
+
+    }
+
+    public void processWave(String personWavingId) { //check current session for a person with this Id.
+        Person foundClassmate = null;
+        System.out.println(personWavingId);
+        for (int i = 0; i < classmates.size(); i++) { //person was in their BoF list
+            Person classmate = classmates.get(i);
+            System.out.println(i + ": " + classmate.getUniqueId() + ", " + classmate.getUniqueId().equals(personWavingId));
+            if (classmate.getUniqueId().equals(personWavingId)) {
+                foundClassmate = classmate;
+                break;
+            }
+        }
+
+        if (foundClassmate != null) {
+            foundClassmate.setWave(true);
+            Log.i(TAG, "Received wave");
+            runOnUiThread(() -> {
+                        personsViewAdapter.resort();
+            });
+            Log.i(TAG, "done wave");
+
+        }
     }
 }

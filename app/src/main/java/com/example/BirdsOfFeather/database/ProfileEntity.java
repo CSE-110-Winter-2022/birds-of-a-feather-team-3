@@ -30,11 +30,14 @@ public class ProfileEntity {
     @ColumnInfo(name = "profileCourses")
     public List<Course> profileCourses;
 
+    @ColumnInfo(name = "uniqueId")
+    public String uniqueId;
 
-    public ProfileEntity(String profileName, String profileURL, int profileSessionId, List<Course> profileCourses){
+
+    public ProfileEntity(String profileName, String profileURL, int profileSessionId, List<Course> profileCourses, String uniqueId){
         this.profileName = profileName;
         this.profileURL = profileURL;
-        //this.profileId = profileId;
+        this.uniqueId = uniqueId;
         this.profileSessionId = profileSessionId;
         this.profileCourses = profileCourses;
     }

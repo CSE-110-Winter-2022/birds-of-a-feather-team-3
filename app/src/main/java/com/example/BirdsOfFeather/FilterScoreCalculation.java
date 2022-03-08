@@ -49,7 +49,7 @@ public class FilterScoreCalculation {
 
 
 
-        for (Course c:commonCourses){
+        for (Course c:commonCourses) {
 
             int quarterage = 0;
             String year = c.getYear();

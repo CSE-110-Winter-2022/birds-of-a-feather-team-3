@@ -21,7 +21,7 @@ public class SearchClassmates {
         }
 
         if (sharedCourses.size() > 0) {
-            ProfileInfo newProfileInfo = new ProfileInfo(secondPerson.getName(), secondPerson.getURL(), sharedCourses);
+            ProfileInfo newProfileInfo = new ProfileInfo(secondPerson.getName(), secondPerson.getURL(), sharedCourses, secondPerson.getUniqueId());
             return newProfileInfo;
         }
         return null;

@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -81,12 +83,23 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 //        }
 //    }
 
+    public void resort() {
+        if (sortType == 0) {
+            sortByMatches();
+        } else if (sortType == 1) {
+            sortByRecent();
+        } else {
+            sortBySize();
+        }
+    }
     // new addPerson that allows different types of sorting
     public void addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
         boolean alreadyContained = false;
         for (Person existingPerson : persons) {
             if (person.toString().equals(existingPerson.toString())) {
+                Log.i(TAG, person.toString() + " " + existingPerson.toString());
                 alreadyContained = true;
+                System.out.println("already contained");
                 break;
             }
         }
@@ -112,9 +125,14 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     public Comparator<Person> SortByMatchesComparator = new Comparator<Person>() {
         @Override
         public int compare(Person p1, Person p2) {
-            int first = profileInformationList.get(p1).getCommonCourses().size();
-            int second = profileInformationList.get(p2).getCommonCourses().size();
-            return second-first;
+            if (p1.getIsWaving() == p2.getIsWaving()) {
+                int first = profileInformationList.get(p1).getCommonCourses().size();
+                int second = profileInformationList.get(p2).getCommonCourses().size();
+                return second-first;
+            } //else
+            //converts boolean to 1 and 0 and compares
+            return (p2.getIsWaving() ? 1 : 0) - (p1.getIsWaving() ? 1 : 0);
+
         }
     };
 
@@ -126,7 +144,11 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     public Comparator<Person> SortByRecentComparator = new Comparator<Person>() {
         @Override
         public int compare(Person p1, Person p2) {
-            return p2.getScoreRecent() - p1.getScoreRecent();
+            if (p1.getIsWaving() == p2.getIsWaving()) {
+                return p2.getScoreRecent() - p1.getScoreRecent();
+            } //else
+            //converts boolean to 1 and 0 and compares
+            return (p2.getIsWaving() ? 1 : 0) - (p1.getIsWaving() ? 1 : 0);
         }
     };
 
@@ -138,9 +160,19 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     public Comparator<Person> SortByCourseSizeComparator = new Comparator<Person>() {
         @Override
         public int compare(Person p1, Person p2) {
-            if (p1.getScoreClassSize() > p2.getScoreClassSize()) {return -1;}
-            else if (p1.getScoreClassSize() < p2.getScoreClassSize()) {return 1;}
-            else {return 0;}
+            if (p1.getIsWaving() == p2.getIsWaving()) { //this allows for float comparison to return int
+                if (p1.getScoreClassSize() > p2.getScoreClassSize()) {
+                    return -1;
+                }
+                else if (p1.getScoreClassSize() < p2.getScoreClassSize()) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            } //else
+            //converts boolean to 1 and 0 and compares
+            return (p2.getIsWaving() ? 1 : 0) - (p1.getIsWaving() ? 1 : 0);
         }
     };
     public void sortBySize() {
@@ -161,9 +193,11 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull PersonsViewAdapter.ViewHolder holder, int position) {
-        holder.setPerson(persons.get(position));
+        Person holderPerson = persons.get(position);
+        holder.setPerson(holderPerson);
         System.out.println("bound");
-        holder.setProfileInfo(profileInformationList.get(persons.get(position)));
+        holder.setProfileInfo(profileInformationList.get(holderPerson));
+        holder.indicateWave(holderPerson.getIsWaving());
     }
 
     @Override
@@ -175,15 +209,32 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         private final TextView personNameView;
         private final ImageView profilePictureView;
         private final TextView matchCountView;
+        private final ImageView waveIndicator;
+        private final ImageButton favoriteButton;
         private String personName;
         private ProfileInfo profileInfo;
+        private boolean isFavorited;
 
         ViewHolder(View itemView) {
             super(itemView);
+            isFavorited = false;
             this.personNameView = itemView.findViewById(R.id.person_row_name);
             this.profilePictureView = itemView.findViewById(R.id.profile_thumbnail_view);
             this.matchCountView = itemView.findViewById(R.id.course_match_count_view);
+            this.waveIndicator = itemView.findViewById(R.id.person_row_waved_indicator);
+            this.favoriteButton = itemView.findViewById(R.id.favorite_person_row_button);
             itemView.setOnClickListener(this);
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    isFavorited = !isFavorited;
+                    if (isFavorited) {
+                        favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
+                    }
+                    else {
+                        favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
+                    }
+                }
+            });
         }
 
         public void setPerson(Person person) {
@@ -194,6 +245,15 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
                 URLDownload downloadClass = new URLDownload(this.profilePictureView);
                 System.out.println(person.getURL());
                 downloadClass.execute(person.getURL());
+            }
+        }
+
+        public void indicateWave(boolean isWaving) {
+            if (isWaving) {
+                this.waveIndicator.setBackgroundResource(R.drawable.googleg_standard_color_18);
+            }
+            else {
+                this.waveIndicator.setBackgroundResource(R.drawable.googleg_disabled_color_18);
             }
         }
 
@@ -213,9 +273,16 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             for (Course course : this.profileInfo.getCommonCourses()) {
                 concatenatedStr += course.toString() + '\n';
             }
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+            String selfName = preferences.getString("unique_identifer", "elmer");
             intent.putExtra("name", this.profileInfo.getName());
             intent.putExtra("courses", concatenatedStr);
             intent.putExtra("URL", this.profileInfo.getURL());
+            intent.putExtra("uniqueId", this.profileInfo.getUniqueId());
+            intent.putExtra("selfId", selfName);
+            intent.putExtra("favorited", isFavorited);
+
             Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);
         }
