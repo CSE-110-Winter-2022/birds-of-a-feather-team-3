@@ -32,7 +32,10 @@ import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ViewPersonsList extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -40,16 +43,23 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
     boolean startButtonOn = false;
+
     //class name for log
     private static final String TAG = ViewPersonsList.class.getSimpleName();
+
     //message that this user broadcasts to others.
     private Message classesMessage;
     private MessageListener classesMessageListener;
     private List<Course> myCourses;
     private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
+
     AppDatabase db;
     List<Person> classmates;
+
+    //session data
+    SessionEntity currentSession;
+    ProfileInfo newProfile;
 
     //save popup stuff
     private AlertDialog.Builder dialogBuilder;
@@ -96,7 +106,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
-
 
         // create the sort(filter) spinner
         Spinner spinner = (Spinner) findViewById(R.id.filter_dropdown);
@@ -180,6 +189,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
                         if (personsProfileInfo != null) {
                             //Was pausing scripts, but running on UI thread fixed
+
+                            //TODO add personsProfileInfo to database
+
+
                             runOnUiThread(() -> {
                                 personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
                             });
@@ -315,10 +328,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
+                System.out.println("It thinks the current session index is: " + currentSession.sessionIndex);
+
+                db.sessionDao().update(sessionName, currentSession.sessionIndex);
 
                 //create new session and add to database
-                SessionEntity sessionEntity = new SessionEntity(sessionName);
-                db.sessionDao().insert(sessionEntity);
+                //SessionEntity sessionEntity = new SessionEntity(sessionName);
+                //db.sessionDao().insert(sessionEntity);
 
 
                 System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
@@ -429,13 +445,26 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-
+                currentSession = new SessionEntity(getCurrDayTime());
+                db.sessionDao().insert(currentSession);
 
                 dialog.dismiss();
             }
         });
 
     }
+
+    public String getCurrDayTime(){
+        //format is "1/16/22 5:10PM"
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm a");
+        String currentDateandTime = sdf.format(new Date());
+
+        System.out.println("Default Session name is: " + currentDateandTime);
+
+        return currentDateandTime;
+    }
+
+
 
 
     @Override

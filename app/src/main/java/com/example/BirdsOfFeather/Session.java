@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Session implements Serializable{
     String sessionName;
+    //int id;
 
     //String timeStamp;
 
