@@ -14,7 +14,7 @@ public class ProfileInfo {
         this.profileCourses = profileCourses;
         this.uniqueId = uniqueId;
     }
-
+  
     public List<Course> getCommonCourses() {
         return this.profileCourses;
     }
