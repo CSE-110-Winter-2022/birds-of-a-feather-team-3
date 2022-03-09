@@ -451,7 +451,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //define click behaviour
                 //assuming that Dao getAll() method preserves order of inserted sessions
                 //index of spinner starts at 0 while index of database starts at 1, thus add 1
-                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 1);
+                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 1, sessionsSpinner);
             }
         });
 
@@ -500,7 +500,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     }
 
 
-    public void renameSessionDialog(int selectedSessionId){
+    public void renameSessionDialog(int selectedSessionId, Spinner spinner){
         renameDialogBuilder = new AlertDialog.Builder(this);
         final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
         renameDialogBuilder.setView(renameSessionPopupView);
@@ -533,9 +533,18 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //define click behaviour
 
                 //TODO actually rename session
+                String newName;
+
+                if(newNameEditText.getText().toString().equals(null) || newNameEditText.getText().toString().equals("")){
+                    newName = classesSpinner.getSelectedItem().toString();
+                }
+                else{
+                    newName = newNameEditText.getText().toString();
+                }
 
 
-                db.sessionDao().update("RENAMED", selectedSessionId);
+                db.sessionDao().update(newName, selectedSessionId);
+                loadSessionData(spinner, db);
 
                 renameDialog.dismiss();
             }
