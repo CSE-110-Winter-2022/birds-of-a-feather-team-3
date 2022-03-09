@@ -10,7 +10,7 @@ import java.util.List;
 public class FilterScoreCalculationTest {
     @Test
     public void properMatchAmount() {
-        List<Person> persons = new ArrayList<>();
+        List<ProfileInfo> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
         Course course1 = new Course("Winter", "2022", "Large (150-250)", "CSE","110");
         //score = 5, 0.1

@@ -36,7 +36,7 @@ public class ViewPersonsListTest {
     //Unit Tests
     @Test
     public void testSearchClassmatesNormal() {
-        List<Person> persons = new ArrayList<>();
+        List<ProfileInfo> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
         Course course1 = new Course("Spring", "2020", "Large (150-250)","CSE", "110");
         Course course2 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
@@ -63,34 +63,34 @@ public class ViewPersonsListTest {
         Person Mark = new Person("Mark", img1, MarkClasses);
         Person Vicki = new Person("Vicki", img1, VickiClasses);
 
-        persons.add(Lucas);
-        persons.add(Grace);
-        persons.add(Mark);
-        persons.add(Vicki);
+        //persons.add(Lucas);
+        //persons.add(Grace);
+        //persons.add(Mark);
+        //persons.add(Vicki);
 
         ProfileInfo LucasInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Lucas);
         ProfileInfo GraceInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Grace);
         ProfileInfo MarkInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Mark);
         ProfileInfo VickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Vicki);
 
-        personViewAdapter.addPerson(Lucas, LucasInfo, true);
-        personViewAdapter.addPerson(Grace, GraceInfo, true);
-        personViewAdapter.addPerson(Mark, MarkInfo, true);
-        personViewAdapter.addPerson(Vicki, VickiInfo, true);
+        personViewAdapter.addPerson(LucasInfo, true);
+        personViewAdapter.addPerson(GraceInfo, true);
+        personViewAdapter.addPerson(MarkInfo, true);
+        personViewAdapter.addPerson(VickiInfo, true);
 
-        List<Person> output = personViewAdapter.getPeople();
+        List<ProfileInfo> output = personViewAdapter.getProfileInfos();
         List<String> nameList = new ArrayList<>();
-        for (Person person : output) {
+        for (ProfileInfo person : output) {
             nameList.add(person.getName());
         }
-        String expectedOutput = "[Lucas, Grace, Mark, Vicki]";
+        String expectedOutput = "[Grace, Mark, Vicki]";
         assertEquals(expectedOutput, nameList.toString());
     }
 
     // unit test
     @Test
     public void testSearchClassmatesDupNames() {
-        List<Person> persons = new ArrayList<>();
+        List<ProfileInfo> persons = new ArrayList<>();
         PersonsViewAdapter personViewAdapter = new PersonsViewAdapter(persons);
         Course course1 = new Course("Spring", "2020", "Large (150-250)", "CSE", "110");
         Course course2 = new Course("Fall", "2020", "Large (150-250)", "CSE", "100");
@@ -119,12 +119,6 @@ public class ViewPersonsListTest {
         Person Vicki = new Person("Vicki", img1, VickiClasses);
         Person DupVicki = new Person("Vicki", "", DupVickiClasses);
 
-        persons.add(Lucas);
-        persons.add(Grace);
-        persons.add(Mark);
-        persons.add(Vicki);
-        persons.add(DupVicki);
-
 
         ProfileInfo LucasInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Lucas);
         ProfileInfo GraceInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Grace);
@@ -132,18 +126,18 @@ public class ViewPersonsListTest {
         ProfileInfo VickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, Vicki);
         ProfileInfo DupVickiInfo = SearchClassmates.detectAndReturnSharedClasses(Rodney, DupVicki);
 
-        personViewAdapter.addPerson(Lucas, LucasInfo, true);
-        personViewAdapter.addPerson(Grace, GraceInfo, true);
-        personViewAdapter.addPerson(Mark, MarkInfo, true);
-        personViewAdapter.addPerson(Vicki, VickiInfo, true);
-        personViewAdapter.addPerson(DupVicki, DupVickiInfo, true);
+        personViewAdapter.addPerson(LucasInfo, true);
+        personViewAdapter.addPerson(GraceInfo, true);
+        personViewAdapter.addPerson(MarkInfo, true);
+        personViewAdapter.addPerson(VickiInfo, true);
+        personViewAdapter.addPerson(DupVickiInfo, true);
 
-        List<Person> output = personViewAdapter.getPeople();
+        List<ProfileInfo> output = personViewAdapter.getProfileInfos();
         List<String> nameList = new ArrayList<>();
-        for (Person person : output) {
-            nameList.add(person.getName());
+        for (ProfileInfo profileInfo : output) {
+            nameList.add(profileInfo.getName());
         }
-        String expectedOutput = "[Lucas, Grace, Mark, Vicki, Vicki]";
+        String expectedOutput = "[Grace, Vicki, Mark, Vicki]";
         assertEquals(expectedOutput, nameList.toString());
     }
 }

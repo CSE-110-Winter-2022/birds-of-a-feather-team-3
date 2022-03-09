@@ -18,10 +18,10 @@ public interface ProfilesDao {
 
     @Transaction
     @Query("SELECT * FROM profiles WHERE session_id=:sessionId")
-    List<ProfileInfo> getForSession(int sessionId);
+    List<ProfileInfo> getForSession(long sessionId);
 
     @Query("SELECT * FROM profiles WHERE id=:id")
-    ProfileInfo get(int id);
+    ProfileInfo get(long id);
 
     @Query("SELECT COUNT(*) from profiles")
     int count();

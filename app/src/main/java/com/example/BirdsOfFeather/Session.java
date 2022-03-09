@@ -8,7 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Session implements Serializable{
-    String sessionName;
+    public String sessionName;
+    public long id;
 
     //String timeStamp;
 
@@ -34,8 +35,9 @@ public class Session implements Serializable{
 //        this.bofList = bofList;
 //    }
 
-    public Session(String sessionName){
+    public Session(String sessionName, long id){
         this.sessionName = sessionName;
+        this.id = id;
     }
 
     public String getName(){return sessionName;}

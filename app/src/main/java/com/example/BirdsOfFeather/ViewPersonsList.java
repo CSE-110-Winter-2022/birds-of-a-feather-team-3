@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 import com.example.BirdsOfFeather.database.AppDatabase;
@@ -33,7 +32,9 @@ import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ViewPersonsList extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -41,16 +42,25 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
     boolean startButtonOn = false;
+
     //class name for log
     private static final String TAG = ViewPersonsList.class.getSimpleName();
+
     //message that this user broadcasts to others.
     private Message classesMessage;
     private MessageListener classesMessageListener;
     private List<Course> myCourses;
     private List<Person> fakedSubscribers;
     PersonSerializer personSerializer;
+
     AppDatabase db;
     List<Person> classmates;
+    List<ProfileInfo> classmateProfileInfos;
+
+    //session data
+    Session currentSession;
+    long currSessionId;
+    //ProfileInfo newProfile;
 
     //save popup stuff
     private AlertDialog.Builder dialogBuilder;
@@ -64,6 +74,15 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     private Spinner sessionsSpinner;
     private Button continueButton;
     private Button newButton;
+    private Button renameButton;
+
+    //rename popup stuff
+    private AlertDialog.Builder renameDialogBuilder;
+    private AlertDialog renameDialog;
+    private Button cancelButton;
+    private Button saveButton;
+    private Spinner classesSpinner;
+    private EditText newNameEditText;
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -98,7 +117,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_view_persons_list);
         personSerializer = new PersonSerializer();
 
-
         // create the sort(filter) spinner
         Spinner spinner = (Spinner) findViewById(R.id.filter_dropdown);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SortSelection,
@@ -110,13 +128,17 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //empty arraylist to be used by PersonsViewAdapter for storing info
         classmates = new ArrayList<>();
+        classmateProfileInfos = new ArrayList<>();
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
+
+
+
         setTitle("BoFs");
         personsRecyclerView = findViewById(R.id.persons_view);
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
-        personsViewAdapter = new PersonsViewAdapter(classmates);
+        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //construct Person object for self
@@ -181,9 +203,21 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
                         if (personsProfileInfo != null) {
                             //Was pausing scripts, but running on UI thread fixed
+
+                            //TODO add personsProfileInfo to database
+
                             runOnUiThread(() -> {
-                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+                                boolean result = personsViewAdapter.addPerson(personsProfileInfo, false);//unchangingDeserializedPerson, personsProfileInfo, false);
+                                if (result) {//was added properly
+                                    ProfileEntity newProfile = new ProfileEntity(personsProfileInfo.getName(), personsProfileInfo.getURL(), currentSession.id, myCourses, personsProfileInfo.getUniqueId());
+                                    db.profilesDao().insert(newProfile);
+                                }
                             });
+
+//
+//                            runOnUiThread(() -> {
+//                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+//                            });
                         }
                     }
                 }
@@ -214,7 +248,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //Instructor can add a Person to fakedSubscribers via the Mock Nearby Activity
         fakedSubscribers = new ArrayList<>();
-        this.classesMessageListener = realMessageListener;//new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
@@ -291,9 +325,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     public void saveSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View saveSessionPopupView = getLayoutInflater().inflate(R.layout.popup_save_session_prompt, null);
-        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.session_name_edittext);
-        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.continue_session_button);
-        classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.sessions_spinner);
+        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.new_name_edittext);
+        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.save_button);
+        classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.classes_spinner);
 
         loadSpinnerData(classes_spinner);
 
@@ -309,7 +343,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //no need to check for empty input as cannot reach this screen unless has at least one class -> default session name
 
                 //if there is any text in custom name box
-
                 if(customName_editText.getText().toString() != null && !customName_editText.getText().toString().equals("")){
                     sessionName = customName_editText.getText().toString();
                 }
@@ -317,25 +350,28 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
+                System.out.println("The current session is called: " + currentSession.sessionName);
+                System.out.println("It thinks the current session index is: " + currentSession.id);
+                //System.out.println("Using the method, it thinks the current session index is: " + currentSession.getSessionId());
+                System.out.println("Using storing method, it thinks the current session index is: " + currSessionId);
+
+                db.sessionDao().update(sessionName, currentSession.id);
 
                 //create new session and add to database
-                SessionEntity sessionEntity = new SessionEntity(sessionName);
-                db.sessionDao().insert(sessionEntity);
+                //SessionEntity sessionEntity = new SessionEntity(sessionName);
+                //db.sessionDao().insert(sessionEntity);
 
 
-                System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
                 //add all profiles to session
-                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", db.sessionWithProfilesDao().count() + 1, myCourses, "uniqueID");
-                db.profilesDao().insert(newProfile);
+              //  ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
+              //  db.profilesDao().insert(newProfile);
 
 
                 //test print all sessions
                 List<Session> mySessions = db.sessionDao().getAll();
-
                 System.out.println("Sessions: ");
                 for(Session s: mySessions){
                     System.out.println(s.sessionName);
-
                 }
 
                 System.out.println("Testing linked database now:");
@@ -343,7 +379,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 List<SessionWithProfiles> sessionProfiles = db.sessionWithProfilesDao().getAll();
 
                 for(SessionWithProfiles swp : sessionProfiles){
-                    System.out.println("Session name: " + swp.getName() + "with id=" + swp.getId());
+                    System.out.println("Session name: " + swp.getName() + " with id=" + swp.getId());
                     List<ProfileInfo> profiles = swp.getProfiles();
                     System.out.println("Number of profiles in "+swp.getName()+":"+profiles.size());
                     for(ProfileInfo p: profiles){
@@ -375,36 +411,66 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         spinner.setAdapter(dataAdapter);
     }
 
+    public void loadSessionData(Spinner spinner, AppDatabase db){
+        List<String> sessionNameList = new ArrayList<String>();
+        List<Session> sessionList = db.sessionDao().getAll();
+
+        for(Session s: sessionList){
+            sessionNameList.add(s.sessionName);
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sessionNameList);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+    }
+
+
+
 
     public void startSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View startSessionPopupView = getLayoutInflater().inflate(R.layout.popup_start_session_prompt, null);
-        //customName_editText = (EditText) startSessionPopupView.findViewById(R.id.session_name_edittext);
-        //saveSession_button = (Button) startSessionPopupView.findViewById(R.id.continue_session_button);
-        //classes_spinner = (Spinner) startSessionPopupView.findViewById(R.id.sessions_spinner);
 
-        //loadSpinnerData(sessionsSpinner);
+        sessionsSpinner = (Spinner) startSessionPopupView.findViewById(R.id.classes_spinner);
+        continueButton = (Button) startSessionPopupView.findViewById(R.id.save_button);
+        newButton = (Button) startSessionPopupView.findViewById(R.id.new_session_button);
+        renameButton = (Button) startSessionPopupView.findViewById(R.id.rename_button);
+
+
+        loadSessionData(sessionsSpinner, db);
 
         dialogBuilder.setView(startSessionPopupView);
         dialog = dialogBuilder.create();
         dialog.show();
 
-        sessionsSpinner = (Spinner) startSessionPopupView.findViewById(R.id.sessions_spinner);
-        continueButton = (Button) startSessionPopupView.findViewById(R.id.continue_session_button);
-        newButton = (Button) startSessionPopupView.findViewById(R.id.new_session_button);
 
-
-
-
+        renameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+                //assuming that Dao getAll() method preserves order of inserted sessions
+                //index of spinner starts at 0 while index of database starts at 1, thus add 1
+                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 1, sessionsSpinner);
+            }
+        });
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //define click behaviour
 
-
-
-
+                //TODO set currSession to selected session
+                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 1);
+                personsViewAdapter.clearAdapter();
+                List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
+                //personsProfileInfo = SearchClassmates
+                //        .detectAndReturnSharedClasses(self, deserializedPerson);
+                for (ProfileInfo newProfile : loadedProfiles) {
+                    personsViewAdapter.addPerson(newProfile, false);
+                }
                 dialog.dismiss();
             }
         });
@@ -415,7 +481,11 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-
+                SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
+                long generatedId =  db.sessionDao().insert(newSessionEntity);
+                currentSession = db.sessionDao().getSession(generatedId);
+                currentSession.id = generatedId;
+                currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
 
                 dialog.dismiss();
             }
@@ -423,11 +493,67 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     }
 
+    public String getCurrDayTime(){
+        //format is "1/16/22 5:10PM"
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm a");
+        String currentDateandTime = sdf.format(new Date());
+
+        System.out.println("Default Session name is: " + currentDateandTime);
+
+        return currentDateandTime;
+    }
+
+
+    public void renameSessionDialog(int selectedSessionId, Spinner spinner){
+        renameDialogBuilder = new AlertDialog.Builder(this);
+        final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
+        renameDialogBuilder.setView(renameSessionPopupView);
+        renameDialog = renameDialogBuilder.create();
+        renameDialog.show();
+
+        classesSpinner = renameSessionPopupView.findViewById(R.id.classes_spinner);
+        newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
+        cancelButton = renameSessionPopupView.findViewById(R.id.cancel_button);
+        saveButton = renameSessionPopupView.findViewById(R.id.save_button);
 
 
 
-    public void onSessionClicked(View view) {}
+        newNameEditText.setHint(db.sessionDao().getSession(selectedSessionId).sessionName);
 
+
+        loadSpinnerData(classesSpinner);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+                renameDialog.dismiss();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+
+                //TODO actually rename session
+                String newName;
+
+                if(newNameEditText.getText().toString().equals(null) || newNameEditText.getText().toString().equals("")){
+                    newName = classesSpinner.getSelectedItem().toString();
+                }
+                else{
+                    newName = newNameEditText.getText().toString();
+                }
+
+
+                db.sessionDao().update(newName, selectedSessionId);
+                loadSessionData(spinner, db);
+
+                renameDialog.dismiss();
+            }
+        });
+    }
 
 
     @Override

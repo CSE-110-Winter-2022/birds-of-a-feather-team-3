@@ -18,7 +18,7 @@ public class SessionWithProfiles{
 //            projection = {"name"}
     public List<ProfileInfo> profileEntities;
 
-    public int getId(){return this.sessionEntity.sessionIndex;}
+    public long getId(){return this.sessionEntity.id;}
 
     public String getName(){return this.sessionEntity.sessionName;}
 
