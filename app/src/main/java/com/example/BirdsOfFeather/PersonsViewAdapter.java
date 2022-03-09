@@ -50,10 +50,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         notifyDataSetChanged();
     }
     //for testing purposes
-    /*
-    public List<Person> getPeople() {
-        return this.persons;
-    }*/
+
+    public List<ProfileInfo> getProfileInfos() {
+        return this.profileInfos;
+    }
     //for testing purposes
     /*
     public Map<Person, ProfileInfo> getPeopleInfoMap() {
@@ -106,6 +106,9 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     // new addPerson that allows different types of sorting
     public boolean addPerson(ProfileInfo newProfileInfo, boolean testing){
         boolean alreadyContained = false;
+        if (newProfileInfo == null) {
+            return false;
+        }
         for (ProfileInfo existingProfile : profileInfos) {
             if (newProfileInfo.toString().equals(existingProfile.toString())) {
                 Log.i(TAG, newProfileInfo.toString() + " " + existingProfile.toString());

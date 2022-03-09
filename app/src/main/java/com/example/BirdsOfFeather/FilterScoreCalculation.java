@@ -47,8 +47,6 @@ public class FilterScoreCalculation {
         int score = 0;
         List<Course> commonCourses = profileInfo.getCommonCourses();
 
-
-
         for (Course c:commonCourses) {
 
             int quarterage = 0;
