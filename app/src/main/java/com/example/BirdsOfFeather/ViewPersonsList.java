@@ -34,7 +34,6 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +73,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     private Spinner sessionsSpinner;
     private Button continueButton;
     private Button newButton;
+    private Button renameButton;
+
+    //rename popup stuff
+    private Button cancelButton;
+    private Button saveButton;
+    private Spinner classesSpinner;
+    private EditText newNameEditText;
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -196,10 +202,17 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
                             //TODO add personsProfileInfo to database
 
-
                             runOnUiThread(() -> {
-                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+                                boolean result = personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+                                if (result) {//was added properly
+                                    ProfileEntity newProfile = new ProfileEntity(personsProfileInfo.getName(), personsProfileInfo.getURL(), currentSession.id, myCourses, personsProfileInfo.getUniqueId());
+                                }
                             });
+
+//
+//                            runOnUiThread(() -> {
+//                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+//                            });
                         }
                     }
                 }
@@ -307,8 +320,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     public void saveSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View saveSessionPopupView = getLayoutInflater().inflate(R.layout.popup_save_session_prompt, null);
-        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.session_name_edittext);
-        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.continue_session_button);
+        customName_editText = (EditText) saveSessionPopupView.findViewById(R.id.new_name_edittext);
+        saveSession_button = (Button) saveSessionPopupView.findViewById(R.id.save_button);
         classes_spinner = (Spinner) saveSessionPopupView.findViewById(R.id.classes_spinner);
 
         loadSpinnerData(classes_spinner);
@@ -418,9 +431,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     public void startSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View startSessionPopupView = getLayoutInflater().inflate(R.layout.popup_start_session_prompt, null);
+
         sessionsSpinner = (Spinner) startSessionPopupView.findViewById(R.id.classes_spinner);
-        continueButton = (Button) startSessionPopupView.findViewById(R.id.continue_session_button);
+        continueButton = (Button) startSessionPopupView.findViewById(R.id.save_button);
         newButton = (Button) startSessionPopupView.findViewById(R.id.new_session_button);
+        renameButton = (Button) startSessionPopupView.findViewById(R.id.rename_button);
+
 
         loadSessionData(sessionsSpinner, db);
 
@@ -429,6 +445,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         dialog.show();
 
 
+        renameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+                renameSessionDialog();
+            }
+        });
 
 
 
@@ -438,6 +461,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
+
+                //TODO set currSession to selected session
 
 
 
@@ -473,6 +498,41 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     }
 
 
+    public void renameSessionDialog(){
+        final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
+        dialogBuilder.setView(renameSessionPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        classesSpinner = renameSessionPopupView.findViewById(R.id.classes_spinner);
+        newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
+        cancelButton = renameSessionPopupView.findViewById(R.id.cancel_button);
+        saveButton = renameSessionPopupView.findViewById(R.id.save_button);
+
+
+        loadSpinnerData(classesSpinner);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+                dialog.dismiss();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //define click behaviour
+                dialog.dismiss();
+            }
+        });
+
+
+
+
+
+    }
 
 
     @Override

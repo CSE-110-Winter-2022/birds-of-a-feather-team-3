@@ -93,32 +93,32 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         }
     }
     // new addPerson that allows different types of sorting
-    public void addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
+    public boolean addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
         boolean alreadyContained = false;
         for (Person existingPerson : persons) {
             if (person.toString().equals(existingPerson.toString())) {
                 Log.i(TAG, person.toString() + " " + existingPerson.toString());
                 alreadyContained = true;
                 System.out.println("already contained");
-                break;
+                return false;
             }
         }
         //Checks if a potential BoF has already been stored in the list
-        if (!alreadyContained) {
-            FilterScoreCalculation helper = new FilterScoreCalculation();
-            person.setScoreRecent(helper.score_recent(newProfileInfo));
-            person.setScoreClassSize(helper.score_size(newProfileInfo));
-            this.persons.add(person);
-            profileInformationList.put(person, newProfileInfo);
-            // sort persons
-            if (sortType == 0) {
-                sortByMatches();
-            } else if (sortType == 1) {
-                sortByRecent();
-            } else {
-                sortBySize();
-            }
+        FilterScoreCalculation helper = new FilterScoreCalculation();
+        person.setScoreRecent(helper.score_recent(newProfileInfo));
+        person.setScoreClassSize(helper.score_size(newProfileInfo));
+        this.persons.add(person);
+        profileInformationList.put(person, newProfileInfo);
+        // sort persons
+        if (sortType == 0) {
+            sortByMatches();
+        } else if (sortType == 1) {
+            sortByRecent();
+        } else {
+            sortBySize();
         }
+
+        return true;
     }
 
     // different sorting methods and their corresponding comparators

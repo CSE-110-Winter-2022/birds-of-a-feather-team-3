@@ -14,27 +14,14 @@
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/activity_view_sessions_list.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/input_name.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/person_row.xml" value="0.2109375" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/drawable/Solid_favorite_background.xml" value="0.14322916666666666" />
-        <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/drawable/Solid_favoritea_background.xml" value="0.14322916666666666" />
-=======
-=======
->>>>>>> 771d261137eb74a70f3f017e385151d957785e9d
+        <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/popup_rename_session_prompt.xml" value="0.264" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/popup_save_session.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/popup_save_session_prompt.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/popup_start_session_prompt.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/popup_test.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Grace/AndroidStudioProjects/birds-of-a-feather-team-3/app/src/main/res/layout/session_row.xml" value="0.22083333333333333" />
-<<<<<<< HEAD
->>>>>>> c92d4d2cf6492983508ef4536271f5d2b1f9986d
-=======
->>>>>>> 771d261137eb74a70f3f017e385151d957785e9d
         <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/layout/activity_input_classes.xml" value="0.2" />
         <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/layout/activity_profile.xml" value="0.4" />
-        <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/layout/activity_view_persons_list.xml" value="0.264" />
-        <entry key="..\:/Users/kempe/AndroidStudioProjects/InputClasses/app/src/main/res/layout/person_row.xml" value="0.4" />
       </map>
     </option>
   </component>
