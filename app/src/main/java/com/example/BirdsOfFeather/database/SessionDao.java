@@ -28,13 +28,15 @@ public interface SessionDao {
 
     @Query("SELECT * FROM sessions WHERE id=:id")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    Session getSession(int id);
+    Session getSession(long id);
 
     @Query("UPDATE sessions SET sessionName=:sessionName WHERE id = :id")
     void update(String sessionName, long id);
 
-
     @Insert
     long insert(SessionEntity session);
+
+    @Query("SELECT * FROM sessions WHERE sessionName=:sessionName")
+    Session getSessionFromName(String sessionName);
 
 }

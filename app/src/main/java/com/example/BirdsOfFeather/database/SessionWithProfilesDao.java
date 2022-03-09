@@ -16,7 +16,7 @@ public interface SessionWithProfilesDao {
     List<SessionWithProfiles> getAll();
 
     @Query("SELECT * FROM sessions WHERE id=:id")
-    SessionWithProfiles get(int id);
+    SessionWithProfiles get(long id);
 
     @Query("SELECT COUNT(*) from sessions")
     int count();

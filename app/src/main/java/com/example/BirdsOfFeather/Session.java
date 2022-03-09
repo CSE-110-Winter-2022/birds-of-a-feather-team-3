@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Session implements Serializable{
     public String sessionName;
-    //public int id;
+    public long id;
 
     //String timeStamp;
 
@@ -35,8 +35,9 @@ public class Session implements Serializable{
 //        this.bofList = bofList;
 //    }
 
-    public Session(String sessionName){
+    public Session(String sessionName, long id){
         this.sessionName = sessionName;
+        this.id = id;
     }
 
     public String getName(){return sessionName;}

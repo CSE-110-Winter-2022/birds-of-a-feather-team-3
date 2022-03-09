@@ -4,6 +4,7 @@ import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.BirdsOfFeather.Course;
@@ -33,13 +34,26 @@ public class ProfileEntity {
     @ColumnInfo(name = "uniqueId")
     public String uniqueId;
 
+    @ColumnInfo(name = "scoreRecent")
+    public int scoreRecent;
 
-    public ProfileEntity(String profileName, String profileURL, long profileSessionId, List<Course> profileCourses, String uniqueId){
+    @ColumnInfo(name = "scoreClassSize")
+    public float scoreClassSize;
+
+    @ColumnInfo(name = "isWaving")
+    public boolean isWaving;
+
+    public ProfileEntity(String profileName, String profileURL, long profileSessionId,
+                         List<Course> profileCourses, String uniqueId){
         this.profileName = profileName;
         this.profileURL = profileURL;
-        this.uniqueId = uniqueId;
         this.profileSessionId = profileSessionId;
         this.profileCourses = profileCourses;
+        this.uniqueId = uniqueId;
+
+        //this.scoreRecent = 0;
+        //this.scoreClassSize = 0;
+        //this.isWaving = false;
     }
 
 }

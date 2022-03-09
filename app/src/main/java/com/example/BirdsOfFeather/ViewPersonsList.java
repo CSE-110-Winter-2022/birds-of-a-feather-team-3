@@ -55,9 +55,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     AppDatabase db;
     List<Person> classmates;
+    List<ProfileInfo> classmateProfileInfos;
 
     //session data
-    SessionEntity currentSession;
+    Session currentSession;
     long currSessionId;
     //ProfileInfo newProfile;
 
@@ -127,6 +128,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //empty arraylist to be used by PersonsViewAdapter for storing info
         classmates = new ArrayList<>();
+        classmateProfileInfos = new ArrayList<>();
         db = AppDatabase.singleton(this);
         myCourses = db.classesDao().getAll();
 
@@ -136,7 +138,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         personsRecyclerView = findViewById(R.id.persons_view);
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
-        personsViewAdapter = new PersonsViewAdapter(classmates);
+        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //construct Person object for self
@@ -205,9 +207,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                             //TODO add personsProfileInfo to database
 
                             runOnUiThread(() -> {
-                                boolean result = personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
+                                boolean result = personsViewAdapter.addPerson(personsProfileInfo, false);//unchangingDeserializedPerson, personsProfileInfo, false);
                                 if (result) {//was added properly
                                     ProfileEntity newProfile = new ProfileEntity(personsProfileInfo.getName(), personsProfileInfo.getURL(), currentSession.id, myCourses, personsProfileInfo.getUniqueId());
+                                    db.profilesDao().insert(newProfile);
                                 }
                             });
 
@@ -245,7 +248,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //Instructor can add a Person to fakedSubscribers via the Mock Nearby Activity
         fakedSubscribers = new ArrayList<>();
-        this.classesMessageListener = realMessageListener;//new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
@@ -362,8 +365,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                // System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
 
                 //add all profiles to session
-                ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
-                db.profilesDao().insert(newProfile);
+              //  ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
+              //  db.profilesDao().insert(newProfile);
 
 
                 //test print all sessions
@@ -371,7 +374,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 System.out.println("Sessions: ");
                 for(Session s: mySessions){
                     System.out.println(s.sessionName);
-
                 }
 
                 System.out.println("Testing linked database now:");
@@ -455,20 +457,20 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             }
         });
 
-
-
-
-
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //define click behaviour
 
                 //TODO set currSession to selected session
-
-
-
-
+                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 1);
+                personsViewAdapter.clearAdapter();
+                List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
+                //personsProfileInfo = SearchClassmates
+                //        .detectAndReturnSharedClasses(self, deserializedPerson);
+                for (ProfileInfo newProfile : loadedProfiles) {
+                    personsViewAdapter.addPerson(newProfile, false);
+                }
                 dialog.dismiss();
             }
         });
@@ -479,9 +481,11 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-                currentSession = new SessionEntity(getCurrDayTime());
+                SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
+                long generatedId =  db.sessionDao().insert(newSessionEntity);
+                currentSession = db.sessionDao().getSession(generatedId);
+                currentSession.id = generatedId;
                 currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
-                currentSession.id = db.sessionDao().insert(currentSession);
 
                 dialog.dismiss();
             }
@@ -530,11 +534,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 renameDialog.dismiss();
             }
         });
-
-
-
-
-
     }
 
 

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,30 +25,40 @@ import java.util.List;
 import java.util.Map;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
-    private final List<Person> persons;
-    private final Map<Person, ProfileInfo> profileInformationList;
+    //private final List<Person> persons;
+    //private final Map<Person, ProfileInfo> profileInformationList;
     private static final String TAG = PersonsViewAdapter.class.getSimpleName();
     // 0=default, 1=recent, 2=class size
     private int sortType;
+    private final List<ProfileInfo> profileInfos;
 
-    public PersonsViewAdapter(List<Person> persons) {
+    public PersonsViewAdapter(List<ProfileInfo> persons) {
         super();
-        this.persons = persons;
-        this.profileInformationList = new HashMap<>();
+        //this.persons = persons;
+        //this.profileInformationList = new HashMap<>();
+        this.profileInfos = persons;
     }
 
     public void setSortType(int sortType) {
         this.sortType = sortType;
     }
 
+    public void clearAdapter() {
+        this.profileInfos.clear();
+        //persons.clear();
+        //profileInformationList.clear();
+        notifyDataSetChanged();
+    }
     //for testing purposes
+    /*
     public List<Person> getPeople() {
         return this.persons;
-    }
+    }*/
     //for testing purposes
+    /*
     public Map<Person, ProfileInfo> getPeopleInfoMap() {
         return profileInformationList;
-    }
+    } */
 
 //    public void addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
 //        boolean alreadyContained = false;
@@ -93,11 +104,11 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         }
     }
     // new addPerson that allows different types of sorting
-    public boolean addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
+    public boolean addPerson(ProfileInfo newProfileInfo, boolean testing){
         boolean alreadyContained = false;
-        for (Person existingPerson : persons) {
-            if (person.toString().equals(existingPerson.toString())) {
-                Log.i(TAG, person.toString() + " " + existingPerson.toString());
+        for (ProfileInfo existingProfile : profileInfos) {
+            if (newProfileInfo.toString().equals(existingProfile.toString())) {
+                Log.i(TAG, newProfileInfo.toString() + " " + existingProfile.toString());
                 alreadyContained = true;
                 System.out.println("already contained");
                 return false;
@@ -105,10 +116,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         }
         //Checks if a potential BoF has already been stored in the list
         FilterScoreCalculation helper = new FilterScoreCalculation();
-        person.setScoreRecent(helper.score_recent(newProfileInfo));
-        person.setScoreClassSize(helper.score_size(newProfileInfo));
-        this.persons.add(person);
-        profileInformationList.put(person, newProfileInfo);
+        newProfileInfo.setScoreRecent(helper.score_recent(newProfileInfo));
+        newProfileInfo.setScoreClassSize(helper.score_size(newProfileInfo));
+        this.profileInfos.add(newProfileInfo);
+        //profileInformationList.put(person, newProfileInfo);
         // sort persons
         if (sortType == 0) {
             sortByMatches();
@@ -122,12 +133,12 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     }
 
     // different sorting methods and their corresponding comparators
-    public Comparator<Person> SortByMatchesComparator = new Comparator<Person>() {
+    public Comparator<ProfileInfo> SortByMatchesComparator = new Comparator<ProfileInfo>() {
         @Override
-        public int compare(Person p1, Person p2) {
+        public int compare(ProfileInfo p1, ProfileInfo p2) {
             if (p1.getIsWaving() == p2.getIsWaving()) {
-                int first = profileInformationList.get(p1).getCommonCourses().size();
-                int second = profileInformationList.get(p2).getCommonCourses().size();
+                int first = p1.getCommonCourses().size();
+                int second = p2.getCommonCourses().size();
                 return second-first;
             } //else
             //converts boolean to 1 and 0 and compares
@@ -137,13 +148,13 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     };
 
     public void sortByMatches() {
-        Collections.sort(persons, SortByMatchesComparator);
+        Collections.sort(profileInfos, SortByMatchesComparator);
         this.notifyDataSetChanged();
     }
 
-    public Comparator<Person> SortByRecentComparator = new Comparator<Person>() {
+    public Comparator<ProfileInfo> SortByRecentComparator = new Comparator<ProfileInfo>() {
         @Override
-        public int compare(Person p1, Person p2) {
+        public int compare(ProfileInfo p1, ProfileInfo p2) {
             if (p1.getIsWaving() == p2.getIsWaving()) {
                 return p2.getScoreRecent() - p1.getScoreRecent();
             } //else
@@ -153,13 +164,13 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     };
 
     public void sortByRecent() {
-        Collections.sort(persons,SortByRecentComparator);
+        Collections.sort(profileInfos, SortByRecentComparator);
         this.notifyDataSetChanged();
     }
 
-    public Comparator<Person> SortByCourseSizeComparator = new Comparator<Person>() {
+    public Comparator<ProfileInfo> SortByCourseSizeComparator = new Comparator<ProfileInfo>() {
         @Override
-        public int compare(Person p1, Person p2) {
+        public int compare(ProfileInfo p1, ProfileInfo p2) {
             if (p1.getIsWaving() == p2.getIsWaving()) { //this allows for float comparison to return int
                 if (p1.getScoreClassSize() > p2.getScoreClassSize()) {
                     return -1;
@@ -176,7 +187,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         }
     };
     public void sortBySize() {
-        Collections.sort(persons, SortByCourseSizeComparator);
+        Collections.sort(profileInfos, SortByCourseSizeComparator);
         this.notifyDataSetChanged();
     }
 
@@ -193,16 +204,18 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull PersonsViewAdapter.ViewHolder holder, int position) {
-        Person holderPerson = persons.get(position);
-        holder.setPerson(holderPerson);
+        //Person holderPerson = persons.get(position);
+        //holder.setPerson(holderPerson);
         System.out.println("bound");
-        holder.setProfileInfo(profileInformationList.get(holderPerson));
-        holder.indicateWave(holderPerson.getIsWaving());
+        ProfileInfo holderProfile = profileInfos.get(position);
+        holder.setProfileInfo(holderProfile);
+        //holder.setProfileInfo(profileInformationList.get(holderPerson));
+        holder.indicateWave(holderProfile.getIsWaving());
     }
 
     @Override
     public int getItemCount() {
-        return this.persons.size();
+        return this.profileInfos.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -237,7 +250,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             });
         }
 
-        public void setPerson(Person person) {
+        public void setPerson(ProfileInfo person) {
             this.personName = person.getName();
             this.personNameView.setText(personName);
             //default image check
