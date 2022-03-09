@@ -76,6 +76,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     private Button renameButton;
 
     //rename popup stuff
+    private AlertDialog.Builder renameDialogBuilder;
+    private AlertDialog renameDialog;
     private Button cancelButton;
     private Button saveButton;
     private Spinner classesSpinner;
@@ -499,10 +501,11 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
 
     public void renameSessionDialog(){
+        renameDialogBuilder = new AlertDialog.Builder(this);
         final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
-        dialogBuilder.setView(renameSessionPopupView);
-        dialog = dialogBuilder.create();
-        dialog.show();
+        renameDialogBuilder.setView(renameSessionPopupView);
+        renameDialog = renameDialogBuilder.create();
+        renameDialog.show();
 
         classesSpinner = renameSessionPopupView.findViewById(R.id.classes_spinner);
         newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
@@ -516,7 +519,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-                dialog.dismiss();
+                renameDialog.dismiss();
             }
         });
 
@@ -524,7 +527,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-                dialog.dismiss();
+                renameDialog.dismiss();
             }
         });
 
