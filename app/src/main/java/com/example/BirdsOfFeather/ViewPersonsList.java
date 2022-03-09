@@ -359,8 +359,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //db.sessionDao().insert(sessionEntity);
 
 
-               // System.out.println("This is the parent id what was sent to profile: "+db.sessionWithProfilesDao().count());
-
                 //add all profiles to session
                 ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
                 db.profilesDao().insert(newProfile);
@@ -451,7 +449,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-                renameSessionDialog();
+                //assuming that Dao getAll() method preserves order of inserted sessions
+                //index of spinner starts at 0 while index of database starts at 1, thus add 1
+                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 1);
             }
         });
 
@@ -500,7 +500,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     }
 
 
-    public void renameSessionDialog(){
+    public void renameSessionDialog(int selectedSessionId){
         renameDialogBuilder = new AlertDialog.Builder(this);
         final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
         renameDialogBuilder.setView(renameSessionPopupView);
@@ -511,6 +511,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
         cancelButton = renameSessionPopupView.findViewById(R.id.cancel_button);
         saveButton = renameSessionPopupView.findViewById(R.id.save_button);
+
+
+
+        newNameEditText.setHint(db.sessionDao().getSession(selectedSessionId).sessionName);
 
 
         loadSpinnerData(classesSpinner);
@@ -527,6 +531,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
+
+                //TODO actually rename session
+
+
+                db.sessionDao().update("RENAMED", selectedSessionId);
+
                 renameDialog.dismiss();
             }
         });
