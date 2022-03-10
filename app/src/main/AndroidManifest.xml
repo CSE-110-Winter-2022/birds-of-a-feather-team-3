@@ -19,7 +19,7 @@
         android:theme="@style/Theme.InputClasses">
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="AIzaSyA7jL0gRzpxgiRmM_9WCqY4xu7MZV_k0G8" />
+            android:value="AIzaSyDNsZzdUQLmhdBhUsLlFqrYfVexZO58CjQ" />
 
         <activity
             android:name=".MockInputPeople"
@@ -39,6 +39,11 @@
 
         <activity
             android:name=".ViewPersonsList"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".ViewFavoritesList"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
