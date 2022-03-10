@@ -279,6 +279,14 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.profileInfo = profInf;
             String matchCount = String.valueOf(this.profileInfo.getCommonCourses().size());
             this.matchCountView.setText(matchCount);
+            this.personName = profInf.getName();
+            this.personNameView.setText(personName);
+            //default image check
+            if (!profInf.getURL().equals("")) {
+                URLDownload downloadClass = new URLDownload(this.profilePictureView);
+                System.out.println(profInf.getURL());
+                downloadClass.execute(profInf.getURL());
+            }
         }
 
         @Override
@@ -300,6 +308,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             intent.putExtra("uniqueId", this.profileInfo.getUniqueId());
             intent.putExtra("selfId", selfName);
             intent.putExtra("favorited", isFavorited);
+            intent.putExtra("profileId", this.profileInfo.getProfileId());
 
             Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);

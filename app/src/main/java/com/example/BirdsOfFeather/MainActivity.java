@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.SessionEntity;
 import com.google.android.gms.common.AccountPicker;
 
 import java.util.UUID;
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
     EditText textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else {
+        else { //first use
+            /*
+            SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
+                long generatedId =  db.sessionDao().insert(newSessionEntity);
+                currentSession = db.sessionDao().getSession(generatedId);
+                currentSession.id = generatedId;
+                currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
+
+             */
+
             textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
             if (!autoFilledName.equals("")) {
