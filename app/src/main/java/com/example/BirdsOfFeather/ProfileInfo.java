@@ -8,6 +8,7 @@ public class ProfileInfo {
     String name;
     String URL;
     String uniqueId;
+    public long id;
     private int scoreRecent;
     private float scoreClassSize;
     private boolean isWaving;
@@ -19,8 +20,14 @@ public class ProfileInfo {
         this.isWaving = false;
         this.scoreRecent = 0;
         this.scoreClassSize = 0;
+        this.id = 0;
     }
-  
+
+    public long getProfileId() {
+        return this.id;
+    }
+    public void setProfileId(long profileId) {this.id = profileId;}
+
     public List<Course> getCommonCourses() {
         return this.profileCourses;
     }
@@ -37,13 +44,9 @@ public class ProfileInfo {
         return this.uniqueId;
     }
     public void setScoreRecent(int scoreRecent) {this.scoreRecent = scoreRecent;}
-
     public void setScoreClassSize(float scoreClassSize) {this.scoreClassSize = scoreClassSize;}
-
     public int getScoreRecent() {return scoreRecent;}
-
     public float getScoreClassSize() {return scoreClassSize;}
-
     public boolean getIsWaving() {
         return this.isWaving;
     }

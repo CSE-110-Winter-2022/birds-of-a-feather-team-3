@@ -12,12 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.ProfileEntity;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.android.gms.nearby.messages.PublishOptions;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 //Displays the image, name, and classes.
 public class ProfileActivity extends AppCompatActivity {
@@ -28,14 +31,23 @@ public class ProfileActivity extends AppCompatActivity {
     private String URL;
     private String uniqueId;
     private String selfId;
+    private long profileId;
     private boolean isFavorited;
     ImageButton button;
-
+    AppDatabase db;
+    Session favoriteSession;
+    List<ProfileInfo> currentFavoritedProfiles;
+    ProfileEntity profileEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        db = AppDatabase.singleton(this);
+        favoriteSession = db.sessionDao().getSession(1);
+        favoriteSession.id = 1;
+        currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
+
         Intent intent = getIntent();
         button = findViewById(R.id.favorite_button_profile);
         name = intent.getStringExtra("name");
@@ -44,6 +56,18 @@ public class ProfileActivity extends AppCompatActivity {
         uniqueId = intent.getStringExtra("uniqueId");
         selfId = intent.getStringExtra("selfId");
         isFavorited = intent.getBooleanExtra("favorited", false);
+        profileId = intent.getLongExtra("profileId", 0);
+
+        //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
+        //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
+        //profileEntity = new ProfileEntity(name, URL, 1, courses);
+        ProfileInfo infoToCopy = db.profilesDao().get(profileId);
+        profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
+                infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
+
+
+
+
         if (isFavorited) {
             button.setImageResource(android.R.drawable.btn_star_big_on);
         }
@@ -74,9 +98,12 @@ public class ProfileActivity extends AppCompatActivity {
         isFavorited = !isFavorited;
         if (isFavorited) {
             button.setImageResource(android.R.drawable.btn_star_big_on);
+            db.profilesDao().insert(profileEntity);
         }
         else {
             button.setImageResource(android.R.drawable.btn_star_big_off);
+            ProfileEntity entityToDelete = db.profilesDao().getEntity(profileId);
+            db.profilesDao().delete(entityToDelete);
         }
     }
 

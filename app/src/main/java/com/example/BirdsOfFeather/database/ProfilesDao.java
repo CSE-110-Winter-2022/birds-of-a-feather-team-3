@@ -14,7 +14,7 @@ import java.util.List;
 public interface ProfilesDao {
 
     @Insert
-    void insert(ProfileEntity profile);
+    long insert(ProfileEntity profile);
 
     @Transaction
     @Query("SELECT * FROM profiles WHERE session_id=:sessionId")
@@ -23,8 +23,14 @@ public interface ProfilesDao {
     @Query("SELECT * FROM profiles WHERE id=:id")
     ProfileInfo get(long id);
 
+    @Query("SELECT * FROM profiles WHERE id=:id")
+    ProfileEntity getEntity(long id);
+
     @Query("SELECT COUNT(*) from profiles")
     int count();
+
+    @Query("UPDATE profiles SET isWaving=:wave WHERE id=:id")
+    void updateWave(boolean wave, long id);
 
     @Delete
     void delete(ProfileEntity profileEntity);
