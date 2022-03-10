@@ -22,13 +22,11 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
     EditText textView;
-    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = AppDatabase.singleton(this);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link and courses
         if (!sharedPreferences.getString("first_name", "").equals("")) {
@@ -45,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
 
              */
-            SessionEntity syntheticFavoriteSession = new SessionEntity("Favorites");
-            db.sessionDao().insert(syntheticFavoriteSession);
+
             textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
             if (!autoFilledName.equals("")) {

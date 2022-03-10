@@ -12,6 +12,7 @@ import android.widget.*;
 
 import com.example.BirdsOfFeather.database.AppDatabase;
 import com.example.BirdsOfFeather.database.ClassEntity;
+import com.example.BirdsOfFeather.database.SessionEntity;
 
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class InputClasses extends AppCompatActivity {
             String databaseType = extras.getStringExtra("database_type");
             if (databaseType != null) {
                 usingMock = !databaseType.equals("actual");
+
             }
             else {
                 usingMock = true;
@@ -41,6 +43,8 @@ public class InputClasses extends AppCompatActivity {
         else { //retrieve classes from local database
             db = AppDatabase.singleton(this);
             localCourses = db.classesDao().getAll();
+            SessionEntity syntheticFavoriteSession = new SessionEntity("Favorites");
+            db.sessionDao().insert(syntheticFavoriteSession);
         }
 
         super.onCreate(savedInstanceState);
