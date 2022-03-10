@@ -425,6 +425,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         for(Session s: sessionList){
             sessionNameList.add(s.sessionName);
         }
+        sessionNameList.remove(0);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, sessionNameList);
@@ -457,7 +458,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 //define click behaviour
                 //assuming that Dao getAll() method preserves order of inserted sessions
                 //index of spinner starts at 0 while index of database starts at 1, thus add 1
-                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 1, sessionsSpinner);
+                renameSessionDialog(sessionsSpinner.getSelectedItemPosition() + 2, sessionsSpinner);
             }
         });
 
@@ -466,7 +467,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 1);
+                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 2);
                 personsViewAdapter.clearAdapter();
                 List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
                 //personsProfileInfo = SearchClassmates
