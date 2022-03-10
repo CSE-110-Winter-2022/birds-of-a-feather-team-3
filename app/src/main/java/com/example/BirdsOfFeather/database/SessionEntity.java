@@ -20,7 +20,6 @@ public class SessionEntity {
 
     public SessionEntity(String sessionName){
         this.sessionName = sessionName;
-        System.out.println("HEY I CREATED DIS SESSOIN AND ITS ID IS " + this.id);
     }
 
 
