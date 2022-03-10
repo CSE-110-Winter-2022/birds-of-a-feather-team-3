@@ -62,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
         //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
         //profileEntity = new ProfileEntity(name, URL, 1, courses);
         ProfileInfo infoToCopy = db.profilesDao().get(profileId);
+
         profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
                 infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
 
