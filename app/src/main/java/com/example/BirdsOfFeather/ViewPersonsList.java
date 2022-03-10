@@ -138,7 +138,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         classmateProfileInfos = new ArrayList<>();
         myCourses = db.classesDao().getAll();
         setTitle("BoFs");
-        personsRecyclerView = findViewById(R.id.persons_view);
+        personsRecyclerView = findViewById(R.id.favorites_view);
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
         personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos);
@@ -218,10 +218,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                                 }
                             });
 
-//
-//                            runOnUiThread(() -> {
-//                                personsViewAdapter.addPerson(unchangingDeserializedPerson, personsProfileInfo, false);
-//                            });
                         }
                     }
                 }
@@ -252,20 +248,25 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //Instructor can add a Person to fakedSubscribers via the Mock Nearby Activity
         fakedSubscribers = new ArrayList<>();
-        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
+        this.classesMessageListener = realMessageListener;//new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
             if (shareButton.getText().equals("Start")) {
-                startButtonOn = true;
 
-                startSessionDialog();
+                System.out.println("Starting session dialog popup");
 
-                //start sharing and receiving data
-                Log.i(TAG, "Starting share");
+                if(db.sessionWithProfilesDao().count()==0){
+                    //start new session
+                    startNewSession();
+                }
+                else{
+                    startSessionDialog();
+                }
+
+
                 shareButton.setText("Stop");
-                subscribe();
-                publish();
+
             } else if (shareButton.getText().equals("Stop")) {
                 startButtonOn = false;
                 //stop sharing and receiving data
@@ -354,21 +355,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     sessionName = classes_spinner.getSelectedItem().toString();
                 }
 
-                System.out.println("The current session is called: " + currentSession.sessionName);
-                System.out.println("It thinks the current session index is: " + currentSession.id);
-                //System.out.println("Using the method, it thinks the current session index is: " + currentSession.getSessionId());
-                System.out.println("Using storing method, it thinks the current session index is: " + currSessionId);
-
+                //update name of autosaved session to user input session name
                 db.sessionDao().update(sessionName, currentSession.id);
-
-                //create new session and add to database
-                //SessionEntity sessionEntity = new SessionEntity(sessionName);
-                //db.sessionDao().insert(sessionEntity);
-
-
-                //add all profiles to session
-              //  ProfileEntity newProfile = new ProfileEntity("Bill", "URL", currentSession.id, myCourses, "uniqueID");
-              //  db.profilesDao().insert(newProfile);
 
 
                 //test print all sessions
@@ -393,8 +381,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                         }
                     }
                 }
-
-
 
                 dialog.dismiss();
             }
@@ -431,9 +417,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     }
 
-
-
-
     public void startSessionDialog(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View startSessionPopupView = getLayoutInflater().inflate(R.layout.popup_start_session_prompt, null);
@@ -466,7 +449,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-                //TODO set currSession to selected session
                 currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 1);
                 personsViewAdapter.clearAdapter();
                 List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
@@ -476,7 +458,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     Log.i(TAG, newProfile.getName() + ", " + newProfile.getURL() + " wave: " + newProfile.getIsWaving());
                     personsViewAdapter.addPerson(newProfile, false);
                 }
-
+                System.out.println("Finishing session dialog popup");
+                //start sharing and receiving data
+                Log.i(TAG, "Starting share");
+                startButtonOn = true;
+                subscribe();
+                publish();
                 dialog.dismiss();
             }
         });
@@ -487,15 +474,26 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-                SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
-                long generatedId =  db.sessionDao().insert(newSessionEntity);
-                currentSession = db.sessionDao().getSession(generatedId);
-                currentSession.id = generatedId;
-                currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
-
+                startNewSession();
                 dialog.dismiss();
             }
         });
+
+    }
+
+    public void startNewSession(){
+        SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
+        long generatedId =  db.sessionDao().insert(newSessionEntity);
+        currentSession = db.sessionDao().getSession(generatedId);
+        currentSession.id = generatedId;
+        currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
+
+
+        //start sharing and receiving data
+        Log.i(TAG, "Starting share");
+        startButtonOn = true;
+        subscribe();
+        publish();
 
     }
 
@@ -509,19 +507,19 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         return currentDateandTime;
     }
 
-
     public void renameSessionDialog(int selectedSessionId, Spinner spinner){
+        //set up popup dialog
         renameDialogBuilder = new AlertDialog.Builder(this);
         final View renameSessionPopupView = getLayoutInflater().inflate(R.layout.popup_rename_session_prompt, null);
         renameDialogBuilder.setView(renameSessionPopupView);
         renameDialog = renameDialogBuilder.create();
         renameDialog.show();
 
+        //views
         classesSpinner = renameSessionPopupView.findViewById(R.id.classes_spinner);
         newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
         cancelButton = renameSessionPopupView.findViewById(R.id.cancel_button);
         saveButton = renameSessionPopupView.findViewById(R.id.save_button);
-
 
 
         newNameEditText.setHint(db.sessionDao().getSession(selectedSessionId).sessionName);
@@ -542,7 +540,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             public void onClick(View view) {
                 //define click behaviour
 
-                //TODO actually rename session
                 String newName;
 
                 if(newNameEditText.getText().toString().equals(null) || newNameEditText.getText().toString().equals("")){
@@ -552,8 +549,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     newName = newNameEditText.getText().toString();
                 }
 
-
                 db.sessionDao().update(newName, selectedSessionId);
+
+                //update session spinner to show new named sessions
                 loadSessionData(spinner, db);
 
                 renameDialog.dismiss();
@@ -609,5 +607,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             Log.i(TAG, "done wave");
 
         }
+    }
+
+    public void onSessionClicked(View view) {
+        Intent intent = new Intent(this, ViewFavoritesList.class);
+        startActivity(intent);
     }
 }
