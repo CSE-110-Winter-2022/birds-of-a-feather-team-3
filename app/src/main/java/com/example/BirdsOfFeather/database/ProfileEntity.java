@@ -44,7 +44,7 @@ public class ProfileEntity {
     public boolean isWaving;
 
     public ProfileEntity(String profileName, String profileURL, long profileSessionId,
-                         List<Course> profileCourses, String uniqueId){
+                         List<Course> profileCourses, String uniqueId, boolean isWaving){
         this.profileName = profileName;
         this.profileURL = profileURL;
         this.profileSessionId = profileSessionId;
@@ -53,7 +53,7 @@ public class ProfileEntity {
 
         //this.scoreRecent = 0;
         //this.scoreClassSize = 0;
-        //this.isWaving = false;
+        this.isWaving = isWaving;
     }
 
 }
