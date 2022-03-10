@@ -54,7 +54,7 @@ public class ViewFavoritesList extends AppCompatActivity {
         favoritesRecyclerView = findViewById(R.id.favorites_view);
         favoritesLayoutManager = new LinearLayoutManager(this);
         favoritesRecyclerView.setLayoutManager(favoritesLayoutManager);
-        personsViewAdapter = new PersonsViewAdapter(favoritesProfileInfos);
+        personsViewAdapter = new PersonsViewAdapter(favoritesProfileInfos, true);
         favoritesRecyclerView.setAdapter(personsViewAdapter);
 
         List<ProfileInfo> retrievedFavorites = db.sessionWithProfilesDao().get(1).getProfiles();

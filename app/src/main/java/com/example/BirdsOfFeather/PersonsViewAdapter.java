@@ -34,12 +34,25 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     // 0=default, 1=recent, 2=class size
     private int sortType;
     private final List<ProfileInfo> profileInfos;
+    private boolean isFavoriteSession;
+
+
+    public PersonsViewAdapter(List<ProfileInfo> persons, boolean isFavoriteSession) {
+        super();
+        //this.persons = persons;
+        //this.profileInformationList = new HashMap<>();
+        this.profileInfos = persons;
+        this.isFavoriteSession = isFavoriteSession;
+    }
 
     public PersonsViewAdapter(List<ProfileInfo> persons) {
         super();
         //this.persons = persons;
         //this.profileInformationList = new HashMap<>();
+        this.isFavoriteSession = false;
         this.profileInfos = persons;
+        this.isFavoriteSession = isFavoriteSession;
+
     }
 
     public void setSortType(int sortType) {
@@ -251,7 +264,6 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.favoriteButton = itemView.findViewById(R.id.favorite_person_row_button);
             //check if mocking
             this.db = AppDatabase.singleton(favoriteButton.getContext());
-
             itemView.setOnClickListener(this);
 
 

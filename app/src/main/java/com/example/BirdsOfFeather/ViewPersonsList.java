@@ -158,7 +158,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         personsRecyclerView = findViewById(R.id.favorites_view);
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
-        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos);
+        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos, false);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //construct Person object for self
@@ -431,6 +431,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+       // reassignFavorites();
 
     }
 
@@ -475,6 +476,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     Log.i(TAG, newProfile.getName() + ", " + newProfile.getURL() + " wave: " + newProfile.getIsWaving());
                     personsViewAdapter.addPerson(newProfile, false);
                 }
+                reassignFavorites();
                 System.out.println("Finishing session dialog popup");
                 //start sharing and receiving data
                 Log.i(TAG, "Starting share");
