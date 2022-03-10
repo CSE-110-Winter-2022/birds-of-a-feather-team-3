@@ -2,6 +2,7 @@ package com.example.BirdsOfFeather;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -20,7 +21,7 @@ public class ViewFavoritesList extends AppCompatActivity {
     protected PersonsViewAdapter personsViewAdapter;
 
     //class name for log
-    private static final String TAG = ViewPersonsList.class.getSimpleName();
+    private static final String TAG = ViewFavoritesList.class.getSimpleName();
 
     AppDatabase db;
     List<Person> favorites;
@@ -49,24 +50,6 @@ public class ViewFavoritesList extends AppCompatActivity {
         myCourses = db.classesDao().getAll();
 
 
-
-        String url = "https://i.imgur.com/HzSuJJR.jpeg";
-
-
-        //create fake favorites list
-        ProfileInfo profile1 = new ProfileInfo("Mark", url, myCourses, "1");
-        ProfileInfo profile2 = new ProfileInfo("Also Mark", url, myCourses, "2");
-        ProfileInfo profile3 = new ProfileInfo("Definitely not Mark", url, myCourses, "3");
-        ProfileInfo profile4 = new ProfileInfo("Mork", url, myCourses, "4");
-
-
-        favoritesProfileInfos.add(profile1);
-        favoritesProfileInfos.add(profile2);
-        favoritesProfileInfos.add(profile3);
-        favoritesProfileInfos.add(profile4);
-
-
-
         setTitle("BoFs");
         favoritesRecyclerView = findViewById(R.id.favorites_view);
         favoritesLayoutManager = new LinearLayoutManager(this);
@@ -74,10 +57,32 @@ public class ViewFavoritesList extends AppCompatActivity {
         personsViewAdapter = new PersonsViewAdapter(favoritesProfileInfos);
         favoritesRecyclerView.setAdapter(personsViewAdapter);
 
+        List<ProfileInfo> retrievedFavorites = db.sessionWithProfilesDao().get(1).getProfiles();
+        Log.i(TAG, "Favorite count: " + retrievedFavorites.size());
+
+        for (ProfileInfo profileInfo : db.sessionWithProfilesDao().get(1).getProfiles()) {
+            Log.i(TAG, profileInfo.getName() + ":  " + profileInfo.getUniqueId() + " w: " + profileInfo.getIsWaving());
+            personsViewAdapter.addPerson(profileInfo, false);
+        }
+
+
+        String url = "https://i.imgur.com/HzSuJJR.jpeg";
+
+        //create fake favorites list
+        /*
+        ProfileInfo profile1 = new ProfileInfo("Mark", url, myCourses, "1");
+        ProfileInfo profile2 = new ProfileInfo("Also Mark", url, myCourses, "2");
+        ProfileInfo profile3 = new ProfileInfo("Definitely not Mark", url, myCourses, "3");
+        ProfileInfo profile4 = new ProfileInfo("Mork", url, myCourses, "4");
+        favoritesProfileInfos.add(profile1);
+        favoritesProfileInfos.add(profile2);
+        favoritesProfileInfos.add(profile3);
+        favoritesProfileInfos.add(profile4);
+        */
         //personsViewAdapter.addPerson(favoriteProfileInfo, false);
+    }
 
-
-
-
+    public void backButtonClicked(View view) {
+        finish();
     }
 }

@@ -43,6 +43,9 @@ public class ProfileEntity {
     @ColumnInfo(name = "isWaving")
     public boolean isWaving;
 
+    @ColumnInfo(name = "isFavorited")
+    public boolean isFavorited;
+
     public ProfileEntity(String profileName, String profileURL, long profileSessionId,
                          List<Course> profileCourses, String uniqueId, boolean isWaving){
         this.profileName = profileName;
@@ -54,6 +57,7 @@ public class ProfileEntity {
         //this.scoreRecent = 0;
         //this.scoreClassSize = 0;
         this.isWaving = isWaving;
+        this.isFavorited = false;
     }
 
 }

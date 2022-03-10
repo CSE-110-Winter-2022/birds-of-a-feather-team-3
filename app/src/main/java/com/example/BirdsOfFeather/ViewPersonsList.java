@@ -108,7 +108,24 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     protected void onResume() {
         Log.i(TAG, "RESUMED");
         System.out.println(myCourses.toString());
+        reassignFavorites();
         super.onResume();
+    }
+
+    public void reassignFavorites() {
+        List<ProfileInfo> retrievedFavorites = db.sessionWithProfilesDao().get(1).getProfiles();
+        for (ProfileInfo classmateProfileInfo : classmateProfileInfos) {
+            classmateProfileInfo.setFavorited(false);
+        }
+        for (ProfileInfo classmateProfileInfo : classmateProfileInfos) {
+            for (ProfileInfo retrievedFavorite : retrievedFavorites) {
+                if (classmateProfileInfo.getUniqueId().equals(retrievedFavorite.getUniqueId())) {
+                    classmateProfileInfo.setFavorited(true);
+                }
+            }
+        }
+
+        personsViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -248,7 +265,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         //Instructor can add a Person to fakedSubscribers via the Mock Nearby Activity
         fakedSubscribers = new ArrayList<>();
-        this.classesMessageListener = realMessageListener;//new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
+        this.classesMessageListener = new FakedMessageListener(realMessageListener, 3, fakedSubscribers);
         Button shareButton = (Button)findViewById(R.id.shareButton);
 
         shareButton.setOnClickListener(v -> {
@@ -487,8 +504,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         currentSession = db.sessionDao().getSession(generatedId);
         currentSession.id = generatedId;
         currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
-
-
         //start sharing and receiving data
         Log.i(TAG, "Starting share");
         startButtonOn = true;
@@ -600,12 +615,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         if (foundClassmate != null) {
             foundClassmate.setWaving(true);//need to update in database
+            db.profilesDao().updateWave(true, foundClassmate.getProfileId());
             Log.i(TAG, "Received wave");
             runOnUiThread(() -> {
                         personsViewAdapter.resort();
             });
             Log.i(TAG, "done wave");
-
         }
     }
 
