@@ -38,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     Session favoriteSession;
     List<ProfileInfo> currentFavoritedProfiles;
     ProfileEntity profileEntity;
+    ImageView waveIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void sendWave(View view) {
         publish();
+
+        //fill wave icon
+        waveIcon = (ImageView) findViewById(R.id.wave_imageView);
+        waveIcon.setImageResource(R.mipmap.filled_wave);
+
         Context context = getApplicationContext();
         Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_LONG);
         waveToast.show();
