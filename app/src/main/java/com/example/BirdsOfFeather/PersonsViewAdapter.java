@@ -325,12 +325,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         public void indicateWave(boolean isWaving) {
             if (isWaving) {
                 //this.waveIndicator.setBackgroundResource(R.drawable.googleg_standard_color_18);
-                //this.waveIndicator.setBackgroundResource(R.mipmap.filled_wave_foreground);
                 this.waveIndicator.setImageResource(R.mipmap.filled_wave);
             }
             else {
                 //this.waveIndicator.setBackgroundResource(R.drawable.googleg_disabled_color_18);
-                //this.waveIndicator.setBackgroundResource(R.mipmap.empty_wave_foreground);
                 this.waveIndicator.setImageResource(R.mipmap.empty_wave);
             }
         }
@@ -381,6 +379,8 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             intent.putExtra("selfId", selfName);
             intent.putExtra("favorited", isFavorited);
             intent.putExtra("profileId", this.profileInfo.getProfileId());
+            intent.putExtra("isFavoritedSession", this.isInFavoriteSession);
+
             Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);
         }

@@ -642,7 +642,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         Log.i(TAG, "no matching classmate");
     }
 
-    public void onSessionClicked(View view) {
+    public void onFavoritesClicked(View view) {
         Intent intent = new Intent(this, ViewFavoritesList.class);
         startActivity(intent);
     }
