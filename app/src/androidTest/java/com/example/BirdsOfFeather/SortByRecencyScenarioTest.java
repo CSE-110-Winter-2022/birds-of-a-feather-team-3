@@ -17,17 +17,24 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
+
+import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.ClassEntity;
+import com.example.BirdsOfFeather.database.ClassesDao;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -41,12 +48,22 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SortByRecencyScenarioTest {
+    private ClassesDao classesDao;
+    private AppDatabase db;
 
     @Rule
     public IntentsTestRule<ViewPersonsList> intentsTestRule =
             new IntentsTestRule<>(ViewPersonsList.class);
 
-    //@Before
+    @Before
+    public void setup() {
+        Context context = ApplicationProvider.getApplicationContext();
+        db = AppDatabase.useTestSingleton(context);
+        classesDao = db.classesDao();
+
+        ClassEntity classEntity = new ClassEntity("Fall", "2021", "Large", "CSE", "140");
+        db.classesDao().insert(classEntity);
+    }
 
 
     @Test
@@ -322,7 +339,7 @@ public class SortByRecencyScenarioTest {
                         isDisplayed()));
         materialButton17.perform(click());
 
-        SystemClock.sleep(5000);
+        SystemClock.sleep(25000);
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.person_row_name), withText("Rodney2"),
