@@ -7,22 +7,34 @@
     tools:context=".ProfileActivity">
 
         <ImageView
+            android:id="@+id/wave_imageView"
+            android:layout_width="66dp"
+            android:layout_height="60dp"
+            android:onClick="sendWave"
+            app:layout_constraintBottom_toTopOf="@+id/profile_name_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/favorite_button_profile"
+            app:layout_constraintTop_toBottomOf="@+id/profile_picture_view"
+            app:srcCompat="@mipmap/empty_wave" />
+
+        <ImageView
             android:id="@+id/profile_picture_view"
             android:layout_width="195dp"
             android:layout_height="193dp"
             android:layout_marginTop="64dp"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src = "@mipmap/ic_launcher" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
             android:id="@+id/profile_name_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_width="185dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="104dp"
             android:text="First Name"
+            android:textAlignment="center"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,9 +42,12 @@
 
         <TextView
             android:id="@+id/profile_common_classes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:scrollbars="vertical"
             android:text="Classes in common"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,26 +55,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_name_view" />
 
-        <Button
-            android:id="@+id/wave_button_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:text="Wave"
-            android:onClick="sendWave"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_common_classes" />
-
         <ImageButton
             android:id="@+id/favorite_button_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="66dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="96dp"
             android:alpha="1"
             android:onClick="favoritePerson"
             app:layout_constraintBottom_toTopOf="@+id/profile_name_view"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_picture_view"
             app:srcCompat="@android:drawable/btn_star_big_off" />
