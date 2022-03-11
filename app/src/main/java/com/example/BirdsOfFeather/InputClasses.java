@@ -134,7 +134,7 @@ public class InputClasses extends AppCompatActivity {
             Course potentialCourse = new Course(quarter, year, classSize, subject, classNumber);
             //alert and do not continue if entry matches previous entry
             if (checkIsDuplicate(localCourses, potentialCourse)) {
-                Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
+                // Utilities.sendAlert(this, "Duplicate Class Exists", "Warning");
             }
             else {
                 //save class to local database
