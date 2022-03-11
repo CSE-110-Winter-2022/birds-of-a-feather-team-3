@@ -33,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String selfId;
     private long profileId;
     private boolean isFavorited;
+    private boolean isFavoritedSession;
     ImageButton button;
     AppDatabase db;
     Session favoriteSession;
@@ -58,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
         selfId = intent.getStringExtra("selfId");
         isFavorited = intent.getBooleanExtra("favorited", false);
         profileId = intent.getLongExtra("profileId", 0);
+        isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
 
         //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
         //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
@@ -133,7 +135,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void sendWave(View view) {
-        publish();
+
+        //publish();
+
+        if(isFavoritedSession){return;}
+
         //fill wave icon
         waveIcon = (ImageView) findViewById(R.id.wave_imageView);
         waveIcon.setImageResource(R.mipmap.filled_wave);
