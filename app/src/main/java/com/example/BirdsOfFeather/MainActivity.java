@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
-            editor.putString("unique_identifer", UUID.randomUUID().toString());
+            editor.putString("unique_identifier", UUID.randomUUID().toString());
             editor.apply();
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);

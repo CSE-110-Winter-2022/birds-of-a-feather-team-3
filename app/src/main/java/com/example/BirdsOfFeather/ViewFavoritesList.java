@@ -66,7 +66,7 @@ public class ViewFavoritesList extends AppCompatActivity {
         }
 
 
-        String url = "https://i.imgur.com/HzSuJJR.jpeg";
+        //String url = "https://i.imgur.com/HzSuJJR.jpeg";
 
         //create fake favorites list
         /*
