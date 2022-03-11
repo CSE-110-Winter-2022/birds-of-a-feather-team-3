@@ -26,6 +26,9 @@ public interface ProfilesDao {
     @Query("SELECT * FROM profiles WHERE id=:id")
     ProfileEntity getEntity(long id);
 
+    @Query("SELECT * FROM profiles WHERE uniqueId=:uniqueId AND session_id=:sessionId")
+    ProfileEntity searchFavorite(String uniqueId, long sessionId);
+
     @Query("SELECT COUNT(*) from profiles")
     int count();
 

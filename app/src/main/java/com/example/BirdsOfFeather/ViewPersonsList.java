@@ -466,7 +466,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-
+                personsViewAdapter.clearAdapter();
                 currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 1);
                 personsViewAdapter.clearAdapter();
                 List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
@@ -492,14 +492,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-
+                personsViewAdapter.clearAdapter();
                 startNewSession();
                 dialog.dismiss();
             }
         });
-
     }
-
+    
     public void startNewSession(){
         SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
         long generatedId =  db.sessionDao().insert(newSessionEntity);
