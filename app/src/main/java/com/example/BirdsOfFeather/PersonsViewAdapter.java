@@ -17,6 +17,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.BirdsOfFeather.database.AppDatabase;
+import com.example.BirdsOfFeather.database.ProfileEntity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,12 +34,24 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     // 0=default, 1=recent, 2=class size
     private int sortType;
     private final List<ProfileInfo> profileInfos;
+    private final boolean isFavoriteSession;
+
+
+    public PersonsViewAdapter(List<ProfileInfo> persons, boolean isFavoriteSession) {
+        super();
+        //this.persons = persons;
+        //this.profileInformationList = new HashMap<>();
+        this.profileInfos = persons;
+        this.isFavoriteSession = isFavoriteSession;
+    }
 
     public PersonsViewAdapter(List<ProfileInfo> persons) {
         super();
         //this.persons = persons;
         //this.profileInformationList = new HashMap<>();
+        this.isFavoriteSession = false;
         this.profileInfos = persons;
+
     }
 
     public void setSortType(int sortType) {
@@ -201,7 +216,8 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.person_row, parent, false);
-
+        //if (!mocking) {
+        //}
         return new ViewHolder(view);
     }
 
@@ -214,6 +230,11 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         holder.setProfileInfo(holderProfile);
         //holder.setProfileInfo(profileInformationList.get(holderPerson));
         holder.indicateWave(holderProfile.getIsWaving());
+        holder.indicateFavorited(holderProfile.getIsFavorited());
+        if (this.isFavoriteSession) {
+            holder.setFavoriteSession(true);
+            holder.indicateFavorited(true);
+        }
     }
 
     @Override
@@ -230,6 +251,11 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         private String personName;
         private ProfileInfo profileInfo;
         private boolean isFavorited;
+        private long entityId;
+        ProfileEntity profileEntity;
+        ProfileInfo infoToCopy;
+        AppDatabase db;
+        private boolean isInFavoriteSession;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -239,23 +265,51 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.matchCountView = itemView.findViewById(R.id.course_match_count_view);
             this.waveIndicator = itemView.findViewById(R.id.person_row_waved_indicator);
             this.favoriteButton = itemView.findViewById(R.id.favorite_person_row_button);
+            //check if mocking
+            this.db = AppDatabase.singleton(favoriteButton.getContext());
             itemView.setOnClickListener(this);
+
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     isFavorited = !isFavorited;
                     if (isFavorited) {
+                        Log.i(TAG, "favoriting");
+                        entityId = db.profilesDao().insert(profileEntity);
+                        Log.i(TAG, " done adding");
+
                         favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
                     }
                     else {
+                        Log.i(TAG, "Deleting");
+                        //favorite session id is always 1.
+                        ProfileEntity entityToDelete = db.profilesDao().searchFavorite(profileInfo.getUniqueId(), 1);
+                        //profileInfo.getUniqueId()
+                        //ProfileEntity entityToDelete = db.profilesDao().getEntity(entityId);
+                        db.profilesDao().delete(entityToDelete);
+                        Log.i(TAG, entityToDelete.profileName + " deleted from favorites");
                         favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
+                        if (isInFavoriteSession) {
+                            
+                        }
                     }
                 }
             });
         }
 
+        public void setFavoriteSession(boolean setType) {
+            this.isInFavoriteSession = setType;
+        }
+
+        /*
         public void setPerson(ProfileInfo person) {
+            this.profileInfo = person;
             this.personName = person.getName();
             this.personNameView.setText(personName);
+
+            //ProfileInfo infoToCopy = db.profilesDao().get(profileInfo.getProfileId());
+            this.profileEntity = new ProfileEntity(person.getName(), person.getURL(), 1,
+                    person.getCommonCourses(), person.getUniqueId(), person.getIsWaving());
+            Log.i(TAG, "Set the profile entity in setPerson");
             //default image check
             if (!person.getURL().equals("")) {
                 URLDownload downloadClass = new URLDownload(this.profilePictureView);
@@ -264,12 +318,26 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             }
         }
 
+         */
+
         public void indicateWave(boolean isWaving) {
             if (isWaving) {
-                this.waveIndicator.setBackgroundResource(R.drawable.googleg_standard_color_18);
+                //this.waveIndicator.setBackgroundResource(R.drawable.googleg_standard_color_18);
+                this.waveIndicator.setBackgroundResource(R.mipmap.filled_wave_foreground);
             }
             else {
-                this.waveIndicator.setBackgroundResource(R.drawable.googleg_disabled_color_18);
+                //this.waveIndicator.setBackgroundResource(R.drawable.googleg_disabled_color_18);
+                this.waveIndicator.setBackgroundResource(R.mipmap.empty_wave_foreground);
+            }
+        }
+
+        public void indicateFavorited (boolean favorited) {
+            this.isFavorited = favorited;
+            if (favorited) {
+                favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
+            }
+            else {
+                favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
             }
         }
 
@@ -277,6 +345,16 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.profileInfo = profInf;
             String matchCount = String.valueOf(this.profileInfo.getCommonCourses().size());
             this.matchCountView.setText(matchCount);
+            this.personName = profInf.getName();
+            this.personNameView.setText(personName);
+            this.profileEntity = new ProfileEntity(profInf.getName(), profInf.getURL(), 1,
+                    profInf.getCommonCourses(), profInf.getUniqueId(), profInf.getIsWaving());
+            //default image check
+            if (!profInf.getURL().equals("")) {
+                URLDownload downloadClass = new URLDownload(this.profilePictureView);
+                System.out.println(profInf.getURL());
+                downloadClass.execute(profInf.getURL());
+            }
         }
 
         @Override
@@ -298,7 +376,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             intent.putExtra("uniqueId", this.profileInfo.getUniqueId());
             intent.putExtra("selfId", selfName);
             intent.putExtra("favorited", isFavorited);
-
+            intent.putExtra("profileId", this.profileInfo.getProfileId());
             Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);
         }

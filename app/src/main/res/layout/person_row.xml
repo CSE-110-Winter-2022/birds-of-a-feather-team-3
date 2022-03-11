@@ -49,8 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/course_match_count_view"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        tools:srcCompat="@drawable/googleg_disabled_color_18" />
+        app:srcCompat="@mipmap/empty_wave" />
 
     <ImageButton
         android:id="@+id/favorite_person_row_button"
