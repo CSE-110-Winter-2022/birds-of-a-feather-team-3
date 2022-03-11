@@ -158,7 +158,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         personsRecyclerView = findViewById(R.id.favorites_view);
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
-        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos);
+        personsViewAdapter = new PersonsViewAdapter(classmateProfileInfos, false);
         personsRecyclerView.setAdapter(personsViewAdapter);
 
         //construct Person object for self
@@ -432,6 +432,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+       // reassignFavorites();
 
     }
 
@@ -466,9 +467,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-
-                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 2);
                 personsViewAdapter.clearAdapter();
+                currentSession = db.sessionDao().getSession(sessionsSpinner.getSelectedItemPosition() + 2);
+                
                 List<ProfileInfo> loadedProfiles = db.sessionWithProfilesDao().get(currentSession.id).getProfiles();
                 //personsProfileInfo = SearchClassmates
                 //        .detectAndReturnSharedClasses(self, deserializedPerson);
@@ -476,6 +477,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     Log.i(TAG, newProfile.getName() + ", " + newProfile.getURL() + " wave: " + newProfile.getIsWaving());
                     personsViewAdapter.addPerson(newProfile, false);
                 }
+                reassignFavorites();
                 System.out.println("Finishing session dialog popup");
                 //start sharing and receiving data
                 Log.i(TAG, "Starting share");
@@ -491,14 +493,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View view) {
                 //define click behaviour
-
+                personsViewAdapter.clearAdapter();
                 startNewSession();
                 dialog.dismiss();
             }
         });
-
     }
-
+    
     public void startNewSession(){
         SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
         long generatedId =  db.sessionDao().insert(newSessionEntity);

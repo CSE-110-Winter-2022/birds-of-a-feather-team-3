@@ -104,7 +104,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             button.setImageResource(android.R.drawable.btn_star_big_off);
-            ProfileEntity entityToDelete = db.profilesDao().getEntity(profileId);
+            //ProfileEntity entityToDelete = db.profilesDao().getEntity(profileId);
+            ProfileEntity entityToDelete = db.profilesDao().searchFavorite(uniqueId, 1);
             db.profilesDao().delete(entityToDelete);
         }
     }
