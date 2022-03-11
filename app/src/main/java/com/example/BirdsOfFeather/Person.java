@@ -27,7 +27,16 @@ public class Person implements Serializable {
         this.isWaving = false;
     }
 
-    public void addWaveMocks(String otherPersonId) {
+    public Person(String name, String profileURL, List<Course> classes) {
+        this.name = name;
+        this.classes = classes;
+        this.profileURL = profileURL;
+        this.waveMocks = new ArrayList<>();
+        this.isWaving = false;
+        this.uniqueId = UUID.randomUUID().toString();
+    }
+
+        public void addWaveMocks(String otherPersonId) {
         this.waveMocks.add(otherPersonId);
     }
 
