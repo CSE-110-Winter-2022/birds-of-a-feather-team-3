@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
     //private final List<Person> persons;
@@ -37,21 +38,20 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     private final boolean isFavoriteSession;
 
 
-    public PersonsViewAdapter(List<ProfileInfo> persons, boolean isFavoriteSession) {
-        super();
-        //this.persons = persons;
-        //this.profileInformationList = new HashMap<>();
-        this.profileInfos = persons;
-        this.isFavoriteSession = isFavoriteSession;
-    }
-
     public PersonsViewAdapter(List<ProfileInfo> persons) {
         super();
         //this.persons = persons;
         //this.profileInformationList = new HashMap<>();
-        this.isFavoriteSession = false;
         this.profileInfos = persons;
+        this.isFavoriteSession = false;
+    }
 
+    public PersonsViewAdapter(List<ProfileInfo> persons, boolean isFavoriteSession) {
+        super();
+        //this.persons = persons;
+        //this.profileInformationList = new HashMap<>();
+        this.isFavoriteSession = isFavoriteSession;
+        this.profileInfos = persons;
     }
 
     public void setSortType(int sortType) {
@@ -209,6 +209,10 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         this.notifyDataSetChanged();
     }
 
+    public void removeProfile(int position) {
+        this.profileInfos.remove(position);
+        this.notifyItemRemoved(position);
+    }
 
     @NonNull
     @Override
@@ -218,7 +222,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
                 .inflate(R.layout.person_row, parent, false);
         //if (!mocking) {
         //}
-        return new ViewHolder(view);
+        return new ViewHolder(view, this::removeProfile);
     }
 
     @Override
@@ -257,7 +261,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         AppDatabase db;
         private boolean isInFavoriteSession;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, Consumer<Integer> removeProfile) {
             super(itemView);
             isFavorited = false;
             this.personNameView = itemView.findViewById(R.id.person_row_name);
@@ -269,28 +273,26 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.db = AppDatabase.singleton(favoriteButton.getContext());
             itemView.setOnClickListener(this);
 
-            favoriteButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    isFavorited = !isFavorited;
-                    if (isFavorited) {
-                        Log.i(TAG, "favoriting");
-                        entityId = db.profilesDao().insert(profileEntity);
-                        Log.i(TAG, " done adding");
+            favoriteButton.setOnClickListener( (view) -> {
+                isFavorited = !isFavorited;
+                if (isFavorited) {
+                    Log.i(TAG, "favoriting");
+                    entityId = db.profilesDao().insert(profileEntity);
+                    Log.i(TAG, " done adding");
 
-                        favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
-                    }
-                    else {
-                        Log.i(TAG, "Deleting");
-                        //favorite session id is always 1.
-                        ProfileEntity entityToDelete = db.profilesDao().searchFavorite(profileInfo.getUniqueId(), 1);
-                        //profileInfo.getUniqueId()
-                        //ProfileEntity entityToDelete = db.profilesDao().getEntity(entityId);
-                        db.profilesDao().delete(entityToDelete);
-                        Log.i(TAG, entityToDelete.profileName + " deleted from favorites");
-                        favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
-                        if (isInFavoriteSession) {
-                            
-                        }
+                    favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
+                }
+                else {
+                    Log.i(TAG, "Deleting");
+                    //favorite session id is always 1.
+                    ProfileEntity entityToDelete = db.profilesDao().searchFavorite(profileInfo.getUniqueId(), 1);
+                    //profileInfo.getUniqueId()
+                    //ProfileEntity entityToDelete = db.profilesDao().getEntity(entityId);
+                    db.profilesDao().delete(entityToDelete);
+                    Log.i(TAG, entityToDelete.profileName + " deleted from favorites");
+                    favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
+                    if (isInFavoriteSession) {
+                        removeProfile.accept(this.getAdapterPosition());
                     }
                 }
             });

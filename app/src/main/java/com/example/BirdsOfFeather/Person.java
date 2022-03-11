@@ -21,13 +21,6 @@ public class Person implements Serializable {
         this.waveMocks = new ArrayList<>();
         this.isWaving = false;
     }
-    public void setWave(boolean isWaving) {
-        this.isWaving = isWaving;
-    }
-
-    public boolean getIsWaving() {
-        return this.isWaving;
-    }
 
     public void addWaveMocks(String otherPersonId) {
         this.waveMocks.add(otherPersonId);
@@ -54,14 +47,6 @@ public class Person implements Serializable {
     public String getName(){
         return this.name;
     }
-
-    public void setScoreRecent(int scoreRecent) {this.scoreRecent = scoreRecent;}
-
-    public void setScoreClassSize(float scoreClassSize) {this.scoreClassSize = scoreClassSize;}
-
-    public int getScoreRecent() {return scoreRecent;}
-
-    public float getScoreClassSize() {return scoreClassSize;}
 
     public String toString() {
         //return name + ", " + profileURL + ", " + this.classes.toString() + ", " + this.classes.size();

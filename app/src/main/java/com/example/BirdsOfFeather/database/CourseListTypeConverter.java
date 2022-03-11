@@ -1,5 +1,7 @@
 package com.example.BirdsOfFeather.database;
 
+import android.util.Log;
+
 import androidx.room.TypeConverter;
 
 import com.example.BirdsOfFeather.Course;
@@ -15,9 +17,8 @@ public class CourseListTypeConverter {
     @TypeConverter
     public static List<Course> stringToCourseList(String dataString) {
         if (dataString == null) {
-            System.out.println("ERROR EMPTY DATA STRING OH NOOOOOOOOOOO :(");
+            Log.d("CourseListTypeConverter", "ERROR EMPTY DATA STRING");
             return Collections.emptyList();
-
         }
 
         Type listType = new TypeToken<List<Course>>() {}.getType();

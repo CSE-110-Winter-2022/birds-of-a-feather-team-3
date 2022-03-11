@@ -112,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     //publish message to nearby devices
     private void publish() {
-        Log.i(TAG, "Publishing");
+        Log.i(TAG, "Publishing wave");
         PublishOptions options = new PublishOptions.Builder()
                 .setCallback(new PublishCallback() {
                     @Override
@@ -128,13 +128,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void unpublish(){
-        Log.i(TAG, "Unpublishing");
+        Log.i(TAG, "Unpublishing wave");
         Nearby.getMessagesClient(this).unpublish(waveMessage);
     }
 
     public void sendWave(View view) {
         publish();
-
         //fill wave icon
         waveIcon = (ImageView) findViewById(R.id.wave_imageView);
         waveIcon.setImageResource(R.mipmap.filled_wave);
