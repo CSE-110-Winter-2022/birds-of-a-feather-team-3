@@ -148,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
         waveIcon.setImageResource(R.mipmap.filled_wave);
 
         Context context = getApplicationContext();
-        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_LONG);
+        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_SHORT);
         waveToast.show();
         publish();
         unpublish();
