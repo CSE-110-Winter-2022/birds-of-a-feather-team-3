@@ -100,6 +100,12 @@ public class ProfileActivity extends AppCompatActivity {
         setTitle("Profile");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unpublish();
+    }
+
     public void favoritePerson(View view) {
         isFavorited = !isFavorited;
         if (isFavorited) {
@@ -151,7 +157,7 @@ public class ProfileActivity extends AppCompatActivity {
         Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_SHORT);
         waveToast.show();
         publish();
-        unpublish();
+       // unpublish();
         wavedTo = true;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.BirdsOfFeather;
 
+import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -10,7 +12,7 @@ public class PersonSerializer {
     public byte[] convertToByteArray(Person person) throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-
+        Log.i("Serialized", person.getName() + ", " + person.getUniqueId());
         oos.writeObject(person);
         oos.flush();
         byte [] data = bos.toByteArray();
@@ -23,6 +25,7 @@ public class PersonSerializer {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         ObjectInputStream ois = new ObjectInputStream(bis);
         Person person = (Person) ois.readObject();
+        Log.i("Deserialized", person.getName() + ", " + person.getUniqueId());
         bis.close();
         ois.close();
         return person;

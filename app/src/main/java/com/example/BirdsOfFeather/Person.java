@@ -13,11 +13,16 @@ public class Person implements Serializable {
     private String uniqueId;
     private List<String> waveMocks;
     private boolean isWaving;
-    public Person(String name, String profileURL, List<Course> classes) {
+    public Person(String name, String profileURL, List<Course> classes, String uniqueId) {
         this.name = name;
         this.classes = classes;
         this.profileURL = profileURL;
-        this.uniqueId = UUID.randomUUID().toString();
+        if (uniqueId == null) {
+            this.uniqueId = UUID.randomUUID().toString();
+        }
+        else {
+            this.uniqueId = uniqueId;
+        }
         this.waveMocks = new ArrayList<>();
         this.isWaving = false;
     }

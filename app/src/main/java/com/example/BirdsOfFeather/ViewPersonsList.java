@@ -166,9 +166,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         //construct Person object for self
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String selfName = preferences.getString("first_name", "First_Name");
+        String selfId = preferences.getString("unique_identifier", "First_Name");
+
         String selfPictureLink = preferences.getString("profile_picture_url", "");
         Log.i(TAG, selfName + " " + selfPictureLink);
-        Person self = new Person(selfName, selfPictureLink, myCourses);
+
+        Person self = new Person(selfName, selfPictureLink, myCourses, selfId);
         //self.setUniqueId("4b295157-ba31-4f9f-8401-5d85d9cf659a"); //for mocking example
         Log.i(TAG, "App user's id: " + self.getUniqueId());
         int i = 1;
@@ -197,7 +200,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                         Log.i(TAG, "Received a potential wave");
                         int indexOfSeparator = messageString.lastIndexOf(":::");
                         String waveSender = messageString.substring(5, indexOfSeparator);
-                        String waveRecipient = messageString.substring(indexOfSeparator + 3, messageString.length());
+                        String waveRecipient = messageString.substring(indexOfSeparator + 3);
                         System.out.println(waveSender + ", " + waveRecipient);
                         if (waveRecipient.equals(self.getUniqueId())) { // they are waving at you
                             Log.i(TAG, "Someone waved to you");

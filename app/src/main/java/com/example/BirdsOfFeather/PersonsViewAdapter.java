@@ -371,7 +371,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             }
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-            String selfName = preferences.getString("unique_identifer", "elmer");
+            String selfName = preferences.getString("unique_identifier", "elmer");
             intent.putExtra("name", this.profileInfo.getName());
             intent.putExtra("courses", concatenatedStr);
             intent.putExtra("URL", this.profileInfo.getURL());
