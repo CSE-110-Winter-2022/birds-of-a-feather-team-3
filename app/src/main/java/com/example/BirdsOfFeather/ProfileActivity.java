@@ -34,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
     private long profileId;
     private boolean isFavorited;
     private boolean isFavoritedSession;
+    private boolean wavedTo;
     ImageButton button;
     AppDatabase db;
     Session favoriteSession;
@@ -60,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
         isFavorited = intent.getBooleanExtra("favorited", false);
         profileId = intent.getLongExtra("profileId", 0);
         isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
+        wavedTo = false;
 
         //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
         //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
@@ -139,6 +141,7 @@ public class ProfileActivity extends AppCompatActivity {
         //publish();
 
         if(isFavoritedSession){return;}
+        if(wavedTo){return;}
 
         //fill wave icon
         waveIcon = (ImageView) findViewById(R.id.wave_imageView);
@@ -149,5 +152,6 @@ public class ProfileActivity extends AppCompatActivity {
         waveToast.show();
         publish();
         unpublish();
+        wavedTo = true;
     }
 }
