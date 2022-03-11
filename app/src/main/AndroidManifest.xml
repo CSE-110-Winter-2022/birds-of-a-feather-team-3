@@ -28,7 +28,7 @@
         android:theme="@style/Theme.InputClasses">
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="AIzaSyA7jL0gRzpxgiRmM_9WCqY4xu7MZV_k0G8" />
+            android:value="AIzaSyDFUQcSTphq_Cq0BitQW4zLx12twjva3SY" />
 
         <activity
             android:name=".MockInputPeople"

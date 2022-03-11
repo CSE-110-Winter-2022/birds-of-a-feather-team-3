@@ -2,6 +2,8 @@ package com.example.BirdsOfFeather;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
@@ -18,6 +20,15 @@ public class FakedMessageListener extends MessageListener {
     private final MessageListener messageListener;
     private final ScheduledExecutorService executor;
 
+    @Override
+    public void onFound(@NonNull Message message) {
+        messageListener.onFound(message);
+    }
+
+    @Override
+    public void onLost(@NonNull Message message) {
+        messageListener.onLost(message);
+    }
 
     //fake message listener class that wraps real messagelistener to mock receiving bluetooth messages
     public FakedMessageListener(MessageListener realMessageListener, int frequency, List<Person> personList){
