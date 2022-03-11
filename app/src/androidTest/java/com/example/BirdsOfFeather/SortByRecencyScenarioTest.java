@@ -46,8 +46,6 @@ public class SortByRecencyScenarioTest {
     public IntentsTestRule<ViewPersonsList> intentsTestRule =
             new IntentsTestRule<>(ViewPersonsList.class);
 
-    //@Before
-
 
     @Test
     public void sortByRecencyScenarioTest() {
