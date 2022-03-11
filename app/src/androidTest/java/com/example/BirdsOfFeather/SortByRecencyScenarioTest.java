@@ -58,7 +58,7 @@ public class SortByRecencyScenarioTest {
     @Before
     public void setup() {
         Context context = ApplicationProvider.getApplicationContext();
-        db = AppDatabase.useTestSingleton(context);
+        db = AppDatabase.singleton(context);
         classesDao = db.classesDao();
 
         ClassEntity classEntity = new ClassEntity("Fall", "2021", "Large", "CSE", "140");
