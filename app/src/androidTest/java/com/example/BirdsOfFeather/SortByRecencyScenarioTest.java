@@ -41,6 +41,7 @@ import com.example.BirdsOfFeather.database.ClassesDao;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -52,42 +53,54 @@ import java.util.List;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SortByRecencyScenarioTest {
-    private ClassesDao classesDao;
-    private AppDatabase db;
+    private AppDatabase previousdb;
 
 //    @Rule
 //    public IntentsTestRule<ViewPersonsList> intentsTestRule =
 //            new IntentsTestRule<>(ViewPersonsList.class);
 
+    ClassEntity class1 = new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "101");
+    ClassEntity class2 = new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "110");
+    ClassEntity class3 = new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "100");
+    ClassEntity class4 = new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "30");
+    ClassEntity class5 = new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "11");
+    ClassEntity class6 = new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "12");
+    ClassEntity class7 = new ClassEntity("Summer Session I", "2021", "Tiny (<40)", "WCWP", "10A");
+
     @Rule
     public ActivityTestRule<ViewPersonsList> viewPersonsListActivityTestRule = new ActivityTestRule<>(ViewPersonsList.class);
 
+    @After
+    public void recoverDatabase() {
+        // viewPersonsListActivityTestRule.getActivity().db = previousdb;
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class1);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class2);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class3);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class4);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class5);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class6);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().delete(class7);
+    }
 
     @Before
     public void setup() {
+        // previousdb = viewPersonsListActivityTestRule.getActivity().db;
 
 //        Context context = ApplicationProvider.getApplicationContext();
-//        db = AppDatabase.useTestSingleton(context);
-//        classesDao = db.classesDao();
-//
-//        ClassEntity classEntity = new ClassEntity("Fall", "2021", "Large", "CSE", "140");
-//        classesDao.insert(classEntity);
-//        classesDao.insert(new ClassEntity("Winter", "2022", "Large", "CSE", "101"));
-//        classesDao.insert(new ClassEntity("Winter", "2022", "Large", "CSE", "110"));
-//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Large", "CSE", "12"));
-//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Large", "CSE", "11"));
-//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Tiny (<40)", "WCWP", "10A"));
+//        AppDatabase testDb = AppDatabase.useTestSingleton(context);
 
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "101"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "110"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "100"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "30"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "11"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "12"));
-        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Tiny (<40)", "WCWP", "10A"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class1);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class2);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class3);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class4);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class5);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class6);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(class7);
 
-        List<Course> classes = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
-        List<Course> classes2 = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
+//        List<Course> classes = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
+//        List<Course> classes2 = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
+
+
     }
 
 //    @Test
