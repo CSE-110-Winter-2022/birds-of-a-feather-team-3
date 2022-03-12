@@ -42,27 +42,29 @@ public class ProfileActivity extends AppCompatActivity {
     ProfileEntity profileEntity;
     ImageView waveIcon;
     ImageView profileImageView;
+    private MessagesClientLogger LoggedNearbyClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        db = AppDatabase.singleton(this);
-        favoriteSession = db.sessionDao().getSession(1);
-        if (favoriteSession != null) {
+        Intent intent = getIntent();
+        button = findViewById(R.id.favorite_button_profile);
+        name = intent.getStringExtra("name");
+        courses = intent.getStringExtra("courses");
+        URL = intent.getStringExtra("URL");
+        uniqueId = intent.getStringExtra("uniqueId");
+        selfId = intent.getStringExtra("selfId");
+        isFavorited = intent.getBooleanExtra("favorited", false);
+        profileId = intent.getLongExtra("profileId", 0);
+        isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
+        wavedTo = false;
+        if (!intent.getBooleanExtra("testingMode", true)) {
+            db = AppDatabase.singleton(this);
+            favoriteSession = db.sessionDao().getSession(1);
+            LoggedNearbyClient = new MessagesClientLogger(Nearby.getMessagesClient(this));
             favoriteSession.id = 1;
             currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
-            Intent intent = getIntent();
-            button = findViewById(R.id.favorite_button_profile);
-            name = intent.getStringExtra("name");
-            courses = intent.getStringExtra("courses");
-            URL = intent.getStringExtra("URL");
-            uniqueId = intent.getStringExtra("uniqueId");
-            selfId = intent.getStringExtra("selfId");
-            isFavorited = intent.getBooleanExtra("favorited", false);
-            profileId = intent.getLongExtra("profileId", 0);
-            isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
-            wavedTo = false;
 
             //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
             //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
@@ -71,7 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
                     infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
-
 
             if (isFavorited) {
                 button.setImageResource(android.R.drawable.btn_star_big_on);
@@ -122,24 +123,21 @@ public class ProfileActivity extends AppCompatActivity {
 
     //publish message to nearby devices
     private void publish() {
-        Log.i(TAG, "Publishing wave");
         PublishOptions options = new PublishOptions.Builder()
                 .setCallback(new PublishCallback() {
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        Log.i(TAG, "No longer publishing");
                         //swap shareButton to stop
                         //runOnUiThread(()->findViewById(R.id.shareButton).performClick());
                     }
                 }).build();
 
-        Nearby.getMessagesClient(this).publish(waveMessage, options);
+        LoggedNearbyClient.publish(waveMessage, options);
     }
 
     public void unpublish(){
-        Log.i(TAG, "Unpublishing wave");
-        Nearby.getMessagesClient(this).unpublish(waveMessage);
+        LoggedNearbyClient.unpublish(waveMessage);
     }
 
     public void sendWave(View view) {
@@ -156,10 +154,7 @@ public class ProfileActivity extends AppCompatActivity {
             //fill wave icon
             waveIcon = (ImageView) findViewById(R.id.wave_imageView);
             waveIcon.setImageResource(R.mipmap.filled_wave);
-
-
             publish();
-            // unpublish();
             wavedTo = true;
         }
         Toast waveToast = Toast.makeText(this, "Wave sent", Toast.LENGTH_SHORT);

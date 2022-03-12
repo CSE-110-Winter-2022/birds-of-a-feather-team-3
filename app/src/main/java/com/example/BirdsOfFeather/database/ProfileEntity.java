@@ -1,16 +1,10 @@
 package com.example.BirdsOfFeather.database;
 
-import static androidx.room.ForeignKey.CASCADE;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
 import com.example.BirdsOfFeather.Course;
-
 import java.util.List;
-
 
 @Entity(tableName = "profiles")
 public class ProfileEntity {
@@ -53,9 +47,6 @@ public class ProfileEntity {
         this.profileSessionId = profileSessionId;
         this.profileCourses = profileCourses;
         this.uniqueId = uniqueId;
-
-        //this.scoreRecent = 0;
-        //this.scoreClassSize = 0;
         this.isWaving = isWaving;
         this.isFavorited = false;
     }
