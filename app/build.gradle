@@ -25,10 +25,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    task clearData(type: Exec) {
-        def clearDataCommand = ['adb', 'shell', 'pm', 'clear', 'com.your.application']
-        commandLine clearDataCommand
-    }
 }
 
 dependencies {

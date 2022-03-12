@@ -65,6 +65,7 @@ public class SortByRecencyScenarioTest {
 
     @Before
     public void setup() {
+
 //        Context context = ApplicationProvider.getApplicationContext();
 //        db = AppDatabase.useTestSingleton(context);
 //        classesDao = db.classesDao();

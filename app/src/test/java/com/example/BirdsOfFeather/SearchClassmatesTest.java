@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 
-public class SearchClassmatesTest {
+public class  SearchClassmatesTest {
     @Test
     public void test() {
         Course course1 = new Course("Spring", "2020", "Large (150-250)","CSE", "110");
