@@ -38,4 +38,16 @@ public class SearchClassmatesTest {
 
         SearchClassmates.detectAndReturnSharedClasses(Rodney, Lucas);
     }
+
+    @Test
+    public void testChronologicalCompare() throws Exception{
+
+        Course course1 = new Course("Spring", "2020", "Large (150-250)","CSE", "110");
+        Course course2 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
+
+        ChronologicalComparator comparator = new ChronologicalComparator();
+        assertEquals(0, comparator.compare(course1, course1));
+        assertEquals(-4, comparator.compare(course1, course2));
+        assertEquals(4, comparator.compare(course2, course1));
+    }
 }
