@@ -278,7 +278,7 @@ public class FavoriteListTest {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText5.perform(replaceText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"), closeSoftKeyboard());
+        appCompatEditText5.perform(replaceText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill3,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"), closeSoftKeyboard());
 
         ViewInteraction materialButton9 = onView(
                 allOf(withId(R.id.mock_enterButton), withText("Enter"),
@@ -331,10 +331,10 @@ public class FavoriteListTest {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText6.perform(replaceText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"), closeSoftKeyboard());
+        appCompatEditText6.perform(replaceText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill3,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.mockDataTextView), withText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"),
+                allOf(withId(R.id.mockDataTextView), withText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill3,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -344,7 +344,7 @@ public class FavoriteListTest {
         appCompatEditText7.perform(click());
 
         ViewInteraction appCompatEditText8 = onView(
-                allOf(withId(R.id.mockDataTextView), withText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"),
+                allOf(withId(R.id.mockDataTextView), withText("a4ca50b6-941b-11ec-b909-0242ac190002,,,,\nBill3,,,,\nhttps://lh3.googleusercontent.com/pw/AM-JKLXQ2ix4dg-PzLrPOSMOOy6M3PSUrijov9jCLXs4IGSTwN73B4kr-F6Nti_4KsiUU8LzDSGPSWNKnFdKIPqCQ2dFTRbARsW76pevHPBzc51nceZDZrMPmDfAYyI4XNOnPrZarGlLLUZW9wal6j-z9uA6WQ=w854-h924-no?authuser=0,,,,\n2018,SSS,VIS,60,Gigantic\n2022,WI,CSE,110,Large\n4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -482,10 +482,10 @@ public class FavoriteListTest {
         materialButton12.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.person_row_name), withText("Bill"),
+                allOf(withId(R.id.person_row_name), withText("Bill3"),
                         withParent(withParent(withId(R.id.favorites_view))),
                         isDisplayed()));
-        textView.check(matches(withText("Bill")));
+        textView.check(matches(withText("Bill3")));
     }
 
     private static Matcher<View> childAtPosition(
