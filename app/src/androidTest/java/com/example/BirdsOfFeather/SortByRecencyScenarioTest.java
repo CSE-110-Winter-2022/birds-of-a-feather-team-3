@@ -16,6 +16,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +28,7 @@ import android.view.ViewParent;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.ActivityResultFunction;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -45,26 +47,53 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SortByRecencyScenarioTest {
     private ClassesDao classesDao;
     private AppDatabase db;
 
+//    @Rule
+//    public IntentsTestRule<ViewPersonsList> intentsTestRule =
+//            new IntentsTestRule<>(ViewPersonsList.class);
+
     @Rule
-    public IntentsTestRule<ViewPersonsList> intentsTestRule =
-            new IntentsTestRule<>(ViewPersonsList.class);
+    public ActivityTestRule<ViewPersonsList> viewPersonsListActivityTestRule = new ActivityTestRule<>(ViewPersonsList.class);
+
 
     @Before
     public void setup() {
-        Context context = ApplicationProvider.getApplicationContext();
-        db = AppDatabase.useTestSingleton(context);
-        classesDao = db.classesDao();
+//        Context context = ApplicationProvider.getApplicationContext();
+//        db = AppDatabase.useTestSingleton(context);
+//        classesDao = db.classesDao();
+//
+//        ClassEntity classEntity = new ClassEntity("Fall", "2021", "Large", "CSE", "140");
+//        classesDao.insert(classEntity);
+//        classesDao.insert(new ClassEntity("Winter", "2022", "Large", "CSE", "101"));
+//        classesDao.insert(new ClassEntity("Winter", "2022", "Large", "CSE", "110"));
+//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Large", "CSE", "12"));
+//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Large", "CSE", "11"));
+//        classesDao.insert(new ClassEntity("Summer Session I", "2021", "Tiny (<40)", "WCWP", "10A"));
 
-        ClassEntity classEntity = new ClassEntity("Fall", "2021", "Large", "CSE", "140");
-        db.classesDao().insert(classEntity);
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "101"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Winter", "2022", "Large (150-250)", "CSE", "110"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "100"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Fall", "2021", "Large (150-250)", "CSE", "30"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "11"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Large (150-250)", "CSE", "12"));
+        viewPersonsListActivityTestRule.getActivity().db.classesDao().insert(new ClassEntity("Summer Session I", "2021", "Tiny (<40)", "WCWP", "10A"));
+
+        List<Course> classes = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
+        List<Course> classes2 = viewPersonsListActivityTestRule.getActivity().db.classesDao().getAll();
     }
 
+//    @Test
+//    public void classesCount() {
+//        List<Course> courses = classesDao.getAll();
+//        List<Course> courses2 = classesDao.getAll();
+//    }
 
     @Test
     public void sortByRecencyScenarioTest() {
@@ -339,7 +368,7 @@ public class SortByRecencyScenarioTest {
                         isDisplayed()));
         materialButton17.perform(click());
 
-        SystemClock.sleep(25000);
+        SystemClock.sleep(5000);
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.person_row_name), withText("Rodney2"),
