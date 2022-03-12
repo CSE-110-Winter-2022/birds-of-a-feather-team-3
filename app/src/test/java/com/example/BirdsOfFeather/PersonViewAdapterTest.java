@@ -77,31 +77,35 @@ public class PersonViewAdapterTest {
 
     @Test
     public void testSortByMatchesComparator(){
+        Course course1 = new Course("Spring", "2020", "Large (150-250)", "CSE", "110");
+        Course course2 = new Course("Fall", "2020", "Large (150-250)","CSE", "100");
+        Course course3 = new Course("Winter", "2020", "Medium (75-150)","CSE", "101");
+        Course course4 = new Course("Fall", "2020", "Tiny (<40)","WCWP", "10A");
+        List<Course> RodneyClasses = new ArrayList<>(Arrays.asList(course1, course2));
+        List<Course> LucasClasses = new ArrayList<>(Arrays.asList(course4));
+        List<Course> GraceClasses = new ArrayList<>(Arrays.asList(course1, course2, course3));
+
+        ProfileInfo profile1 = new ProfileInfo("Rodney", "", RodneyClasses, "abc");
+        ProfileInfo profile2 = new ProfileInfo("Grace", "", GraceClasses, "def");
+        ProfileInfo profile3 = new ProfileInfo("Lucas", "", LucasClasses, "ghi");
+
+        profile1.setWaving(true);
+
+
+        List<ProfileInfo> people = new ArrayList<ProfileInfo>();
+        people.add(profile1);
+        people.add(profile2);
+        people.add(profile3);
+
+        PersonsViewAdapter adapter = new PersonsViewAdapter(people);
+
+
+        assertEquals(-1, adapter.SortByMatchesComparator.compare(profile1, profile2));
+        assertEquals(-2, adapter.SortByMatchesComparator.compare(profile2, profile3));
+
+
 
     }
-
-    @Test
-    public void testSortByRecentComparator(){
-
-    }
-
-    @Test
-    public void testSortByCourseSizeComparator(){
-
-    }
-
-    @Test
-    public void testIndicateWaving(){
-
-
-    }
-
-    @Test
-    public void testSetProfileInfo(){
-
-    }
-
-
 
 
     @Test
