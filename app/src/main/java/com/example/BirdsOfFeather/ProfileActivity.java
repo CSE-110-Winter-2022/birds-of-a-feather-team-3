@@ -41,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     List<ProfileInfo> currentFavoritedProfiles;
     ProfileEntity profileEntity;
     ImageView waveIcon;
+    ImageView profileImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,62 +49,61 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         db = AppDatabase.singleton(this);
         favoriteSession = db.sessionDao().getSession(1);
-        favoriteSession.id = 1;
-        currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
+        if (favoriteSession != null) {
+            favoriteSession.id = 1;
+            currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
+            Intent intent = getIntent();
+            button = findViewById(R.id.favorite_button_profile);
+            name = intent.getStringExtra("name");
+            courses = intent.getStringExtra("courses");
+            URL = intent.getStringExtra("URL");
+            uniqueId = intent.getStringExtra("uniqueId");
+            selfId = intent.getStringExtra("selfId");
+            isFavorited = intent.getBooleanExtra("favorited", false);
+            profileId = intent.getLongExtra("profileId", 0);
+            isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
+            wavedTo = false;
 
-        Intent intent = getIntent();
-        button = findViewById(R.id.favorite_button_profile);
-        name = intent.getStringExtra("name");
-        courses = intent.getStringExtra("courses");
-        URL = intent.getStringExtra("URL");
-        uniqueId = intent.getStringExtra("uniqueId");
-        selfId = intent.getStringExtra("selfId");
-        isFavorited = intent.getBooleanExtra("favorited", false);
-        profileId = intent.getLongExtra("profileId", 0);
-        isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
-        wavedTo = false;
+            //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
+            //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
+            //profileEntity = new ProfileEntity(name, URL, 1, courses);
+            ProfileInfo infoToCopy = db.profilesDao().get(profileId);
 
-        //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
-        //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
-        //profileEntity = new ProfileEntity(name, URL, 1, courses);
-        ProfileInfo infoToCopy = db.profilesDao().get(profileId);
-
-        profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
-                infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
-
-
+            profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
+                    infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
 
 
-        if (isFavorited) {
-            button.setImageResource(android.R.drawable.btn_star_big_on);
+            if (isFavorited) {
+                button.setImageResource(android.R.drawable.btn_star_big_on);
+            } else {
+                button.setImageResource(android.R.drawable.btn_star_big_off);
+            }
+            String waveString = "WAVE:" + selfId + ":::" + uniqueId;
+            waveMessage = new Message(waveString.getBytes(StandardCharsets.UTF_8));
+            TextView nameTextView;
+            TextView commonCoursesTextView;
+            profileImageView = findViewById(R.id.profile_picture_view);
+            nameTextView = findViewById(R.id.profile_name_view);
+            commonCoursesTextView = findViewById(R.id.profile_common_classes);
+            nameTextView.setText(name);
+            commonCoursesTextView.setText(courses);
+
+            if (!URL.equals("")) {
+                URLDownload downloadClass = new URLDownload(profileImageView);
+                Log.i(TAG, "Downloading image");
+                downloadClass.execute(URL);
+            }
+            //Set the title with the person
+            setTitle("Profile");
         }
-        else {
-            button.setImageResource(android.R.drawable.btn_star_big_off);
-        }
-        String waveString = "WAVE:" + selfId + ":::" + uniqueId;
-        waveMessage = new Message(waveString.getBytes(StandardCharsets.UTF_8));
-        ImageView profileImageView;
-        TextView nameTextView;
-        TextView commonCoursesTextView;
-        profileImageView = findViewById(R.id.profile_picture_view);
-        nameTextView = findViewById(R.id.profile_name_view);
-        commonCoursesTextView = findViewById(R.id.profile_common_classes);
-        nameTextView.setText(name);
-        commonCoursesTextView.setText(courses);
-
-        if (!URL.equals("")) {
-            URLDownload downloadClass = new URLDownload(profileImageView);
-            Log.i(TAG, "Downloading image");
-            downloadClass.execute(URL);
-        }
-        //Set the title with the person
-        setTitle("Profile");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unpublish();
+        if (favoriteSession != null) {
+            unpublish();
+        }
     }
 
     public void favoritePerson(View view) {
@@ -145,19 +145,24 @@ public class ProfileActivity extends AppCompatActivity {
     public void sendWave(View view) {
 
         //publish();
+        if (favoriteSession != null) { //for testing, if its null, means its a test
+            if (isFavoritedSession) {
+                return;
+            }
+            if (wavedTo) {
+                return;
+            }
 
-        if(isFavoritedSession){return;}
-        if(wavedTo){return;}
+            //fill wave icon
+            waveIcon = (ImageView) findViewById(R.id.wave_imageView);
+            waveIcon.setImageResource(R.mipmap.filled_wave);
 
-        //fill wave icon
-        waveIcon = (ImageView) findViewById(R.id.wave_imageView);
-        waveIcon.setImageResource(R.mipmap.filled_wave);
 
-        Context context = getApplicationContext();
-        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_SHORT);
+            publish();
+            // unpublish();
+            wavedTo = true;
+        }
+        Toast waveToast = Toast.makeText(this, "Wave sent", Toast.LENGTH_SHORT);
         waveToast.show();
-        publish();
-       // unpublish();
-        wavedTo = true;
     }
 }

@@ -1,7 +1,10 @@
 package com.example.BirdsOfFeather;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowToast;
 //import org.junit.runner.RunWith;
 //import org.robolectric.shadows.ShadowAlertDialog;
 import static org.junit.Assert.*;
@@ -18,6 +21,15 @@ import static org.junit.Assert.*;
 
 import static java.util.Collections.sort;
 
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.lifecycle.Lifecycle;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import java.lang.reflect.Array;
@@ -28,6 +40,7 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class WaveTest {
+    //Unit Tests
     @Test
     public void waveBringsUserToTop() {
         List<ProfileInfo> persons = new ArrayList<>();
@@ -125,5 +138,21 @@ public class WaveTest {
         }
         String expectedOutput = "[Mark, Vicki, Grace]";
         assertEquals(expectedOutput, nameList.toString());
+    }
+
+    //Robolectric tests
+    @Rule
+    public ActivityScenarioRule<ProfileActivity> scenarioRule = new ActivityScenarioRule<>(ProfileActivity.class);
+    @Test
+    public void testWaveToast() {
+        ActivityScenario<ProfileActivity> scenario = scenarioRule.getScenario();
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            ImageView waveButton = activity.findViewById(R.id.wave_imageView);
+            assertEquals(0, ShadowAlertDialog.getShownDialogs().size());
+            waveButton.performClick();
+            assertEquals(ShadowToast.getTextOfLatestToast(), "Wave sent");
+        });
     }
 }
