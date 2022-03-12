@@ -30,7 +30,6 @@ public class ViewFavoritesList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "CREATED");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_favorites_list);
 

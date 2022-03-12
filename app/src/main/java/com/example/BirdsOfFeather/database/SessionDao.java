@@ -14,13 +14,6 @@ import java.util.List;
 @Dao
 public interface SessionDao {
 
-//    @Transaction
-//    @Insert
-//    void insertSessionEntity(SessionEntity sessionEntity);
-//
-//    @Insert
-//    void insertProfileEntities(List<ProfileEntity> profileEntities);
-
     @Transaction
     @Query("SELECT * FROM sessions")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

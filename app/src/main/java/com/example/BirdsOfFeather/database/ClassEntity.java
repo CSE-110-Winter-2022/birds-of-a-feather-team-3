@@ -26,7 +26,6 @@ public class ClassEntity {
     public String classNumber;
 
     public ClassEntity(String quarter, String year, String classSize, String subject, String classNumber) {
-        System.out.println("it id is class btw : " + classIndex);
         this.quarter = quarter;
         this.year = year;
         this.classSize = classSize;

@@ -58,6 +58,36 @@ public class MockInputTest {
 
     }
 
+    @Test
+    public void testParseWave(){
+        MockInputPeople mockInputPeople = new MockInputPeople();
+
+        String waveToParse = "4b295157-ba31-4f9f-8401-5d85d9cf659a,wave,,,";
+
+        assertEquals("4b295157-ba31-4f9f-8401-5d85d9cf659a", mockInputPeople.parseWave(waveToParse));
+    }
+
+
+    @Test
+    public void testSizeToClassSize(){
+        MockInputPeople mockInputPeople = new MockInputPeople();
+        String size;
+
+        size = "Tiny";
+        assertEquals("Tiny (<40)", mockInputPeople.sizeToClassSize(size));
+        size = "Small";
+        assertEquals("Small (40-75)", mockInputPeople.sizeToClassSize(size));
+        size = "Medium";
+        assertEquals("Medium (75-150)", mockInputPeople.sizeToClassSize(size));
+        size = "Large";
+        assertEquals("Large (150-250)", mockInputPeople.sizeToClassSize(size));
+        size = "Huge";
+        assertEquals("Huge (250-400)", mockInputPeople.sizeToClassSize(size));
+        size = "Gigantic";
+        assertEquals("Gigantic (400+)", mockInputPeople.sizeToClassSize(size));
+    }
+
+
 
     @Rule
     public ActivityScenarioRule<MockInputPeople> scenarioRule = new ActivityScenarioRule<>(MockInputPeople.class);

@@ -41,16 +41,13 @@ public class ProfileActivity extends AppCompatActivity {
     List<ProfileInfo> currentFavoritedProfiles;
     ProfileEntity profileEntity;
     ImageView waveIcon;
+    ImageView profileImageView;
+    private MessagesClientLogger LoggedNearbyClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        db = AppDatabase.singleton(this);
-        favoriteSession = db.sessionDao().getSession(1);
-        favoriteSession.id = 1;
-        currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
-
         Intent intent = getIntent();
         button = findViewById(R.id.favorite_button_profile);
         name = intent.getStringExtra("name");
@@ -62,48 +59,52 @@ public class ProfileActivity extends AppCompatActivity {
         profileId = intent.getLongExtra("profileId", 0);
         isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
         wavedTo = false;
+        if (!intent.getBooleanExtra("testingMode", true)) {
+            db = AppDatabase.singleton(this);
+            favoriteSession = db.sessionDao().getSession(1);
+            LoggedNearbyClient = new MessagesClientLogger(Nearby.getMessagesClient(this));
+            favoriteSession.id = 1;
+            currentFavoritedProfiles = db.sessionWithProfilesDao().get(favoriteSession.id).getProfiles();
 
-        //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
-        //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
-        //profileEntity = new ProfileEntity(name, URL, 1, courses);
-        ProfileInfo infoToCopy = db.profilesDao().get(profileId);
+            //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
+            //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
+            //profileEntity = new ProfileEntity(name, URL, 1, courses);
+            ProfileInfo infoToCopy = db.profilesDao().get(profileId);
 
-        profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
-                infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
+            profileEntity = new ProfileEntity(infoToCopy.getName(), infoToCopy.getURL(), 1,
+                    infoToCopy.getCommonCourses(), infoToCopy.getUniqueId(), infoToCopy.getIsWaving());
 
+            if (isFavorited) {
+                button.setImageResource(android.R.drawable.btn_star_big_on);
+            } else {
+                button.setImageResource(android.R.drawable.btn_star_big_off);
+            }
+            String waveString = "WAVE:" + selfId + ":::" + uniqueId;
+            waveMessage = new Message(waveString.getBytes(StandardCharsets.UTF_8));
+            TextView nameTextView;
+            TextView commonCoursesTextView;
+            profileImageView = findViewById(R.id.profile_picture_view);
+            nameTextView = findViewById(R.id.profile_name_view);
+            commonCoursesTextView = findViewById(R.id.profile_common_classes);
+            nameTextView.setText(name);
+            commonCoursesTextView.setText(courses);
 
-
-
-        if (isFavorited) {
-            button.setImageResource(android.R.drawable.btn_star_big_on);
+            if (!URL.equals("")) {
+                URLDownload downloadClass = new URLDownload(profileImageView);
+                Log.i(TAG, "Downloading image");
+                downloadClass.execute(URL);
+            }
+            //Set the title with the person
+            setTitle("Profile");
         }
-        else {
-            button.setImageResource(android.R.drawable.btn_star_big_off);
-        }
-        String waveString = "WAVE:" + selfId + ":::" + uniqueId;
-        waveMessage = new Message(waveString.getBytes(StandardCharsets.UTF_8));
-        ImageView profileImageView;
-        TextView nameTextView;
-        TextView commonCoursesTextView;
-        profileImageView = findViewById(R.id.profile_picture_view);
-        nameTextView = findViewById(R.id.profile_name_view);
-        commonCoursesTextView = findViewById(R.id.profile_common_classes);
-        nameTextView.setText(name);
-        commonCoursesTextView.setText(courses);
-
-        if (!URL.equals("")) {
-            URLDownload downloadClass = new URLDownload(profileImageView);
-            Log.i(TAG, "Downloading image");
-            downloadClass.execute(URL);
-        }
-        //Set the title with the person
-        setTitle("Profile");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unpublish();
+        if (favoriteSession != null) {
+            unpublish();
+        }
     }
 
     public void favoritePerson(View view) {
@@ -122,42 +123,41 @@ public class ProfileActivity extends AppCompatActivity {
 
     //publish message to nearby devices
     private void publish() {
-        Log.i(TAG, "Publishing wave");
         PublishOptions options = new PublishOptions.Builder()
                 .setCallback(new PublishCallback() {
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        Log.i(TAG, "No longer publishing");
                         //swap shareButton to stop
                         //runOnUiThread(()->findViewById(R.id.shareButton).performClick());
                     }
                 }).build();
 
-        Nearby.getMessagesClient(this).publish(waveMessage, options);
+        LoggedNearbyClient.publish(waveMessage, options);
     }
 
     public void unpublish(){
-        Log.i(TAG, "Unpublishing wave");
-        Nearby.getMessagesClient(this).unpublish(waveMessage);
+        LoggedNearbyClient.unpublish(waveMessage);
     }
 
     public void sendWave(View view) {
 
         //publish();
+        if (favoriteSession != null) { //for testing, if its null, means its a test
+            if (isFavoritedSession) {
+                return;
+            }
+            if (wavedTo) {
+                return;
+            }
 
-        if(isFavoritedSession){return;}
-        if(wavedTo){return;}
-
-        //fill wave icon
-        waveIcon = (ImageView) findViewById(R.id.wave_imageView);
-        waveIcon.setImageResource(R.mipmap.filled_wave);
-
-        Context context = getApplicationContext();
-        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_SHORT);
+            //fill wave icon
+            waveIcon = (ImageView) findViewById(R.id.wave_imageView);
+            waveIcon.setImageResource(R.mipmap.filled_wave);
+            publish();
+            wavedTo = true;
+        }
+        Toast waveToast = Toast.makeText(this, "Wave sent", Toast.LENGTH_SHORT);
         waveToast.show();
-        publish();
-       // unpublish();
-        wavedTo = true;
     }
 }

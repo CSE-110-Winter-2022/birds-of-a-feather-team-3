@@ -43,13 +43,11 @@ public class FakedMessageListener extends MessageListener {
                 try {
                     PersonSerializer personSerializer = new PersonSerializer();
                     serializedPerson = personSerializer.convertToByteArray(person);
-                    Log.i("Person Before Serialized", person.toString());
-                    Log.i("Person After Serialized", serializedPerson.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 if (serializedPerson != null) {
-                    Log.i("FakeMessageListener", "Fake message received");
+                    Log.i("FakeMessageListener", "Fake message sending");
                     Message message = new Message(serializedPerson);
                     this.messageListener.onFound(message);
                     this.messageListener.onLost(message);

@@ -21,33 +21,4 @@ public class SessionEntity {
     public SessionEntity(String sessionName){
         this.sessionName = sessionName;
     }
-
-
-//    public long getSessionId(){
-//        return sessionIndex;
-//    }
-//
-//    public void setSessionId(int sessionId){
-//        this.sessionId = sessionId;
-//    }
-//
-//    public String getSessionName(){
-//        return sessionName;
-//    }
-//
-//    public void setSessionName(String sessionName){
-//        this.sessionName = sessionName;
-//    }
-//
-//    public String getSessionTimeStamp(){
-//        return timeStamp;
-//    }
-//
-//    public void setSessionTimeStamp(String timeStamp){
-//        this.timeStamp = timeStamp;
-//    }
-
-
-
-
 }

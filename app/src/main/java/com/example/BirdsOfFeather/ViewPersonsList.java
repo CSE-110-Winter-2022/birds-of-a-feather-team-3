@@ -86,13 +86,13 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
     private Button saveButton;
     private Spinner classesSpinner;
     private EditText newNameEditText;
+    private MessagesClientLogger LoggedNearbyClient;
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == 500) {
             byte[] result = intent.getByteArrayExtra("deserialized");
-            System.out.println("RESULT: " + result);
             try {
                 fakedSubscribers.add(personSerializer.convertFromByteArray(result));
             } catch (Exception e) {
@@ -108,8 +108,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     @Override
     protected void onResume() {
-        Log.i(TAG, "RESUMED");
-        System.out.println(myCourses.toString());
+        //System.out.println(myCourses.toString());
         reassignFavorites();
         super.onResume();
     }
@@ -132,7 +131,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "CREATED");
+        LoggedNearbyClient = new MessagesClientLogger(Nearby.getMessagesClient(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_persons_list);
         db = AppDatabase.singleton(this);
@@ -179,6 +178,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             Log.i(TAG, "Course " + i + ":" + course.toString());
             i++;
         }
+
         byte[] empty = {};
         classesMessage = new Message(empty);
         try {
@@ -191,17 +191,18 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         MessageListener realMessageListener = new MessageListener() {
             @Override
             public void onFound(@NonNull Message message) {
-                Log.i(TAG, "Found a message");
+                Log.i(TAG, "onFound called");
+                Log.i(TAG, new String(message.getContent()));
                 if (startButtonOn) {
                     byte[] messageByteArray = message.getContent();
                     String messageString = new String(messageByteArray, StandardCharsets.UTF_8);
-                    System.out.println(messageString.substring(0, 5));
+                    //System.out.println(messageString.substring(0, 5));
                     if (messageString.substring(0, 5).equals("WAVE:")  ) { // it was  a wave
                         Log.i(TAG, "Received a potential wave");
                         int indexOfSeparator = messageString.lastIndexOf(":::");
                         String waveSender = messageString.substring(5, indexOfSeparator);
                         String waveRecipient = messageString.substring(indexOfSeparator + 3);
-                        System.out.println(waveSender + ", " + waveRecipient);
+                        Log.i(TAG, waveSender + ", " + waveRecipient);
                         if (waveRecipient.equals(self.getUniqueId())) { // they are waving at you
                             Log.i(TAG, "Someone waved to you");
                             processWave(waveSender);
@@ -230,9 +231,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
                         if (personsProfileInfo != null) {
                             //Was pausing scripts, but running on UI thread fixed
-
-                            //TODO add personsProfileInfo to database
-
                             runOnUiThread(() -> {
                                 boolean result = personsViewAdapter.addPerson(personsProfileInfo, false);//unchangingDeserializedPerson, personsProfileInfo, false);
                                 if (result) {//was added properly
@@ -251,13 +249,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void onLost(@NonNull Message message) {
-                Log.i(TAG, "message lost");
+                Log.i(TAG, "onLost called");
                 //Called when message no longer detectable nearby
                 //should NOT delete user from list in this case
                 if (startButtonOn) {
                     byte[] msgBody = message.getContent();
                     String messageString = new String(msgBody, StandardCharsets.UTF_8);
-                    System.out.println(messageString.substring(0, 5));
                     if (!messageString.substring(0, 5).equals("WAVE:")  ) { // it was  a wave
                         String senderName = "";
                         try {
@@ -265,7 +262,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Log.i(TAG, "Stopped receiving messages from " + senderName);
+                        Log.i(TAG, "onLost from " + senderName);
                     }
                 }
             }
@@ -278,9 +275,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
         shareButton.setOnClickListener(v -> {
             if (shareButton.getText().equals("Start")) {
-
-                System.out.println("Starting session dialog popup");
-
                 if(db.sessionWithProfilesDao().count()==0){
                     //start new session
                     startNewSession();
@@ -288,8 +282,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 else{
                     startSessionDialog();
                 }
-
-
                 shareButton.setText("Stop");
 
             } else if (shareButton.getText().equals("Stop")) {
@@ -299,7 +291,6 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                 shareButton.setText("Start");
                 unsubscribe();
                 unpublish();
-
                 //prompt to save session
                 saveSessionDialog();
 
@@ -315,12 +306,9 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        Log.i(TAG, "No longer subscribing");
                     }
                 }).build();
-        Nearby.getMessagesClient(this).subscribe(classesMessageListener, options);
-        Log.i(TAG, Nearby.getMessagesClient(this).toString());
-        Log.i(TAG, "Subscribing");
+        LoggedNearbyClient.subscribe(classesMessageListener, options);
     }
 
     //publish message to nearby devices
@@ -330,25 +318,21 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        Log.i(TAG, "No longer publishing");
                         //swap shareButton to stop
                         //runOnUiThread(()->findViewById(R.id.shareButton).performClick());
                     }
                 }).build();
 
-        Nearby.getMessagesClient(this).publish(classesMessage, options);
-        Log.i(TAG, "Publishing");
+        LoggedNearbyClient.publish(classesMessage, options);
     }
 
     //stop getting messages from nearby devices
     private void unsubscribe(){
-        Nearby.getMessagesClient(this).unsubscribe(classesMessageListener);
-        Log.i(TAG,"Unsubscribing");
+        LoggedNearbyClient.unsubscribe(classesMessageListener);
     }
 
     public void unpublish(){
-        Nearby.getMessagesClient(this).unpublish(classesMessage);
-        Log.i(TAG, "Unpublishing");
+        LoggedNearbyClient.unpublish(classesMessage);
     }
 
 
@@ -395,23 +379,21 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
                 //test print all sessions
                 List<Session> mySessions = db.sessionDao().getAll();
-                System.out.println("Sessions: ");
+                Log.i(TAG, "Saved sessions:");
                 for(Session s: mySessions){
-                    System.out.println(s.sessionName);
+                    Log.i(TAG, s.sessionName);
                 }
-
-                System.out.println("Testing linked database now:");
 
                 List<SessionWithProfiles> sessionProfiles = db.sessionWithProfilesDao().getAll();
 
                 for(SessionWithProfiles swp : sessionProfiles){
-                    System.out.println("Session name: " + swp.getName() + " with id=" + swp.getId());
+                    Log.i(TAG, "Session name: " + swp.getName() + " with id=" + swp.getId());
                     List<ProfileInfo> profiles = swp.getProfiles();
-                    System.out.println("Number of profiles in "+swp.getName()+":"+profiles.size());
+                    Log.i(TAG, "Number of profiles in "+swp.getName()+":"+profiles.size());
                     for(ProfileInfo p: profiles){
-                        System.out.println(p.name + " " + p.URL);
+                        Log.i(TAG, p.name + " " + p.URL);
                         for(Course c: p.getCommonCourses()){
-                            System.out.println(c.toString());
+                            Log.i(TAG, c.toString());
                         }
                     }
                 }
@@ -496,7 +478,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
                     personsViewAdapter.addPerson(newProfile, false);
                 }
                 reassignFavorites();
-                System.out.println("Finishing session dialog popup");
+                //System.out.println("Finishing session dialog popup");
                 //start sharing and receiving data
                 Log.i(TAG, "Starting share");
                 startButtonOn = true;
@@ -536,9 +518,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         //format is "1/16/22 5:10PM"
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm a");
         String currentDateandTime = sdf.format(new Date());
-
-        System.out.println("Default Session name is: " + currentDateandTime);
-
+        Log.i(TAG, "Default Session name is: " + currentDateandTime);
         return currentDateandTime;
     }
 
@@ -549,17 +529,12 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         renameDialogBuilder.setView(renameSessionPopupView);
         renameDialog = renameDialogBuilder.create();
         renameDialog.show();
-
         //views
         classesSpinner = renameSessionPopupView.findViewById(R.id.classes_spinner);
         newNameEditText = renameSessionPopupView.findViewById(R.id.new_name_edittext);
         cancelButton = renameSessionPopupView.findViewById(R.id.cancel_button);
         saveButton = renameSessionPopupView.findViewById(R.id.save_button);
-
-
         newNameEditText.setHint(db.sessionDao().getSession(selectedSessionId).sessionName);
-
-
         loadSpinnerData(classesSpinner);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -623,10 +598,10 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
 
     public void processWave(String personWavingId) { //check current session for a person with this Id.
         ProfileInfo foundClassmate = null;
-        System.out.println(personWavingId);
+        //System.out.println(personWavingId);
         for (int i = 0; i < classmateProfileInfos.size(); i++) { //person was in their BoF list
             ProfileInfo classmate = classmateProfileInfos.get(i);
-            System.out.println(i + ": " + classmate.getUniqueId() + ", " + classmate.getUniqueId().equals(personWavingId));
+            Log.i(TAG, i + ": " + classmate.getUniqueId() + ", " + classmate.getUniqueId().equals(personWavingId));
             if (classmate.getUniqueId().equals(personWavingId)) {
                 foundClassmate = classmate;
                 break;
@@ -640,9 +615,8 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
             runOnUiThread(() -> {
                         personsViewAdapter.resort();
             });
-            Log.i(TAG, "done wave");
         }
-        Log.i(TAG, "no matching classmate");
+        Log.i(TAG, "No BoF matches this wave");
     }
 
     public void onFavoritesClicked(View view) {

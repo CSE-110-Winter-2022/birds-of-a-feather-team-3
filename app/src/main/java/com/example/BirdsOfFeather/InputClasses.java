@@ -29,7 +29,6 @@ public class InputClasses extends AppCompatActivity {
             String databaseType = extras.getStringExtra("database_type");
             if (databaseType != null) {
                 usingMock = !databaseType.equals("actual");
-
             }
             else {
                 usingMock = true;
