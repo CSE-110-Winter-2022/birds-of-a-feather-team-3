@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
-    //private final List<Person> persons;
-    //private final Map<Person, ProfileInfo> profileInformationList;
     private static final String TAG = PersonsViewAdapter.class.getSimpleName();
     // 0=default, 1=recent, 2=class size
     private int sortType;
@@ -60,54 +58,13 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
 
     public void clearAdapter() {
         this.profileInfos.clear();
-        //persons.clear();
-        //profileInformationList.clear();
         notifyDataSetChanged();
     }
-    //for testing purposes
 
+    //for testing purposes
     public List<ProfileInfo> getProfileInfos() {
         return this.profileInfos;
     }
-    //for testing purposes
-    /*
-    public Map<Person, ProfileInfo> getPeopleInfoMap() {
-        return profileInformationList;
-    } */
-
-//    public void addPerson(Person person, ProfileInfo newProfileInfo, boolean testing){
-//        boolean alreadyContained = false;
-//        for (Person existingPerson : persons) {
-//            if (person.toString().equals(existingPerson.toString())) {
-//                alreadyContained = true;
-//                break;
-//            }
-//        }
-//        //Checks if a potential BoF has already been stored in the list
-//        if (!alreadyContained) {
-//            int addPosition = 0;
-//            for (Person listPerson : persons) {
-//                ProfileInfo listProfileInfo = profileInformationList.get(listPerson);
-//                //Sorts according to match amount
-//                if (listProfileInfo != null) {
-//                    int newMatches = newProfileInfo.getCommonCourses().size();
-//                    int comparingMatches = listProfileInfo.getCommonCourses().size();
-//                    if (newMatches >= comparingMatches) {
-//                        break;
-//                    }
-//                    addPosition++;
-//                }
-//            }
-//            this.persons.add(addPosition, person);
-//            profileInformationList.put(person, newProfileInfo);
-//            if (!testing) {
-//                this.notifyItemInserted(addPosition);//this.persons.size()-1);
-//
-//                // notifyDataSetChanged();
-//                Log.i(TAG, "Added list item and notified view adapter of new person");
-//            }
-//        }
-//    }
 
     public void resort() {
         if (sortType == 0) {
@@ -302,26 +259,6 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             this.isInFavoriteSession = setType;
         }
 
-        /*
-        public void setPerson(ProfileInfo person) {
-            this.profileInfo = person;
-            this.personName = person.getName();
-            this.personNameView.setText(personName);
-
-            //ProfileInfo infoToCopy = db.profilesDao().get(profileInfo.getProfileId());
-            this.profileEntity = new ProfileEntity(person.getName(), person.getURL(), 1,
-                    person.getCommonCourses(), person.getUniqueId(), person.getIsWaving());
-            Log.i(TAG, "Set the profile entity in setPerson");
-            //default image check
-            if (!person.getURL().equals("")) {
-                URLDownload downloadClass = new URLDownload(this.profilePictureView);
-                System.out.println(person.getURL());
-                downloadClass.execute(person.getURL());
-            }
-        }
-
-         */
-
         public void indicateWave(boolean isWaving) {
             if (isWaving) {
                 //this.waveIndicator.setBackgroundResource(R.drawable.googleg_standard_color_18);
@@ -380,6 +317,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             intent.putExtra("favorited", isFavorited);
             intent.putExtra("profileId", this.profileInfo.getProfileId());
             intent.putExtra("isFavoritedSession", this.isInFavoriteSession);
+            intent.putExtra("testingMode", false);
 
             Log.i(TAG, "Going to Profile Activity");
             context.startActivity(intent);

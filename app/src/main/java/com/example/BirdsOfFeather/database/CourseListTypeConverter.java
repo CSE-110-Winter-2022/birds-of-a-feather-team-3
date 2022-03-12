@@ -17,7 +17,7 @@ public class CourseListTypeConverter {
     @TypeConverter
     public static List<Course> stringToCourseList(String dataString) {
         if (dataString == null) {
-            Log.d("CourseListTypeConverter", "ERROR EMPTY DATA STRING");
+            Log.i("CourseListTypeConverter", "Null string");
             return Collections.emptyList();
         }
 

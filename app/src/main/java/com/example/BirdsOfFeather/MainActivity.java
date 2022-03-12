@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
         if (!name.equals("")) {
             Log.i(TAG, "saving non-empty name");
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String generatedUUID = UUID.randomUUID().toString();
+            Log.i(TAG, "App user's unique ID:" + generatedUUID);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
-            editor.putString("unique_identifier", UUID.randomUUID().toString());
+            editor.putString("unique_identifier", generatedUUID);
             editor.apply();
             Intent intent = new Intent(this, ImageLinkEntry.class);
             startActivity(intent);
