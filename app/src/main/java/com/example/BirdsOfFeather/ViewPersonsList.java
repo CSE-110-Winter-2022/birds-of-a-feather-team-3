@@ -166,6 +166,7 @@ public class ViewPersonsList extends AppCompatActivity implements AdapterView.On
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String selfName = preferences.getString("first_name", "First_Name");
         String selfId = preferences.getString("unique_identifier", "First_Name");
+        Log.i(TAG, "App user's unique ID:" + selfId);
 
         String selfPictureLink = preferences.getString("profile_picture_url", "");
         Log.i(TAG, selfName + " " + selfPictureLink);
