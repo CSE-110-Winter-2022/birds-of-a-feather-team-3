@@ -23,11 +23,11 @@ public abstract class AppDatabase extends RoomDatabase {
         return singletonInstance;
     }
 
-    public static void useTestSingleton(Context context) {
-        singletonInstance = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
-                .allowMainThreadQueries()
-                .build();
-    }
+//     public static void useTestSingleton(Context context) {
+//         singletonInstance = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
+//                 .allowMainThreadQueries()
+//                 .build();
+//     }
 
     public abstract ClassesDao classesDao();
     public abstract SessionDao sessionDao();
