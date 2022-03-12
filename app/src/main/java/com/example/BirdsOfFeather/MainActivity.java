@@ -29,22 +29,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //If its not their first use, skip inputting name/link and courses
-//        if (!sharedPreferences.getString("first_name", "").equals("")) {
-//            Intent intent = new Intent(this, ViewPersonsList.class);
-//            startActivity(intent);
-//            finish();
-//        }
-        if (false) {}
+        if (!sharedPreferences.getString("first_name", "").equals("")) {
+            Intent intent = new Intent(this, ViewPersonsList.class);
+            startActivity(intent);
+            finish();
+        }
         else { //first use
-            /*
-            SessionEntity newSessionEntity = new SessionEntity(getCurrDayTime());
-                long generatedId =  db.sessionDao().insert(newSessionEntity);
-                currentSession = db.sessionDao().getSession(generatedId);
-                currentSession.id = generatedId;
-                currSessionId = currentSession.id;//db.sessionWithProfilesDao().count() + 1;
-
-             */
-
             textView = findViewById(R.id.enter_name_view);
             String autoFilledName = this.getNameFromGoogle();
             if (!autoFilledName.equals("")) {
