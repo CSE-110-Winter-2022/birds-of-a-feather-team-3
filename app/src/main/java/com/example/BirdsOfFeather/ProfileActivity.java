@@ -33,6 +33,8 @@ public class ProfileActivity extends AppCompatActivity {
     private String selfId;
     private long profileId;
     private boolean isFavorited;
+    private boolean isFavoritedSession;
+    private boolean wavedTo;
     ImageButton button;
     AppDatabase db;
     Session favoriteSession;
@@ -58,6 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
         selfId = intent.getStringExtra("selfId");
         isFavorited = intent.getBooleanExtra("favorited", false);
         profileId = intent.getLongExtra("profileId", 0);
+        isFavoritedSession = intent.getBooleanExtra("isFavoritedSession", false);
+        wavedTo = false;
 
         //public ProfileEntity(String profileName, String profileURL, long profileSessionId,
         //                         List<Course> profileCourses, String uniqueId, boolean isWaving){
@@ -96,6 +100,12 @@ public class ProfileActivity extends AppCompatActivity {
         setTitle("Profile");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unpublish();
+    }
+
     public void favoritePerson(View view) {
         isFavorited = !isFavorited;
         if (isFavorited) {
@@ -112,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     //publish message to nearby devices
     private void publish() {
-        Log.i(TAG, "Publishing");
+        Log.i(TAG, "Publishing wave");
         PublishOptions options = new PublishOptions.Builder()
                 .setCallback(new PublishCallback() {
                     @Override
@@ -128,21 +138,26 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void unpublish(){
-        Log.i(TAG, "Unpublishing");
+        Log.i(TAG, "Unpublishing wave");
         Nearby.getMessagesClient(this).unpublish(waveMessage);
     }
 
     public void sendWave(View view) {
-        publish();
+
+        //publish();
+
+        if(isFavoritedSession){return;}
+        if(wavedTo){return;}
 
         //fill wave icon
         waveIcon = (ImageView) findViewById(R.id.wave_imageView);
         waveIcon.setImageResource(R.mipmap.filled_wave);
 
         Context context = getApplicationContext();
-        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_LONG);
+        Toast waveToast = Toast.makeText(context, "Wave sent", Toast.LENGTH_SHORT);
         waveToast.show();
         publish();
-        unpublish();
+       // unpublish();
+        wavedTo = true;
     }
 }

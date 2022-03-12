@@ -66,8 +66,7 @@ public class MockInputPeople extends AppCompatActivity {
                 }
             }
 
-            newStudent = new Person(name, profileURL, classes);
-            newStudent.setUniqueId(uniqueId);
+            newStudent = new Person(name, profileURL, classes, uniqueId);
             for (String waveId : wavePersonIds) {
                 newStudent.addWaveMocks(waveId);
             }
