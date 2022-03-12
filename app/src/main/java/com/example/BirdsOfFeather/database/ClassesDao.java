@@ -2,6 +2,7 @@ package com.example.BirdsOfFeather.database;
 
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RoomWarnings;
@@ -24,4 +25,13 @@ public interface ClassesDao {
 
     @Insert
     long insert(ClassEntity course);
+
+    // for testing purposes
+    @Delete
+    void delete(ClassEntity course);
+
+//    // for testing
+//    @Query("SELECT COUNT(*) FROM classes")
+//    int count();
+
 }

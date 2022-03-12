@@ -33,4 +33,12 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract SessionDao sessionDao();
     public abstract ProfilesDao profilesDao();
     public abstract SessionWithProfilesDao sessionWithProfilesDao();
+
+    public static AppDatabase useTestSingleton(Context context) {
+        singletonInstance = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
+                .allowMainThreadQueries()
+                .build();
+
+        return singletonInstance;
+    }
 }
