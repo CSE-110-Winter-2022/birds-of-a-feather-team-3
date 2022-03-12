@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "saving non-empty name");
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             String generatedUUID = UUID.randomUUID().toString();
-            Log.i(TAG, "App user's unique ID:" + generatedUUID);
+//            Log.i(TAG, "App user's unique ID:" + generatedUUID);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("first_name", name);
             editor.putString("unique_identifier", generatedUUID);
